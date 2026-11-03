@@ -100,7 +100,7 @@ h1, h2, h3 {
   -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--color-border);
 }
-.logo { grid-column: 2; grid-row: 1; display: block; line-height: 0; }
+.logo { grid-column: 1; grid-row: 1; justify-self: start; display: block; line-height: 0; }
 .logo img { height: var(--logo-height); width: auto; }
 .logo:hover img { opacity: 0.85; }
 
