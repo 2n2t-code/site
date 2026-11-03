@@ -310,6 +310,9 @@
     });
   }
 
+  var sent = document.getElementById("form-success");
+  if (sent && /[?&]sent=1/.test(location.search)) sent.hidden = false;
+
   var page = document.body.getAttribute("data-page");
   if (page === "film") renderFilm();
   if (page === "photography") renderPhotos();

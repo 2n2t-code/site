@@ -4,6 +4,8 @@ Plain HTML, CSS and vanilla JS. No framework, no build step, nothing to install.
 
 ```
 index.html              Homepage (Film / Photography / Music panels)
+about/index.html        About (bio, services)
+contact/index.html      Contact details + form (Netlify Forms)
 film/index.html         Film & productions
 photography/index.html  Gallery + lightbox
 music/index.html        Track list
@@ -96,10 +98,18 @@ Edit the three `<a class="panel">` blocks in `index.html` and swap the image `sr
 The Film panel also has a muted, looping background `<video>`. Change its `data-bg-src`, or delete the `<video>` line to use only the image.
 The video never plays sound, and it's skipped for visitors who use reduced motion or data saver.
 
+### About and Contact pages
+
+- **About** (`about/index.html`): the bio and the "What I do" list are plain HTML, marked with an `EDIT ME` comment. Replace the placeholder text, and replace `assets/img/about/portrait.jpg` with your photo (a 4:5 portrait, about 1000×1250).
+- **Contact** (`contact/index.html`): your email, location and links, plus a contact form.
+  The form uses **Netlify Forms**, which is free and needs no setup beyond deploying to Netlify. Messages appear in Netlify under **Forms**. To get them by email, go to **Site configuration → Notifications → Form submission notifications**.
+  After someone sends a message, they return to the Contact page and see a thank-you note.
+  On GitHub Pages the form won't work. Delete the `<form>…</form>` block and keep the email link.
+
 ### Header, footer, email and socials
 
-These are plain HTML in each page: `index.html`, `film/`, `photography/`, `music/` and `404.html`.
-To change the email or social links, find and replace them across those five files.
+These are plain HTML in each page: `index.html`, `film/`, `photography/`, `music/`, `about/`, `contact/` and `404.html`.
+To change the email or social links, find and replace them across those seven files.
 The Instagram link is different on each page on purpose.
 
 The menu is the three-line button at the top right. To add a page to it, add a `<li><a href="...">Name</a></li>` line inside `<nav class="site-nav">` on every page.
