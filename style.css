@@ -185,6 +185,7 @@ main { display: block; }
   transition: flex-grow var(--transition);
   container-type: inline-size;
 }
+.panel-media { container-type: size; }
 .panel-media, .panel-media img, .panel-media video {
   position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2;
 }
@@ -215,6 +216,20 @@ main { display: block; }
 }
 .panel:hover .panel-sub, .panel:focus-visible .panel-sub { color: var(--color-accent); gap: var(--space-4); }
 .panel:focus-visible { outline-offset: -4px; }
+
+/* YouTube background: scaled to cover the panel like object-fit: cover,
+   enlarged a little to crop YouTube's title bar, and click-through so the
+   whole panel stays a link. It fades in once it has had time to start. */
+.panel-yt { position: absolute; inset: 0; z-index: -2; overflow: hidden; pointer-events: none; }
+.panel-yt iframe {
+  position: absolute; top: 50%; left: 50%; border: 0;
+  width: max(100cqw, 177.78cqh); height: max(100cqh, 56.25cqw);
+  transform: translate(-50%, -50%) scale(1.2);
+  opacity: 0; transition: opacity 1s ease, filter var(--transition);
+  filter: grayscale(0.35) brightness(0.7);
+}
+.panel-yt.is-playing iframe { opacity: 1; }
+.panel:hover .panel-yt iframe, .panel:focus-visible .panel-yt iframe { filter: grayscale(0) brightness(0.85); }
 
 /* ---------- Film ---------- */
 .grid {

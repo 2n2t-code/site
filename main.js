@@ -308,6 +308,29 @@
       var p = v.play();
       if (p && p.catch) p.catch(function () {});
     });
+
+    // YouTube background: muted, looping, no controls. Loaded after the page
+    // has finished loading so it never slows down the first view.
+    var startYouTubeBackgrounds = function () {
+      document.querySelectorAll("[data-youtube-bg]").forEach(function (box) {
+        var id = encodeURIComponent(box.getAttribute("data-youtube-bg"));
+        var iframe = el("iframe", {
+          src: "https://www.youtube-nocookie.com/embed/" + id +
+            "?autoplay=1&mute=1&loop=1&playlist=" + id +
+            "&controls=0&playsinline=1&rel=0&disablekb=1&iv_load_policy=3&modestbranding=1",
+          title: "Background video",
+          allow: "autoplay; encrypted-media; picture-in-picture",
+          tabindex: "-1",
+          frameborder: "0"
+        });
+        iframe.addEventListener("load", function () {
+          setTimeout(function () { box.classList.add("is-playing"); }, 1500);
+        });
+        box.appendChild(iframe);
+      });
+    };
+    if (document.readyState === "complete") startYouTubeBackgrounds();
+    else window.addEventListener("load", startYouTubeBackgrounds);
   }
 
   var sent = document.getElementById("form-success");

@@ -56,7 +56,7 @@
     <a class="logo" href="./" aria-label="2N2T home">2N<span>2</span>T</a>
     <nav class="site-nav" id="site-menu" aria-label="Main">
       <ul>
-        <li><a href="film/">Film</a></li>
+        <li><a href="film/">Video Production</a></li>
         <li><a href="photography/">Photography</a></li>
         <li><a href="music/">Music</a></li>
         <li><a href="about/">About</a></li>
@@ -70,14 +70,16 @@
     <nav class="panels" aria-label="Sections">
       <a class="panel" href="film/">
         <div class="panel-media">
-          <!-- Background video is muted, loops, and is skipped for reduced-motion users.
-               To use an image only, delete the <video> line. -->
-          <img src="assets/img/home/film.jpg" alt="" loading="lazy" decoding="async" width="1600" height="1000">
-          <video data-bg-src="assets/video/film-loop.mp4" muted loop playsinline preload="none" aria-hidden="true" poster="assets/img/home/film.jpg"></video>
+          <!-- Background: YouTube video, muted and looping. To change it, swap the
+               video ID (a8pjf4iHd9c) in BOTH places below. The image shows first,
+               and stays for visitors with reduced motion or data saver on. -->
+          <img src="https://i.ytimg.com/vi/a8pjf4iHd9c/maxresdefault.jpg" alt="" decoding="async" width="1280" height="720"
+               onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/a8pjf4iHd9c/hqdefault.jpg'">
+          <div class="panel-yt" data-youtube-bg="a8pjf4iHd9c" aria-hidden="true"></div>
         </div>
         <span class="panel-label">
-          <span class="panel-title">Film</span>
-          <span class="panel-sub">Productions &amp; Live In Session <span aria-hidden="true">&rarr;</span></span>
+          <span class="panel-title">Video Production</span>
+          <span class="panel-sub">Live In Session &amp; showreels <span aria-hidden="true">&rarr;</span></span>
         </span>
       </a>
       <a class="panel" href="photography/">

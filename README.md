@@ -94,9 +94,12 @@ Only one track plays at a time. Audio downloads only when someone presses play.
 
 ### Homepage panels
 
-Edit the three `<a class="panel">` blocks in `index.html` and swap the image `src`.
-The Film panel also has a muted, looping background `<video>`. Change its `data-bg-src`, or delete the `<video>` line to use only the image.
-The video never plays sound, and it's skipped for visitors who use reduced motion or data saver.
+Edit the three `<a class="panel">` blocks in `index.html`.
+
+- **Video Production** has a muted, looping YouTube video as its background (currently the Silk Mill showreel, `a8pjf4iHd9c`). To change it, replace that video ID in the `<img>` and `data-youtube-bg` lines. The video's thumbnail shows first. The video fades in after the page has loaded, and it's skipped for visitors with reduced motion or data saver on.
+- **Photography** and **Music** use images in `assets/img/home/`. Replace those files, or change the `src`.
+
+The Video Production page still lives at `/film/`, so existing links keep working.
 
 ### About and Contact pages
 
