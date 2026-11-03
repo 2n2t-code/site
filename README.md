@@ -61,7 +61,11 @@ Keep self-hosted MP4s small (H.264, `-movflags +faststart`). Big files are bette
 - `thumb` is the grid image (about 800px wide). It's optional, but much faster.
 - Always write a real `alt` description.
 
-The `photos` list is the **Highlights** gallery at the top of `/photography/`.
+The `photos` list is the **Highlights** slideshow at the top of `/photography/`.
+- It moves to the next photo every 5 seconds. To change that, edit `SLIDE_SECONDS` near the slideshow code in `main.js`.
+- Each photo is shown whole, with a blurred copy filling the frame behind it, so portrait-shaped photos aren't cropped.
+- Captions appear on the photo.
+- It pauses when it's scrolled out of view or the full-size viewer is open. Visitors who've turned on reduced motion get no autoplay or zoom.
 
 **Category galleries:** the `photoCategories` list in `content.js` holds six categories: Weddings, Landscape, Portraits, Music, Street and Film. Each has its own page at `/photography/<slug>/`, and the Photography page lists them as cards under Highlights. To add photos to a category, add entries to that category's `photos` list. They use the same format as above.
 

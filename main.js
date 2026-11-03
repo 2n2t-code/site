@@ -100,19 +100,12 @@
   }
 
   /* ---------- Photography + lightbox ---------- */
-  function renderPhotos(photos) {
-    photos = photos || [];
-    var gallery = document.getElementById("gallery");
-    renderList(gallery, photos, function (p, i) {
-      var btn = el("button", { class: "gallery-item", type: "button", "aria-label": "Enlarge: " + (p.alt || "photo " + (i + 1)) }, [
-        el("img", { src: url(p.thumb || p.src), alt: p.alt || "", loading: "lazy", decoding: "async" })
-      ]);
-      btn.addEventListener("click", function () { openLightbox(i, btn); });
-      return btn;
-    }, "Photos coming soon.");
-
+  // Sets up the full-screen photo viewer for a list of photos and returns
+  // open(index, triggerElement). Optional hooks run when it opens/closes.
+  function setupLightbox(photos, hooks) {
+    hooks = hooks || {};
     var lb = document.getElementById("lightbox");
-    if (!lb) return;
+    if (!lb || !photos.length) return function () {};
     var img = lb.querySelector("img");
     var cap = lb.querySelector("figcaption");
     var current = 0, lastFocus = null, touchX = null;
@@ -129,13 +122,14 @@
         if (q) new Image().src = url(q.src);
       });
     }
-    function openLightbox(i, trigger) {
+    function open(i, trigger) {
       lastFocus = trigger;
       show(i);
       lb.hidden = false;
       document.body.classList.add("no-scroll");
       lb.querySelector(".lb-close").focus();
       document.addEventListener("keydown", onKey);
+      if (hooks.onOpen) hooks.onOpen();
     }
     function close() {
       lb.hidden = true;
@@ -143,6 +137,7 @@
       document.body.classList.remove("no-scroll");
       document.removeEventListener("keydown", onKey);
       if (lastFocus) lastFocus.focus();
+      if (hooks.onClose) hooks.onClose(current);
     }
     function onKey(e) {
       if (e.key === "Escape") close();
@@ -167,6 +162,148 @@
       if (Math.abs(dx) > 50) show(current + (dx < 0 ? 1 : -1));
       touchX = null;
     });
+    return open;
+  }
+
+  // Grid gallery (used on the category pages).
+  function renderPhotos(photos) {
+    photos = photos || [];
+    var open = setupLightbox(photos);
+    renderList(document.getElementById("gallery"), photos, function (p, i) {
+      var btn = el("button", { class: "gallery-item", type: "button", "aria-label": "Enlarge: " + (p.alt || "photo " + (i + 1)) }, [
+        el("img", { src: url(p.thumb || p.src), alt: p.alt || "", loading: "lazy", decoding: "async" })
+      ]);
+      btn.addEventListener("click", function () { open(i, btn); });
+      return btn;
+    }, "Photos coming soon.");
+  }
+
+  // Highlights slideshow: one big photo with its neighbours peeking in,
+  // a slow zoom, and progress dots. Auto-advances every SLIDE_SECONDS;
+  // pauses when off screen, when the viewer is open, or when the visitor
+  // presses pause. Visitors with reduced motion get no autoplay or zoom.
+  var SLIDE_SECONDS = 5;
+
+  function renderSlideshow(root, photos) {
+    if (!root) return;
+    if (!photos || !photos.length) { root.appendChild(el("p", { class: "empty", text: "Photos coming soon." })); return; }
+
+    var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var state = { index: 0, userPaused: reduced, offscreen: false, viewerOpen: false };
+    root.style.setProperty("--slide-duration", SLIDE_SECONDS + "s");
+    root.setAttribute("aria-roledescription", "carousel");
+
+    var track = el("ol", { class: "slideshow-track" });
+    var viewport = el("div", { class: "slideshow-viewport" }, [track]);
+    var dots = el("div", { class: "slideshow-dots" });
+    var playBtn = el("button", { class: "slideshow-play", type: "button" }, [el("span", { class: "play-glyph", "aria-hidden": "true" })]);
+    root.appendChild(viewport);
+    root.appendChild(el("div", { class: "slideshow-bar" }, [el("div", { class: "slideshow-controls" }, [dots, playBtn])]));
+
+    var open = setupLightbox(photos, {
+      onOpen: function () { state.viewerOpen = true; update(); },
+      onClose: function (i) { state.viewerOpen = false; go(i, true); }
+    });
+
+    var slides = photos.map(function (p, i) {
+      var bg = el("span", { class: "slide-bg", "aria-hidden": "true" });
+      var img = el("img", { alt: p.alt || "", decoding: "async", draggable: "false" });
+      var cap = p.caption ? el("span", { class: "slide-caption", text: p.caption, "aria-hidden": "true" }) : null;
+      var btn = el("button", { class: "slide-btn", type: "button", "aria-label": (p.alt || "Photo " + (i + 1)) + " (open full size)" }, [bg, img, cap]);
+      btn.addEventListener("click", function () {
+        if (dragged) return;
+        if (i === state.index) open(i, btn); else go(i);
+      });
+      var li = el("li", { class: "slide", "aria-roledescription": "slide", "aria-label": (i + 1) + " of " + photos.length }, [btn]);
+      track.appendChild(li);
+      return { li: li, img: img, bg: bg, loaded: false };
+    });
+
+    var dotBtns = photos.map(function (p, i) {
+      var d = el("button", { class: "dot", type: "button", "aria-label": "Show photo " + (i + 1) }, [el("span", { class: "dot-fill" })]);
+      d.addEventListener("click", function () { go(i); });
+      dots.appendChild(d);
+      return d;
+    });
+
+    function load(i) {
+      var s = slides[(i + slides.length) % slides.length];
+      if (!s || s.loaded) return;
+      var p = photos[(i + slides.length) % slides.length];
+      s.img.src = url(p.src);
+      s.bg.style.backgroundImage = "url('" + url(p.thumb || p.src) + "')";
+      s.loaded = true;
+    }
+
+    function position(animate) {
+      var s = slides[state.index].li;
+      var x = s.offsetLeft - (viewport.clientWidth - s.offsetWidth) / 2;
+      track.style.transition = animate ? "" : "none";
+      track.style.transform = "translate3d(" + (-x) + "px,0,0)";
+    }
+
+    function go(i, instant) {
+      state.index = (i + slides.length) % slides.length;
+      slides.forEach(function (s, n) {
+        var active = n === state.index;
+        s.li.classList.toggle("is-active", active);
+        s.li.querySelector(".slide-btn").tabIndex = active ? 0 : -1;
+      });
+      dotBtns.forEach(function (d, n) {
+        var active = n === state.index;
+        d.classList.remove("is-active");
+        d.setAttribute("aria-current", active ? "true" : "false");
+      });
+      // Restart the progress-fill animation on the new active dot.
+      void dots.offsetWidth;
+      dotBtns[state.index].classList.add("is-active");
+      [0, 1, -1, 2].forEach(function (o) { load(state.index + o); });
+      position(!instant);
+    }
+
+    function update() {
+      var paused = state.userPaused || state.offscreen || state.viewerOpen || document.hidden;
+      root.classList.toggle("is-paused", paused);
+      playBtn.setAttribute("aria-label", state.userPaused ? "Play slideshow" : "Pause slideshow");
+      playBtn.classList.toggle("is-playing", !state.userPaused);
+    }
+
+    // When the active dot's progress fill finishes, move to the next photo.
+    dots.addEventListener("animationend", function (e) {
+      if (e.target.classList.contains("dot-fill") && e.target.parentNode === dotBtns[state.index]) go(state.index + 1);
+    });
+
+    playBtn.addEventListener("click", function () { state.userPaused = !state.userPaused; update(); });
+    root.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowRight") { go(state.index + 1); e.preventDefault(); }
+      if (e.key === "ArrowLeft") { go(state.index - 1); e.preventDefault(); }
+    });
+
+    // Swipe / drag between photos.
+    var startX = null, dragged = false;
+    viewport.addEventListener("pointerdown", function (e) { startX = e.clientX; dragged = false; });
+    viewport.addEventListener("pointerup", function (e) {
+      if (startX === null) return;
+      var dx = e.clientX - startX;
+      if (Math.abs(dx) > 40) { dragged = true; go(state.index + (dx < 0 ? 1 : -1)); setTimeout(function () { dragged = false; }, 0); }
+      startX = null;
+    });
+    viewport.addEventListener("pointercancel", function () { startX = null; });
+
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (entries) {
+        state.offscreen = !entries[0].isIntersecting; update();
+      }, { threshold: 0.35 }).observe(root);
+    }
+    document.addEventListener("visibilitychange", update);
+    var resizeTimer;
+    window.addEventListener("resize", function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function () { position(false); }, 100);
+    });
+
+    update();
+    go(0, true);
   }
 
   // Cards linking to each photography category page.
@@ -370,7 +507,7 @@
   var page = document.body.getAttribute("data-page");
   if (page === "film") renderFilm();
   if (page === "photography") {
-    renderPhotos(content.photos);
+    renderSlideshow(document.getElementById("highlights"), content.photos || []);
     renderPhotoCategories(document.getElementById("photo-categories"));
   }
   if (page === "photo-category") renderPhotoCategoryPage();

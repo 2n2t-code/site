@@ -313,6 +313,108 @@ main { display: block; }
 .back-link a { color: var(--color-muted); text-decoration: none; }
 .back-link a:hover { color: var(--color-accent); }
 
+/* Highlights slideshow (Apple-style) */
+.slideshow {
+  --slide-w: min(84vw, calc(56svh * 4 / 5));
+  --slide-ratio: 4 / 5;
+  --ease-slide: cubic-bezier(0.65, 0, 0.35, 1);
+  position: relative;
+}
+.slideshow:focus-within { outline: none; }
+.slideshow-viewport { overflow: hidden; touch-action: pan-y; cursor: grab; user-select: none; -webkit-user-select: none; }
+.slideshow-viewport:active { cursor: grabbing; }
+.slideshow-track {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; gap: var(--space-4);
+  transition: transform 0.9s var(--ease-slide);
+  will-change: transform;
+}
+.slide {
+  flex: 0 0 var(--slide-w); aspect-ratio: var(--slide-ratio);
+  opacity: 0.35; transform: scale(0.94);
+  transition: opacity 0.9s var(--ease-slide), transform 0.9s var(--ease-slide);
+}
+.slide.is-active { opacity: 1; transform: none; }
+.slide-btn {
+  position: relative; display: block; width: 100%; height: 100%;
+  padding: 0; border: 0; border-radius: 18px; overflow: hidden; cursor: pointer;
+  background: var(--color-surface); isolation: isolate;
+}
+.slide:not(.is-active) .slide-btn { cursor: pointer; }
+/* The photo is shown whole; a blurred copy fills the frame behind it. */
+.slide-bg {
+  position: absolute; inset: -40px; z-index: -1;
+  background-size: cover; background-position: center;
+  filter: blur(30px) brightness(0.45) saturate(1.2);
+}
+.slide-btn img { width: 100%; height: 100%; object-fit: contain; transform-origin: center; }
+.slide.is-active .slide-btn img {
+  animation: slide-zoom calc(var(--slide-duration, 5s) + 1.5s) ease-out both;
+}
+@keyframes slide-zoom { from { transform: scale(1); } to { transform: scale(1.06); } }
+
+/* Caption sits on the photo, fading in with the active slide. */
+.slide-caption {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: var(--space-7) var(--space-5) var(--space-4);
+  text-align: left; font-size: var(--text-sm); font-weight: 600; color: var(--color-text);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+  opacity: 0; transform: translateY(6px);
+  transition: opacity 0.6s ease 0.3s, transform 0.6s ease 0.3s;
+}
+.slide.is-active .slide-caption { opacity: 1; transform: none; }
+.slideshow-bar {
+  max-width: calc(100% - 2 * var(--gutter)); margin: var(--space-4) auto 0;
+  display: flex; justify-content: center;
+}
+.slideshow-controls { display: flex; align-items: center; gap: var(--space-3); min-width: 0; }
+.slideshow-dots {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--color-surface-2); padding: 12px 14px; border-radius: 999px;
+}
+.dot {
+  position: relative; flex: none; width: 7px; height: 7px; padding: 0; border: 0; cursor: pointer;
+  border-radius: 999px; overflow: hidden; background: rgba(255, 255, 255, 0.35);
+  transition: width 0.5s var(--ease-slide), background-color 0.3s;
+}
+.dot:hover { background: rgba(255, 255, 255, 0.6); }
+.dot.is-active { width: 32px; background: rgba(255, 255, 255, 0.35); }
+.dot-fill {
+  position: absolute; inset: 0; border-radius: inherit;
+  background: var(--color-text); transform: scaleX(0); transform-origin: left;
+}
+.dot.is-active .dot-fill { animation: dot-progress var(--slide-duration, 5s) linear forwards; }
+@keyframes dot-progress { to { transform: scaleX(1); } }
+.slideshow.is-paused .dot-fill,
+.slideshow.is-paused .slide.is-active .slide-btn img { animation-play-state: paused; }
+
+.slideshow-play {
+  width: 40px; height: 40px; flex: none; border: 0; cursor: pointer; border-radius: 50%;
+  background: var(--color-surface-2); display: grid; place-items: center;
+}
+.slideshow-play:hover { background: var(--color-border); }
+.play-glyph { /* triangle = play */
+  width: 0; height: 0; margin-left: 3px;
+  border-style: solid; border-width: 7px 0 7px 11px;
+  border-color: transparent transparent transparent var(--color-text);
+}
+.slideshow-play.is-playing .play-glyph { /* two bars = pause */
+  width: 10px; height: 13px; margin: 0; border: 0;
+  border-left: 3px solid var(--color-text); border-right: 3px solid var(--color-text);
+}
+
+@media (min-width: 640px) {
+  .slideshow { --slide-w: min(80vw, 1100px, calc(50svh * 16 / 9)); --slide-ratio: 16 / 9; }
+  .dot { width: 8px; height: 8px; }
+  .dot.is-active { width: 40px; }
+  .slideshow-dots { gap: 8px; padding: 12px 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .slideshow-track, .slide { transition-duration: 0.01s !important; }
+}
+.photography-intro { padding-bottom: var(--space-5); }
+.slideshow-section { padding-bottom: var(--space-6); }
+
 /* Lightbox */
 .lightbox {
   position: fixed; inset: 0; z-index: 200;
