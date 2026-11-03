@@ -31,12 +31,16 @@
   <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
 
   <link rel="stylesheet" href="../style.css">
+  <script>document.documentElement.classList.add("js")</script>
 </head>
 <body data-root="../" data-page="film">
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header">
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-menu" aria-label="Open menu">
+      <span class="menu-icon" aria-hidden="true"><span></span></span>
+    </button>
     <a class="logo" href="../" aria-label="2N2T home">2N<span>2</span>T</a>
-    <nav class="site-nav" aria-label="Main">
+    <nav class="site-nav" id="site-menu" aria-label="Main">
       <ul>
         <li><a href="../film/" aria-current="page">Film</a></li>
         <li><a href="../photography/">Photography</a></li>
@@ -64,7 +68,7 @@
   </main>
 
   <footer class="site-footer">
-    <a class="footer-email" href="mailto:hello@2n2t.com">hello@2n2t.com</a>
+    <a class="footer-email" href="mailto:2n2tproductions@gmail.com">2n2tproductions@gmail.com</a>
     <ul class="social">
       <li><a href="https://www.instagram.com/2n2tproductions/" rel="me noopener" target="_blank">Instagram</a></li>
       <li><a href="https://www.youtube.com/@2n2tproductions" rel="me noopener" target="_blank">YouTube</a></li>

@@ -100,6 +100,9 @@ The video never plays sound, and it's skipped for visitors who use reduced motio
 
 These are plain HTML in each page: `index.html`, `film/`, `photography/`, `music/` and `404.html`.
 To change the email or social links, find and replace them across those five files.
+The Instagram link is different on each page on purpose.
+
+The menu is the three-line button at the top left. To add a page to it, add a `<li><a href="...">Name</a></li>` line inside `<nav class="site-nav">` on every page.
 
 ### Look and feel
 

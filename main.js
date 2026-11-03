@@ -268,6 +268,32 @@
   }
 
   /* ---------- Shared ---------- */
+  // Dropdown menu: opens from the three-line button, closes on Esc,
+  // on a click outside the menu, or when a link is chosen.
+  var toggle = document.querySelector(".menu-toggle");
+  var menu = document.getElementById("site-menu");
+  if (toggle && menu) {
+    var setMenu = function (open) {
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+      menu.classList.toggle("is-open", open);
+      if (open) { var first = menu.querySelector("a"); if (first) first.focus(); }
+    };
+    toggle.addEventListener("click", function () {
+      setMenu(toggle.getAttribute("aria-expanded") !== "true");
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && menu.classList.contains("is-open")) { setMenu(false); toggle.focus(); }
+    });
+    document.addEventListener("click", function (e) {
+      if (menu.classList.contains("is-open") && !menu.contains(e.target) && !toggle.contains(e.target)) setMenu(false);
+    });
+    menu.addEventListener("click", function (e) { if (e.target.closest("a")) setMenu(false); });
+    // Clicks inside embedded players (Bandcamp, Spotify, YouTube) don't reach
+    // the page, but they do take focus away from it, so close then too.
+    window.addEventListener("blur", function () { if (menu.classList.contains("is-open")) setMenu(false); });
+  }
+
   var year = document.getElementById("year");
   if (year) year.textContent = new Date().getFullYear();
 
