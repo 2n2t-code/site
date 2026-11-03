@@ -130,51 +130,39 @@ window.SITE_CONTENT = {
                    and paste it between backticks ` ` like the example below.
        tracklist -> true to show the full album track list (albums only)
        src      -> OR a .mp3 (or .m4a/.ogg/.wav) path or URL
-       title, artist, year, duration -> shown on the track
-       notes -> a sentence or two about the track
+       title, artist, year, duration -> shown on the track (leave out any you don't want)
+       notes -> a sentence or two about the release
      ------------------------------------------------------------------------ */
   tracks: [
-    // EXAMPLE Bandcamp entry: remove the two slashes at the start of each
-    // line below and replace the embed code with your own.
-    // {
-    //   bandcamp: `<iframe style="border: 0; width: 100%; height: 120px;" src="https://bandcamp.com/EmbeddedPlayer/album=1234567890/size=large/bgcol=ffffff/linkcol=0687f5/tracklist=false/artwork=small/transparent=true/" seamless><a href="https://2n2t.bandcamp.com/album/example">Example by 2N2T</a></iframe>`,
-    //   title: "My Bandcamp Release",
-    //   artist: "2N2T",
-    //   year: "2026",
-    //   notes: "Out now on Bandcamp."
-    // },
-
     {
-      src: "assets/audio/track-1.mp3",
-      title: "Placeholder Track One",
+      bandcamp: `<iframe style="border: 0; width: 350px; height: 442px;" src="https://bandcamp.com/EmbeddedPlayer/track=1068435607/size=large/bgcol=ffffff/linkcol=333333/tracklist=false/transparent=true/" seamless><a href="https://2n2t.bandcamp.com/track/chugga">Chugga by 2N2T</a></iframe>`,
+      title: "Chugga",
       artist: "2N2T",
-      year: "2026",
-      duration: "0:06",
-      notes: "Recorded live in one take. Replace this with a note about the track."
+      notes: ""
     },
     {
-      src: "assets/audio/track-2.mp3",
-      title: "Placeholder Track Two",
-      artist: "2N2T feat. Guest",
-      year: "2025",
-      duration: "0:06",
-      notes: "Mixed and mastered at a studio in Manchester."
+      bandcamp: `<iframe style="border: 0; width: 350px; height: 442px;" src="https://bandcamp.com/EmbeddedPlayer/track=2351636420/size=large/bgcol=ffffff/linkcol=333333/tracklist=false/transparent=true/" seamless><a href="https://2n2t.bandcamp.com/track/highfields">Highfields by 2N2T</a></iframe>`,
+      title: "Highfields",
+      artist: "2N2T",
+      notes: ""
     },
     {
-      src: "assets/audio/track-3.mp3",
-      title: "Placeholder Track Three",
+      bandcamp: `<iframe style="border: 0; width: 350px; height: 720px;" src="https://bandcamp.com/EmbeddedPlayer/album=2459414514/size=large/bgcol=ffffff/linkcol=333333/transparent=true/" seamless><a href="https://2n2t.bandcamp.com/album/lkdwn-demos">LKDWN (demos) by 2N2T</a></iframe>`,
+      tracklist: true,
+      title: "LKDWN (demos)",
       artist: "2N2T",
-      year: "2025",
-      duration: "0:06",
-      notes: "Score written for a short film."
+      notes: ""
     },
     {
-      src: "assets/audio/track-4.mp3",
-      title: "Placeholder Track Four",
+      bandcamp: `<iframe style="border: 0; width: 350px; height: 753px;" src="https://bandcamp.com/EmbeddedPlayer/album=3959238659/size=large/bgcol=ffffff/linkcol=333333/transparent=true/" seamless><a href="https://2n2t.bandcamp.com/album/twin-peaks-ep">TWIN PEAKS EP by 2N2T</a></iframe>`,
+      tracklist: true,
+      title: "TWIN PEAKS EP",
       artist: "2N2T",
-      year: "2024",
-      duration: "0:06",
       notes: ""
     }
+
+    // To add your own audio file instead of Bandcamp, add a comma after the
+    // last } above and an entry like this:
+    // { src: "assets/audio/my-track.mp3", title: "Track", artist: "2N2T", year: "2026", notes: "" }
   ]
 };

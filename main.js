@@ -189,12 +189,22 @@
     });
   }
 
+  // Uses the link inside Bandcamp's embed code (or a "link" you set yourself).
+  function bandcampLink(t) {
+    var m = t.link ? [0, t.link] : String(t.bandcamp || "").match(/href="(https:\/\/[^"]+)"/);
+    if (!m) return null;
+    return el("p", { class: "meta" }, [
+      el("a", { href: m[1], target: "_blank", rel: "noopener", text: "Buy / listen on Bandcamp \u2192" })
+    ]);
+  }
+
   function renderMusic() {
     renderList(document.getElementById("tracks"), content.tracks, function (t) {
       return el("li", { class: "track" }, [
         el("div", { class: "track-head" }, [el("h2", { text: t.title || "Untitled" })]),
         el("p", { class: "meta", text: metaLine(t, ["artist", "year", "duration"]) }),
         t.notes ? el("p", { class: "notes", text: t.notes }) : null,
+        bandcampLink(t),
         t.bandcamp ? bandcampPlayer(t) : el("audio", { controls: true, preload: "none", src: url(t.src), "aria-label": t.title })
       ]);
     }, "Tracks coming soon.");
