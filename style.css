@@ -46,6 +46,7 @@
   /* Layout */
   --max-width: 1200px;
   --header-height: 64px;
+  --logo-height: 48px;
   /* Homepage showreel: the widest picture shape inside the YouTube video.
      2.4 crops black bars from cinemascope (2.39:1) footage on desktop.
      Use 1.78 if the video has no black bars. */
@@ -99,13 +100,9 @@ h1, h2, h3 {
   -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--color-border);
 }
-.logo {
-  grid-column: 2; grid-row: 1;
-  font-family: var(--font-display);
-  font-weight: 800; font-size: var(--text-lg);
-  letter-spacing: 0.04em; text-decoration: none;
-}
-.logo span { color: var(--color-accent); }
+.logo { grid-column: 2; grid-row: 1; display: block; line-height: 0; }
+.logo img { height: var(--logo-height); width: auto; }
+.logo:hover img { opacity: 0.85; }
 
 /* Hamburger button, top right (three lines → X when open) */
 .menu-toggle {
@@ -421,11 +418,11 @@ main { display: block; }
   .panel:hover, .panel:focus-visible { flex-grow: 1.6; }
   /* Desktop: size the video so its picture (not its black bars) covers the panel. */
   .panel-yt iframe {
-    width: max(100cqw, calc(var(--showreel-ratio) * 100cqh));
-    height: calc(max(100cqw, calc(var(--showreel-ratio) * 100cqh)) * 9 / 16);
+    width: max(100cqw, calc(max(var(--showreel-ratio), 1.7778) * 100cqh));
+    height: calc(max(100cqw, calc(max(var(--showreel-ratio), 1.7778) * 100cqh)) * 9 / 16);
     transform: translate(-50%, -50%) scale(1.08);
   }
-  .panel-yt-poster { scale: calc(var(--showreel-ratio) * 9 / 16); }
+  .panel-yt-poster { scale: max(1, calc(var(--showreel-ratio) * 9 / 16)); }
   .featured-grid { grid-template-columns: repeat(2, 1fr); }
   .featured-grid > :only-child { grid-column: 1 / -1; }
   .grid { grid-template-columns: repeat(3, 1fr); }
