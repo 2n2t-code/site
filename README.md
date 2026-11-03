@@ -7,7 +7,8 @@ index.html              Homepage (Film / Photography / Music panels)
 about/index.html        About (bio, services)
 contact/index.html      Contact details + form (Netlify Forms)
 film/index.html         Film & productions
-photography/index.html  Gallery + lightbox
+photography/index.html  Highlights gallery + category cards
+photography/*/          Category pages (weddings, landscape, portraits, music, street, film)
 music/index.html        Track list
 404.html                Not-found page
 content.js              ← ALL videos, photos and tracks live here
@@ -59,6 +60,16 @@ Keep self-hosted MP4s small (H.264, `-movflags +faststart`). Big files are bette
 - `src` is the large image shown in the lightbox (about 1600–2000px on the long edge).
 - `thumb` is the grid image (about 800px wide). It's optional, but much faster.
 - Always write a real `alt` description.
+
+The `photos` list is the **Highlights** gallery at the top of `/photography/`.
+
+**Category galleries:** the `photoCategories` list in `content.js` holds six categories: Weddings, Landscape, Portraits, Music, Street and Film. Each has its own page at `/photography/<slug>/`, and the Photography page lists them as cards under Highlights. To add photos to a category, add entries to that category's `photos` list. They use the same format as above.
+
+To add a brand-new category:
+1. Copy one of the folders (for example `photography/street/`) and rename it, say to `photography/events/`.
+2. In the copy's `index.html`, change `data-category="street"` to `data-category="events"`. Also change the page title, description, `canonical`/`og:url` and the `<h1>`.
+3. Add a matching entry to `photoCategories` in `content.js` with `slug: "events"`.
+4. Add the new page's address to `sitemap.xml`.
 
 Lightbox controls: click to open, ← / → to move, Esc to close, swipe on phones.
 

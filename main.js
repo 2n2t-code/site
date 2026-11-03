@@ -100,8 +100,8 @@
   }
 
   /* ---------- Photography + lightbox ---------- */
-  function renderPhotos() {
-    var photos = content.photos || [];
+  function renderPhotos(photos) {
+    photos = photos || [];
     var gallery = document.getElementById("gallery");
     renderList(gallery, photos, function (p, i) {
       var btn = el("button", { class: "gallery-item", type: "button", "aria-label": "Enlarge: " + (p.alt || "photo " + (i + 1)) }, [
@@ -167,6 +167,37 @@
       if (Math.abs(dx) > 50) show(current + (dx < 0 ? 1 : -1));
       touchX = null;
     });
+  }
+
+  // Cards linking to each photography category page.
+  function renderPhotoCategories(target, skipSlug) {
+    if (!target) return;
+    var cats = (content.photoCategories || []).filter(function (c) { return c.slug !== skipSlug; });
+    renderList(target, cats, function (c) {
+      var first = (c.photos || [])[0] || {};
+      var cover = c.cover || first.thumb || first.src;
+      var n = (c.photos || []).length;
+      return el("a", { class: "category-card", href: ROOT + "photography/" + c.slug + "/" }, [
+        cover ? el("img", { src: url(cover), alt: "", loading: "lazy", decoding: "async" }) : null,
+        el("span", { class: "category-label" }, [
+          el("span", { class: "category-title", text: c.label || c.title }),
+          el("span", { class: "category-count", text: n + (n === 1 ? " photo" : " photos") })
+        ])
+      ]);
+    }, "");
+  }
+
+  function renderPhotoCategoryPage() {
+    var slug = document.body.getAttribute("data-category");
+    var cat = (content.photoCategories || []).filter(function (c) { return c.slug === slug; })[0];
+    var intro = document.getElementById("category-intro");
+    if (!cat) {
+      if (intro) intro.textContent = "This gallery isn't set up yet. Add it to photoCategories in content.js.";
+      return;
+    }
+    if (intro && cat.intro) intro.textContent = cat.intro;
+    renderPhotos(cat.photos);
+    renderPhotoCategories(document.getElementById("more-categories"), slug);
   }
 
   /* ---------- Music ---------- */
@@ -338,6 +369,10 @@
 
   var page = document.body.getAttribute("data-page");
   if (page === "film") renderFilm();
-  if (page === "photography") renderPhotos();
+  if (page === "photography") {
+    renderPhotos(content.photos);
+    renderPhotoCategories(document.getElementById("photo-categories"));
+  }
+  if (page === "photo-category") renderPhotoCategoryPage();
   if (page === "music") renderMusic();
 })();
