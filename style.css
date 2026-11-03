@@ -50,7 +50,7 @@
   /* Homepage showreel: the widest picture shape inside the YouTube video.
      2.4 crops black bars from cinemascope (2.39:1) footage on desktop.
      Use 1.78 if the video has no black bars. */
-  --showreel-ratio: 1;
+  --showreel-ratio: 2.4;
   --radius: 6px;
   --transition: 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
