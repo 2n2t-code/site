@@ -46,6 +46,10 @@
   /* Layout */
   --max-width: 1200px;
   --header-height: 64px;
+  /* Homepage showreel: the widest picture shape inside the YouTube video.
+     2.4 crops black bars from cinemascope (2.39:1) footage on desktop.
+     Use 1.78 if the video has no black bars. */
+  --showreel-ratio: 2.4;
   --radius: 6px;
   --transition: 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
@@ -415,6 +419,13 @@ main { display: block; }
   .panels { flex-direction: row; height: calc(100vh - var(--header-height)); height: calc(100svh - var(--header-height)); }
   .panel { min-height: 0; }
   .panel:hover, .panel:focus-visible { flex-grow: 1.6; }
+  /* Desktop: size the video so its picture (not its black bars) covers the panel. */
+  .panel-yt iframe {
+    width: max(100cqw, calc(var(--showreel-ratio) * 100cqh));
+    height: calc(max(100cqw, calc(var(--showreel-ratio) * 100cqh)) * 9 / 16);
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+  .panel-yt-poster { scale: calc(var(--showreel-ratio) * 9 / 16); }
   .featured-grid { grid-template-columns: repeat(2, 1fr); }
   .featured-grid > :only-child { grid-column: 1 / -1; }
   .grid { grid-template-columns: repeat(3, 1fr); }
