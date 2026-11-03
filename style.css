@@ -491,6 +491,7 @@ main { display: block; }
 .about-portrait { width: 100%; max-width: 480px; height: auto; border-radius: var(--radius); }
 .about-text { max-width: 65ch; }
 .about-text p { color: var(--color-muted); }
+.about-text p a:not(.button) { color: var(--color-accent); }
 .about-text .lede { font-size: var(--text-lg); color: var(--color-text); line-height: 1.5; margin-top: 0; }
 .about-heading {
   font-size: var(--text-sm); text-transform: uppercase; letter-spacing: 0.15em;
