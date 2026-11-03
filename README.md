@@ -78,6 +78,16 @@ The site picks out the album/track number and shows Bandcamp's large player with
   year: "2026", duration: "3:41", notes: "A sentence about it." }
 ```
 
+Releases are split into two rows automatically: Bandcamp albums and EPs go under **Albums & EPs**, and everything else under **Singles**. Add `type: "album"` or `type: "single"` to a release to override this.
+
+**Bands:** the `bands` list in `content.js` sets the Spotify players under **Bands**. On Spotify, open the band and click **… → Share → Copy link to artist**, then paste the link:
+
+```js
+{ name: "Vordermann", spotify: "https://open.spotify.com/artist/...", notes: "" }
+```
+
+Album, track and playlist links work too, and so does Spotify's embed code.
+
 Only one track plays at a time. Audio downloads only when someone presses play.
 
 ### Homepage panels

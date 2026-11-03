@@ -204,17 +204,62 @@
     ]);
   }
 
+  function trackCard(t) {
+    return el("li", { class: "track" + (t.bandcamp ? " track--bandcamp" : "") }, [
+      t.bandcamp ? bandcampPlayer(t) : null,
+      el("div", { class: "track-head" }, [el("h3", { text: t.title || "Untitled" })]),
+      el("p", { class: "meta", text: metaLine(t, ["artist", "year", "duration"]) }),
+      t.notes ? el("p", { class: "notes", text: t.notes }) : null,
+      bandcampLink(t),
+      t.bandcamp ? null : el("audio", { controls: true, preload: "none", src: url(t.src), "aria-label": t.title })
+    ]);
+  }
+
+  // Accepts a Spotify share link (https://open.spotify.com/artist/...) or
+  // Spotify's embed code, and turns it into Spotify's embedded player.
+  function spotifyPlayer(b) {
+    var m = String(b.spotify || "").match(/(artist|album|track|playlist)\/([A-Za-z0-9]+)/);
+    if (!m) return el("p", { class: "notes", text: "Spotify player coming soon." });
+    return el("iframe", {
+      class: "spotify",
+      src: "https://open.spotify.com/embed/" + m[1] + "/" + m[2] + "?theme=0",
+      title: b.name + " on Spotify",
+      allow: "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture",
+      loading: "lazy"
+    });
+  }
+
+  function hideIfEmpty(id, items) {
+    var section = document.getElementById(id);
+    if (section && (!items || !items.length)) section.hidden = true;
+  }
+
   function renderMusic() {
-    renderList(document.getElementById("tracks"), content.tracks, function (t) {
-      return el("li", { class: "track" + (t.bandcamp ? " track--bandcamp" : "") }, [
-        t.bandcamp ? bandcampPlayer(t) : null,
-        el("div", { class: "track-head" }, [el("h2", { text: t.title || "Untitled" })]),
-        el("p", { class: "meta", text: metaLine(t, ["artist", "year", "duration"]) }),
-        t.notes ? el("p", { class: "notes", text: t.notes }) : null,
-        bandcampLink(t),
-        t.bandcamp ? null : el("audio", { controls: true, preload: "none", src: url(t.src), "aria-label": t.title })
+    // Releases are sorted automatically: Bandcamp albums/EPs on one row,
+    // singles (Bandcamp tracks or your own audio files) on another.
+    // Set type: "album" or type: "single" on a release to override.
+    var tracks = content.tracks || [];
+    function isAlbum(t) {
+      if (t.type) return t.type === "album";
+      return /album=\d+/.test(String(t.bandcamp || ""));
+    }
+    var albums = tracks.filter(isAlbum);
+    var singles = tracks.filter(function (t) { return !isAlbum(t); });
+
+    renderList(document.getElementById("albums"), albums, trackCard, "");
+    renderList(document.getElementById("singles"), singles, trackCard, "");
+    hideIfEmpty("albums-section", albums);
+    hideIfEmpty("singles-section", singles);
+
+    var bands = content.bands || [];
+    renderList(document.getElementById("bands"), bands, function (b) {
+      return el("article", { class: "band" }, [
+        el("h3", { text: b.name }),
+        b.notes ? el("p", { class: "notes", text: b.notes }) : null,
+        spotifyPlayer(b)
       ]);
-    }, "Tracks coming soon.");
+    }, "");
+    hideIfEmpty("bands-section", bands);
 
     // Only one track plays at a time.
     document.addEventListener("play", function (e) {

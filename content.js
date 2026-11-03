@@ -123,8 +123,11 @@ window.SITE_CONTENT = {
   ],
 
   /* ------------------------------------------------------------------------
-     MUSIC
-     Each track uses EITHER a Bandcamp player OR your own audio file:
+     MUSIC — SOLO PRODUCTIONS
+     Releases are sorted onto two rows automatically: Bandcamp albums/EPs
+     go under "Albums & EPs", everything else under "Singles". To override,
+     add  type: "album"  or  type: "single"  to a release.
+     Each release uses EITHER a Bandcamp player OR your own audio file:
        bandcamp -> on Bandcamp, open the track/album, click Share/Embed,
                    choose any player style, then copy the code it gives you
                    and paste it between backticks ` ` like the example below.
@@ -162,5 +165,26 @@ window.SITE_CONTENT = {
     // To add your own audio file instead of Bandcamp, add a comma after the
     // last } above and an entry like this:
     // { src: "assets/audio/my-track.mp3", title: "Track", artist: "2N2T", year: "2026", notes: "" }
+  ],
+
+  /* ------------------------------------------------------------------------
+     BANDS (shown under "Bands" on the Music page)
+       name    -> band name
+       spotify -> the band's Spotify link. On Spotify, open the artist (or an
+                  album/track/playlist), click ... → Share → Copy link, and
+                  paste it here. Spotify's embed code also works.
+       notes   -> optional sentence about the band / your role in it
+     ------------------------------------------------------------------------ */
+  bands: [
+    {
+      name: "Vordermann",
+      spotify: "https://open.spotify.com/artist/6q8MQV9ZLqQtv1UN44SgwN",
+      notes: ""
+    },
+    {
+      name: "This Sun No More",
+      spotify: "https://open.spotify.com/artist/5z5jmWVA2F4Pcpx7eXJfTP",
+      notes: ""
+    }
   ]
 };
