@@ -69,7 +69,7 @@ Lightbox controls: click to open, ← / → to move, Esc to close, swipe on phon
   title: "My EP", artist: "2N2T", year: "2026", notes: "Out now." }
 ```
 
-The site picks out the album/track number and restyles the player to match the site's colours. Add `tracklist: true` to show an album's full track list.
+The site picks out the album/track number and shows Bandcamp's large player with full artwork, recoloured to match the site. It keeps the player height Bandcamp gave you so the artwork fits. Albums show their track list. Add `tracklist: false` to hide it.
 
 **Your own audio file:**
 

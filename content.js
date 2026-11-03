@@ -128,7 +128,7 @@ window.SITE_CONTENT = {
        bandcamp -> on Bandcamp, open the track/album, click Share/Embed,
                    choose any player style, then copy the code it gives you
                    and paste it between backticks ` ` like the example below.
-       tracklist -> true to show the full album track list (albums only)
+       tracklist -> false to hide an album's track list (shown by default)
        src      -> OR a .mp3 (or .m4a/.ogg/.wav) path or URL
        title, artist, year, duration -> shown on the track (leave out any you don't want)
        notes -> a sentence or two about the release
@@ -148,14 +148,12 @@ window.SITE_CONTENT = {
     },
     {
       bandcamp: `<iframe style="border: 0; width: 350px; height: 720px;" src="https://bandcamp.com/EmbeddedPlayer/album=2459414514/size=large/bgcol=ffffff/linkcol=333333/transparent=true/" seamless><a href="https://2n2t.bandcamp.com/album/lkdwn-demos">LKDWN (demos) by 2N2T</a></iframe>`,
-      tracklist: true,
       title: "LKDWN (demos)",
       artist: "2N2T",
       notes: ""
     },
     {
       bandcamp: `<iframe style="border: 0; width: 350px; height: 753px;" src="https://bandcamp.com/EmbeddedPlayer/album=3959238659/size=large/bgcol=ffffff/linkcol=333333/transparent=true/" seamless><a href="https://2n2t.bandcamp.com/album/twin-peaks-ep">TWIN PEAKS EP by 2N2T</a></iframe>`,
-      tracklist: true,
       title: "TWIN PEAKS EP",
       artist: "2N2T",
       notes: ""

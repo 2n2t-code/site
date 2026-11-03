@@ -253,14 +253,14 @@ main { display: block; }
 .no-scroll { overflow: hidden; }
 
 /* ---------- Music ---------- */
-.track-list { list-style: none; margin: 0; padding: 0; counter-reset: track; }
-.track {
-  counter-increment: track;
-  display: grid; gap: var(--space-3);
-  padding: var(--space-5) 0; border-top: 1px solid var(--color-border);
+.track-list {
+  list-style: none; margin: 0; padding: 0; counter-reset: track;
+  display: grid; gap: var(--space-7) var(--space-6);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 350px));
+  align-items: start;
 }
-.track:last-child { border-bottom: 1px solid var(--color-border); }
-.track-head { display: flex; gap: var(--space-4); align-items: baseline; }
+.track { counter-increment: track; display: grid; gap: var(--space-2); align-content: start; }
+.track-head { display: flex; gap: var(--space-3); align-items: baseline; }
 .track-head::before {
   content: counter(track, decimal-leading-zero);
   font-family: var(--font-mono); font-size: var(--text-sm); color: var(--color-accent);
@@ -269,10 +269,12 @@ main { display: block; }
 .track .meta { font-size: var(--text-sm); color: var(--color-muted); margin: 0; }
 .track .meta a { color: var(--color-accent); text-decoration: none; }
 .track .meta a:hover { text-decoration: underline; }
-.track .notes { margin: 0; color: var(--color-muted); max-width: 65ch; }
-.track audio { width: 100%; height: 40px; }
-.track .bandcamp { width: 100%; height: 120px; border: 0; border-radius: var(--radius); background: var(--color-surface); }
-.track .bandcamp--tracklist { height: 420px; }
+.track .notes { margin: 0; color: var(--color-muted); }
+.track audio { width: 100%; height: 40px; margin-top: var(--space-2); }
+.track .bandcamp {
+  width: 100%; border: 0; border-radius: var(--radius);
+  background: var(--color-surface); margin-bottom: var(--space-2);
+}
 
 /* ---------- Footer ---------- */
 .site-footer {
@@ -303,8 +305,6 @@ main { display: block; }
   .gallery { columns: 3; }
   .site-nav ul { gap: var(--space-6); }
   .site-footer { flex-direction: row; align-items: center; justify-content: space-between; }
-  .track { grid-template-columns: 1fr minmax(260px, 360px); align-items: center; column-gap: var(--space-6); }
-  .track audio, .track .bandcamp { grid-column: 2; grid-row: 1 / span 4; }
 }
 
 @media (max-width: 380px) {

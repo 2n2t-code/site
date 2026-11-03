@@ -173,17 +173,23 @@
   // Accepts the whole embed code Bandcamp gives you (or just its URL), pulls
   // out the album/track numbers, and builds a player that matches the site.
   function bandcampPlayer(t) {
-    var ids = String(t.bandcamp).match(/(album|track)=\d+/g);
+    var code = String(t.bandcamp);
+    var ids = code.match(/(album|track)=\d+/g);
     if (!ids) return el("p", { class: "notes", text: "Bandcamp embed code not recognised — check content.js." });
-    var colours = "bgcol=18181b/linkcol=f05a32/";
-    var tracklist = t.tracklist && /album=/.test(ids.join(""));
+    var isAlbum = /album=/.test(ids.join(""));
+    // Albums show their track list unless the embed code (or tracklist: false) says otherwise.
+    var tracklist = isAlbum && (t.tracklist !== undefined ? !!t.tracklist : !/tracklist=false/.test(code));
+    // Use the height Bandcamp chose for this release, so the artwork fits exactly.
+    var h = code.match(/height:\s*(\d+)px/);
+    var height = h ? +h[1] : (tracklist ? 720 : 442);
     var src = "https://bandcamp.com/EmbeddedPlayer/" + ids.join("/") +
-      "/size=large/" + colours + "tracklist=" + (tracklist ? "true" : "false") +
-      "/artwork=small/transparent=true/";
+      "/size=large/bgcol=18181b/linkcol=f05a32/tracklist=" + (tracklist ? "true" : "false") +
+      "/transparent=true/";
     return el("iframe", {
-      class: "bandcamp" + (tracklist ? " bandcamp--tracklist" : ""),
+      class: "bandcamp",
       src: src,
-      title: "Listen to " + (t.title || "this track") + " on Bandcamp",
+      style: "height:" + height + "px",
+      title: "Listen to " + (t.title || "this release") + " on Bandcamp",
       loading: "lazy",
       seamless: true
     });
@@ -200,12 +206,13 @@
 
   function renderMusic() {
     renderList(document.getElementById("tracks"), content.tracks, function (t) {
-      return el("li", { class: "track" }, [
+      return el("li", { class: "track" + (t.bandcamp ? " track--bandcamp" : "") }, [
+        t.bandcamp ? bandcampPlayer(t) : null,
         el("div", { class: "track-head" }, [el("h2", { text: t.title || "Untitled" })]),
         el("p", { class: "meta", text: metaLine(t, ["artist", "year", "duration"]) }),
         t.notes ? el("p", { class: "notes", text: t.notes }) : null,
         bandcampLink(t),
-        t.bandcamp ? bandcampPlayer(t) : el("audio", { controls: true, preload: "none", src: url(t.src), "aria-label": t.title })
+        t.bandcamp ? null : el("audio", { controls: true, preload: "none", src: url(t.src), "aria-label": t.title })
       ]);
     }, "Tracks coming soon.");
 
