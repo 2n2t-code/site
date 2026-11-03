@@ -103,7 +103,7 @@ The Video Production page still lives at `/film/`, so existing links keep workin
 
 ### About and Contact pages
 
-- **About** (`about/index.html`): the bio and the "What I do" list are plain HTML, marked with an `EDIT ME` comment. Replace the placeholder text, and replace `assets/img/about/portrait.jpg` with your photo (a 4:5 portrait, about 1000×1250).
+- **About** (`about/index.html`): the bio and the "What I do" list are plain HTML, marked with an `EDIT ME` comment. Replace the placeholder text. The portrait is `assets/img/about/alex-portrait.jpg`, a web-sized copy of your upload `alex2n2t-contact.jpg`.
 - **Contact** (`contact/index.html`): your email, location and links, plus a contact form.
   The form uses **Netlify Forms**, which is free and needs no setup beyond deploying to Netlify. Messages appear in Netlify under **Forms**. To get them by email, go to **Site configuration → Notifications → Form submission notifications**.
   After someone sends a message, they return to the Contact page and see a thank-you note.
