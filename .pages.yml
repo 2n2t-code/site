@@ -3,9 +3,16 @@
 # The website reads the same files from the data/ folder.
 
 media:
-  input: assets/img
-  output: assets/img
-  categories: [image]
+  - name: images
+    label: Images
+    input: assets/img
+    output: assets/img
+    categories: [image]
+  - name: videos
+    label: Videos
+    input: assets/video
+    output: assets/video
+    categories: [video]
 
 content:
   - name: videos
@@ -72,7 +79,14 @@ content:
       - name: showreel
         label: Showreel (YouTube link)
         type: string
-        description: Plays muted in the background, and with sound when someone presses "Watch the showreel".
+        description: Opens with sound when someone presses "Watch the showreel". Also plays muted in the background if no showreel video file is set below.
+      - name: showreelFile
+        label: Showreel background video file (optional, for HD)
+        type: file
+        options:
+          media: videos
+          categories: [video]
+        description: "For a crisp HD background: upload a 20–40 second cut to Videos → Original (1080p or higher, MP4 or MOV, no audio needed, no black bars, under 100 MB) and pick it here. About 2–3 minutes after uploading, GitHub makes the web versions; until then the YouTube showreel is used. Leave empty to use YouTube."
       - name: showreelTitle
         label: Showreel title
         type: string

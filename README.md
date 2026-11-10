@@ -19,6 +19,8 @@ assets/img/             Images (CMS uploads go here too)
 favicon.svg / .ico      Favicons
 scripts/apply_seo.py    Writes the CMS's SEO text into the pages when publishing
 scripts/make_web_images.py  Makes web-sized copies of photos added to photos/Original
+scripts/make_web_videos.py  Makes web versions of videos added to assets/video/Original
+assets/video/           Showreel video files (Original uploads + Web versions)
 .github/workflows/      GitHub's publishing steps
 robots.txt, sitemap.xml, .nojekyll
 ```
@@ -65,7 +67,9 @@ You can also edit the `data/*.json` files directly on GitHub, or ask Claude. Eve
 
 ### Homepage layout
 
-1. **Hero:** the showreel plays full-screen, muted and looping. Visitors with reduced motion or data saver on see only its thumbnail. **Watch the showreel** plays it with sound in a pop-up player.
+1. **Hero:** the showreel plays full-screen, muted and looping. Visitors with reduced motion or data saver on see a still image instead. **Watch the showreel** opens the YouTube version with sound in a pop-up player.
+   - **HD background (recommended):** in the CMS, upload a 20–40 second cut to **Videos → Original** (1080p or higher, MP4 or MOV, no black bars, under 100 MB), then pick it as **Showreel background video file** under Homepage. A few minutes later GitHub makes `name-1080.mp4` (desktops), `name-720.mp4` (phones) and `name-poster.jpg` in **Videos → Web**, and republishes the site (`scripts/make_web_videos.py`, run by `.github/workflows/web-videos.yml`). The originals are kept in the repository but left out of the published site.
+   - Until the web versions exist, or if the field is empty or the file fails, the YouTube showreel plays in the background. YouTube lowers the quality of background videos and has to zoom in to crop black bars, so a video file looks much sharper.
 2. **Selected work:** a tile for every video in Video work, in list order. The first tile runs full width. With an even number of videos the last one is full width too, and an odd number keeps the rest in pairs.
 3. **Also by 2N2T:** Photography and Music tiles (images set under **Homepage** in the CMS).
 4. **Got a project in mind?** with a link to the Contact page.

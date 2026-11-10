@@ -1,0 +1,55 @@
+# When videos are added to (or changed in) assets/video/Original — e.g. the
+# homepage showreel uploaded in Pages CMS — make web versions in
+# assets/video/Web (scripts/make_web_videos.py) and save them, then publish.
+name: Make web versions of videos
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "assets/video/Original/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: web-videos
+  cancel-in-progress: false
+
+jobs:
+  encode:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install ffmpeg
+        run: sudo apt-get update -q && sudo apt-get install -y -q ffmpeg
+      - name: Make web versions
+        run: python3 scripts/make_web_videos.py
+      - name: Save them to the repository
+        id: save
+        run: |
+          git add assets/video/Web
+          if git diff --cached --quiet; then
+            echo "Nothing new."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Make web versions of new videos"
+          for attempt in 1 2 3; do
+            if git pull --rebase origin main && git push origin HEAD:main; then
+              echo "pushed=true" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            sleep $((attempt * 5))
+          done
+          exit 1
+      # Changes saved by this workflow don't start other workflows by themselves,
+      # so start the site publish explicitly once the web versions are saved.
+      - name: Publish the site
+        if: steps.save.outputs.pushed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run pages.yml --ref main

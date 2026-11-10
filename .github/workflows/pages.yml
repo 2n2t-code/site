@@ -30,7 +30,7 @@ jobs:
       - name: Write SEO text from the CMS into the pages
         run: python3 scripts/apply_seo.py
       - name: Leave full-size originals out of the published site (it only uses the Web copies)
-        run: rm -rf assets/img/photos/Original
+        run: rm -rf assets/img/photos/Original assets/video/Original
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
