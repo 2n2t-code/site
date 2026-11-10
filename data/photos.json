@@ -1,27 +1,4 @@
 {
-  "featured": [
-    "assets/img/photos/Web/rival-consoles-live.jpg",
-    "assets/img/photos/Web/levenshulme-fireworks.jpg",
-    "assets/img/photos/Web/vw-camper-tram-trails.jpg",
-    "assets/img/photos/Web/levenshulme-station-sunset-nov26.jpg",
-    "assets/img/photos/Web/nick-fran-1.jpg",
-    "assets/img/photos/Web/english-teacher-at-soup.jpg",
-    "assets/img/photos/Web/budapest-2.jpg",
-    "assets/img/photos/Web/siv-jacobsen-at-gullivers-1.jpg",
-    "assets/img/photos/Web/black-belt-eagle-scout-at-night-and-day.jpg",
-    "assets/img/photos/Web/germanymay2026-21.jpg",
-    "assets/img/photos/Web/victoria-baths-floor-and-window.jpg",
-    "assets/img/photos/Web/ed-portrait-1.jpg",
-    "assets/img/photos/Web/euan-portrait-1.jpg",
-    "assets/img/photos/Web/stone-station-on-a-foggy-night.jpg",
-    "assets/img/photos/Web/nature-tv-gullivers-2.jpg",
-    "assets/img/photos/Web/stone-beech-xmas-light-trails.jpg",
-    "assets/img/photos/Web/glasgow-leaf-oct-2025-26.jpg",
-    "assets/img/photos/Web/spring-flowers-castlefield-viaduct.jpg",
-    "assets/img/photos/Web/budapest-bridge-view-1.jpg",
-    "assets/img/photos/Web/rail-bridge-over-trent-and-mersey-stone.jpg",
-    "assets/img/photos/Web/fabiana-palladino-at-yes-pink-room-1.jpg"
-  ],
   "highlights": [
     {
       "src": "assets/img/photos/Web/rival-consoles-live.jpg",
@@ -265,12 +242,6 @@
           "thumb": "assets/img/photos/Web/black-belt-eagle-scout-at-night-and-day-sm.jpg",
           "alt": "Black Belt Eagle Scout singing into a microphone with a pink guitar, a second guitarist beside her, lit in red",
           "caption": "Black Belt Eagle Scout at Night & Day Cafe"
-        },
-        {
-          "src": "assets/img/photos/Web/black-belt-eagle-scout-02.jpg",
-          "thumb": "assets/img/photos/Web/black-belt-eagle-scout-02-sm.jpg",
-          "alt": "Black Belt Eagle Scout singing and playing a pink electric guitar under pink stage light, surrounded by mirror-ball reflections",
-          "caption": "Black Belt Eagle Scout"
         },
         {
           "src": "assets/img/photos/Web/fabiana-palladino-at-yes-pink-room-1.jpg",
