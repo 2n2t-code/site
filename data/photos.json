@@ -61,16 +61,16 @@
       "caption": "Mannheim Water Town"
     },
     {
-      "src": "assets/img/photos/Web/ed-portrait-1.jpg",
-      "thumb": "assets/img/photos/Web/ed-portrait-1-sm.jpg",
-      "alt": "Portrait of Ed in sunglasses and a leather jacket against a lattice railing in the sun",
-      "caption": "Ed"
-    },
-    {
       "src": "assets/img/photos/Web/victoria-baths-floor-and-window.jpg",
       "thumb": "assets/img/photos/Web/victoria-baths-floor-and-window-sm.jpg",
       "alt": "Light from a stained-glass window falling across the floor in a dark corridor at Victoria Baths",
       "caption": "Victoria Baths"
+    },
+    {
+      "src": "assets/img/photos/Web/ed-portrait-1.jpg",
+      "thumb": "assets/img/photos/Web/ed-portrait-1-sm.jpg",
+      "alt": "Portrait of Ed in sunglasses and a leather jacket against a lattice railing in the sun",
+      "caption": "Ed"
     },
     {
       "src": "assets/img/photos/Web/euan-portrait-1.jpg",
