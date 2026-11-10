@@ -93,7 +93,7 @@ content:
       - name: showreelMobileImage
         label: Showreel background on phones (optional)
         type: image
-        description: Shown behind the headline on phones while the showreel loads (and instead of it for visitors with data saver on). A tall, portrait image works best. Leave empty to use YouTube's thumbnail.
+        description: Phones don't play the background video. They show this image behind the headline instead. A tall, portrait image works best. Leave empty to use the YouTube showreel's thumbnail.
       - name: photographyTile
         label: Photography tile image
         type: image

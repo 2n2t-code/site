@@ -320,8 +320,15 @@
     tile("tile-photography", home.photographyTile, home.photographyTileMobile);
     tile("tile-music", home.musicTile, home.musicTileMobile);
 
-    // HD background: your own showreel file, if one is set in the CMS.
-    setupHeroVideo(home);
+    // Phones: no background video at all (saves data and battery). They keep
+    // the still image: the "Showreel background on phones" image if set in the
+    // CMS, otherwise the YouTube showreel's thumbnail.
+    if (PHONE.matches) {
+      document.querySelectorAll(".hero-yt[data-youtube-bg]").forEach(function (b) { b.removeAttribute("data-youtube-bg"); });
+    } else {
+      // HD background: your own showreel file, if one is set in the CMS.
+      setupHeroVideo(home);
+    }
 
     // Showreel button in the hero.
     document.querySelectorAll("[data-play-youtube]").forEach(function (btn) {
