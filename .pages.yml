@@ -79,7 +79,7 @@ content:
       - name: showreel
         label: Showreel (YouTube link)
         type: string
-        description: Opens with sound when someone presses "Watch the showreel". Also plays muted in the background if no showreel video file is set below.
+        description: Opens with sound when someone presses "Watch the showreel", and is the big video at the top of the Video Production page. Also plays muted in the homepage background if no showreel video file is set below.
       - name: showreelFile
         label: Showreel background video file (optional, for HD)
         type: file

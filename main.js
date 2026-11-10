@@ -37,7 +37,7 @@
   // Which data files each page needs (site.json is loaded on every page).
   var PAGE_DATA = {
     home: ["videos", "home"],
-    film: ["videos"],
+    film: ["videos", "home"],
     photography: ["photos"],
     "photo-category": ["photos"],
     music: ["music"],
@@ -194,6 +194,16 @@
   }
 
   function renderFilm() {
+    // Big showreel at the top, from the YouTube link under Homepage in the CMS.
+    var home = content.home || {};
+    var reel = parseVideoLink(home.showreel);
+    var reelBox = document.getElementById("showreel");
+    if (reelBox && reel) {
+      reelBox.appendChild(videoCard(Object.assign({}, reel, { title: home.showreelTitle || "Showreel" }), false));
+    } else if (reelBox) {
+      reelBox.closest("section").hidden = true;
+    }
+
     var videos = (content.film || {}).videos || [];
     renderList(document.getElementById("live-in-session"), videos.filter(isLiveInSession),
       function (v) { return videoCard(v, true); }, "Live In Session videos coming soon.");

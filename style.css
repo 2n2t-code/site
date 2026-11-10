@@ -348,6 +348,11 @@ img.thumb-letterboxed { scale: 1.34; }
 .featured-grid { display: grid; gap: var(--space-6); grid-template-columns: 1fr; }
 .video-card { margin: 0; }
 .video-card figcaption { padding-top: var(--space-3); }
+/* Showreel at the top of the Video Production page: full width, larger play button and title. */
+.showreel-section .video-frame { border-radius: calc(var(--radius) * 2); }
+.showreel-section .play-icon { width: 96px; height: 96px; }
+.showreel-section .play-icon::before { border-width: 17px 0 17px 28px; margin-left: 7px; }
+.showreel-section .video-card h3 { font-size: var(--text-xl); }
 .video-card h3 { font-size: var(--text-lg); margin: 0 0 var(--space-1); }
 .video-card .meta { font-size: var(--text-sm); color: var(--color-muted); margin: 0; }
 .video-card .video-category { font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.14em; color: var(--color-accent); margin-bottom: var(--space-1); }
