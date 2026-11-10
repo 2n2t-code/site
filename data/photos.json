@@ -9,7 +9,7 @@
     {
       "src": "assets/img/photos/Web/levenshulme-fireworks.jpg",
       "thumb": "assets/img/photos/Web/levenshulme-fireworks-sm.jpg",
-      "alt": "Fireworks bursting over Levenshulme station platform at night",
+      "alt": "Fireworks bursting over Levenshulme from the station platform at night",
       "caption": "Levenshulme station, fireworks night"
     },
     {
@@ -17,6 +17,12 @@
       "thumb": "assets/img/photos/Web/vw-camper-tram-trails-sm.jpg",
       "alt": "A cream VW camper van parked at night as a passing tram leaves light trails behind it",
       "caption": "Camper and tram trails"
+    },
+    {
+      "src": "assets/img/photos/Web/levenshulme-station-sunset-nov26.jpg",
+      "thumb": "assets/img/photos/Web/levenshulme-station-sunset-nov26-sm.jpg",
+      "alt": "Sunset over Levenshume from the station platform",
+      "caption": "Sunset from Levenshulme Station"
     }
   ],
   "categories": [
@@ -26,8 +32,7 @@
       "intro": "Relaxed, story-led wedding photography, from getting ready to the last dance.",
       "metaTitle": "Wedding Photography — 2N2T",
       "metaDescription": "Wedding photography by 2N2T in Manchester and the North West: relaxed, story-led coverage of your day.",
-      "slug": "weddings",
-      "photos": []
+      "slug": "weddings"
     },
     {
       "title": "Landscape Photography",
@@ -35,8 +40,7 @@
       "intro": "Hills, coastlines and big skies across the North West and beyond.",
       "metaTitle": "Landscape Photography — 2N2T",
       "metaDescription": "Landscape photography by 2N2T: hills, coastlines and big skies across the North West and beyond.",
-      "slug": "landscape",
-      "photos": []
+      "slug": "landscape"
     },
     {
       "title": "Portrait Photography",
@@ -44,8 +48,7 @@
       "intro": "Artist, press and personal portraits, on location or in the studio.",
       "metaTitle": "Portrait Photography — 2N2T",
       "metaDescription": "Portrait photography by 2N2T in Manchester: artist, press and personal portraits.",
-      "slug": "portraits",
-      "photos": []
+      "slug": "portraits"
     },
     {
       "title": "Music Photography",
@@ -91,8 +94,7 @@
       "intro": "Shot on 35mm and medium format film.",
       "metaTitle": "Film Photography — 2N2T",
       "metaDescription": "Film photography by 2N2T, shot on 35mm and medium format.",
-      "slug": "film",
-      "photos": []
+      "slug": "film"
     }
   ]
 }
