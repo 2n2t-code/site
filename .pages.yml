@@ -206,9 +206,15 @@ content:
     path: data/photos.json
     format: json
     fields:
-      - name: highlights
+      - name: featured
         label: Featured photos
-        description: The main grid on the Photography page. Every photo shows uncropped at its real shape, in rows that fill the page width (portrait and landscape mixed, in this order — drag to reorder). Captions appear over the lower third of a photo on hover.
+        type: image
+        options:
+          multiple: true
+        description: "The main grid on the Photography page, in this order. Drag the thumbnails to reorder, + to add (pick name.jpg from photos/Web, not the -sm version), × to remove. Each photo's description and caption come from its gallery automatically, or from Featured photo details below."
+      - name: highlights
+        label: Featured photo details (optional)
+        description: Only needed for a featured photo that isn't in any gallery, or to give it a different description or caption here. Adding or removing entries here doesn't change what's featured; use the Featured photos thumbnails above.
         type: object
         list:
           collapsible:
