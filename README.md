@@ -62,7 +62,7 @@ Notes:
 - **Phone images:** most images have an optional "on phones" or "Phone version" field: video thumbnails, the showreel background, the homepage tiles, featured and gallery photos, gallery card images and the About portrait. On screens under 640px wide it's used instead of the normal image. Use it when the normal crop doesn't work on a small screen, for example a tighter crop.
 - **Bio:** leave a blank line between paragraphs. The first paragraph is shown larger.
 - **New gallery pages:** a brand-new photography category needs its own page folder. Ask Claude, or copy `photography/street/`, change `data-category` and the page titles, add a matching entry under Galleries with that page address, and add it to `sitemap.xml`.
-- **Featured photos:** the main Photography page shows portrait and square photos in a 3-across grid, then landscape photos 2-across with their caption underneath. The site detects each photo's shape automatically. Captions on portrait photos show in the full-size viewer.
+- **Featured photos:** the main Photography page uses a justified grid. Every photo shows uncropped at its real shape, in your CMS order, in rows that exactly fill the page width. The page picks how many photos fit per row, fewer on phones, and re-flows when the window size changes. Captions appear over the lower third of a photo on hover, and in the full-size viewer.
 
 You can also edit the `data/*.json` files directly on GitHub, or ask Claude. Everything uses the same files.
 

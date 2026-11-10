@@ -204,7 +204,7 @@ content:
     fields:
       - name: highlights
         label: Featured photos
-        description: The main grid on the Photography page. Portrait and square photos go in a 3-across grid, landscape photos 2-across with their caption underneath. Each photo's shape is detected automatically; drag to reorder within each group.
+        description: The main grid on the Photography page. Every photo shows uncropped at its real shape, in rows that fill the page width (portrait and landscape mixed, in this order — drag to reorder). Captions appear over the lower third of a photo on hover.
         type: object
         list:
           collapsible:

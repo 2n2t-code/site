@@ -524,49 +524,91 @@
     }, "Photos coming soon.");
   }
 
-  // Featured grid (main Photography page): portrait and square photos in a
-  // 3-across grid, then landscape photos 2-across with captions underneath.
-  // Each photo's shape is read from the image itself, so there's nothing to set.
-  function photoShape(p) {
+  // Featured grid (main Photography page): a "justified" layout. Every photo
+  // is shown uncropped at its real shape; each row's photos share one height,
+  // chosen so the row exactly fills the width. Rows follow the CMS order.
+  function photoRatio(p) {
     return new Promise(function (resolve) {
       var img = new Image(), done = false;
-      var finish = function (shape) { if (!done) { done = true; resolve(shape); } };
-      img.onload = function () { finish(img.naturalWidth > img.naturalHeight * 1.05 ? "landscape" : "portrait"); };
-      img.onerror = function () { finish("landscape"); };
-      setTimeout(function () { finish("landscape"); }, 6000);
+      var finish = function (r) { if (!done) { done = true; resolve(r); } };
+      img.onload = function () { finish(img.naturalWidth && img.naturalHeight ? img.naturalWidth / img.naturalHeight : 1.5); };
+      img.onerror = function () { finish(1.5); };
+      setTimeout(function () { finish(1.5); }, 8000);
       img.src = url(pick(p.thumb || p.src, p.mobile));
     });
+  }
+
+  // Ideal row height for the space available (rows end up within about ±30% of it).
+  function targetRowHeight(width) { return width < 640 ? 190 : width < 1000 ? 260 : 340; }
+
+  function layoutJustified(list, items, gap) {
+    var width = list.clientWidth;
+    if (!width) return;
+    var target = targetRowHeight(width);
+    var row = [], rowRatio = 0;
+    var place = function (rowItems, height, isLast) {
+      var used = 0;
+      rowItems.forEach(function (it, i) {
+        var w = it.ratio * height;
+        // Give rounding leftovers to the last photo so full rows end exactly at the edge.
+        if (!isLast && i === rowItems.length - 1) w = width - used - gap * (rowItems.length - 1);
+        w = Math.max(1, Math.floor(w));
+        used += w;
+        it.li.style.width = w + "px";
+        it.li.style.height = Math.round(height) + "px";
+      });
+    };
+    var heightFor = function (ratioSum, count) { return (width - gap * (count - 1)) / ratioSum; };
+    items.forEach(function (it, i) {
+      var hWith = heightFor(rowRatio + it.ratio, row.length + 1);
+      if (row.length && hWith < target) {
+        // Adding this photo makes the row too short. Close the row before or
+        // after it, whichever height is closer to the ideal.
+        var hWithout = heightFor(rowRatio, row.length);
+        if (Math.abs(hWithout - target) < Math.abs(hWith - target) && hWithout < target * 1.5) {
+          place(row, hWithout, false);
+          row = [it]; rowRatio = it.ratio;
+        } else {
+          row.push(it);
+          place(row, hWith, false);
+          row = []; rowRatio = 0;
+        }
+      } else {
+        row.push(it); rowRatio += it.ratio;
+      }
+    });
+    if (row.length) {
+      // Last row: fill the width only if that keeps it close to the ideal height.
+      var h = heightFor(rowRatio, row.length);
+      if (h <= target * 1.25) place(row, h, false); else place(row, target, true);
+    }
   }
 
   function renderFeatured(root, photos) {
     if (!root) return;
     if (!photos || !photos.length) { root.appendChild(el("p", { class: "empty", text: "Photos coming soon." })); return; }
     root.setAttribute("aria-busy", "true");
-    Promise.all(photos.map(photoShape)).then(function (shapes) {
-      var portraits = [], landscapes = [];
-      photos.forEach(function (p, i) { (shapes[i] === "portrait" ? portraits : landscapes).push(p); });
-      // The viewer follows the order on screen: portraits, then landscapes.
-      var ordered = portraits.concat(landscapes);
-      var open = setupLightbox(ordered);
-      var tile = function (p, i, shape) {
-        var btn = el("button", { class: "feature-tile feature-tile--" + shape, type: "button", "aria-label": "Enlarge: " + (p.alt || "photo " + (i + 1)) }, [
-          el("span", { class: "feature-img" }, [
-            el("img", { src: url(pick(p.thumb || p.src, p.mobile)), alt: p.alt || "", loading: "lazy", decoding: "async" })
-          ]),
-          shape === "landscape" && p.caption ? el("span", { class: "feature-caption", text: p.caption }) : null
+    Promise.all(photos.map(photoRatio)).then(function (ratios) {
+      var open = setupLightbox(photos);
+      var list = el("ul", { class: "justified" });
+      var items = photos.map(function (p, i) {
+        var btn = el("button", { class: "feature-tile", type: "button", "aria-label": "Enlarge: " + (p.alt || "photo " + (i + 1)) }, [
+          el("img", { src: url(pick(p.thumb || p.src, p.mobile)), alt: p.alt || "", loading: "lazy", decoding: "async" }),
+          p.caption ? el("span", { class: "feature-caption", text: p.caption }) : null
         ]);
         btn.addEventListener("click", function () { open(i, btn); });
-        return el("li", { class: "reveal" }, [btn]);
-      };
-      root.replaceChildren();
-      if (portraits.length) {
-        root.appendChild(el("ul", { class: "feature-grid feature-grid--portrait" },
-          portraits.map(function (p, i) { return tile(p, i, "portrait"); })));
-      }
-      if (landscapes.length) {
-        root.appendChild(el("ul", { class: "feature-grid feature-grid--landscape" },
-          landscapes.map(function (p, i) { return tile(p, portraits.length + i, "landscape"); })));
-      }
+        var li = el("li", { class: "reveal" }, [btn]);
+        list.appendChild(li);
+        return { li: li, ratio: ratios[i] };
+      });
+      root.replaceChildren(list);
+      var gap = parseFloat(getComputedStyle(list).columnGap) || 8;
+      layoutJustified(list, items, gap);
+      // Re-flow when the window (or phone orientation) changes size.
+      var lastWidth = list.clientWidth;
+      var relayout = function () { if (list.clientWidth !== lastWidth) { lastWidth = list.clientWidth; layoutJustified(list, items, gap); } };
+      if ("ResizeObserver" in window) new ResizeObserver(relayout).observe(list);
+      else window.addEventListener("resize", relayout);
       root.removeAttribute("aria-busy");
       revealOnScroll();
     });
