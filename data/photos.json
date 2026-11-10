@@ -36,9 +36,15 @@
       "title": "Wedding Photography",
       "label": "Weddings",
       "intro": "Relaxed, story-led wedding photography, from getting ready to the last dance.",
+      "cover": "assets/img/photos/Web/nick-fran-1.jpg",
       "metaTitle": "Wedding Photography — 2N2T",
       "metaDescription": "Wedding photography by 2N2T in Manchester and the North West: relaxed, story-led coverage of your day.",
-      "slug": "weddings"
+      "slug": "weddings",
+      "photos": [
+        {
+          "src": "assets/img/photos/Web/nick-fran-3.jpg"
+        }
+      ]
     },
     {
       "title": "Landscape Photography",
