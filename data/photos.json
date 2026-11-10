@@ -27,7 +27,8 @@
     {
       "src": "assets/img/photos/Web/nick-fran-1.jpg",
       "thumb": "assets/img/photos/Web/nick-fran-1-sm.jpg",
-      "alt": "Mr & Mrs Bennett"
+      "alt": "Mr & Mrs Bennett",
+      "caption": "Mr & Mrs Bennett"
     },
     {
       "src": "assets/img/photos/Web/english-teacher-at-soup.jpg",
@@ -121,20 +122,17 @@
         {
           "src": "assets/img/photos/Web/nick-fran-2.jpg",
           "thumb": "assets/img/photos/Web/nick-fran-2-sm.jpg",
-          "alt": "Bride and groom smiling outside the venue doorway, the bride holding a bouquet of pink peonies",
-          "caption": ""
+          "alt": "Bride and groom smiling outside the venue doorway, the bride holding a bouquet of pink peonies"
         },
         {
           "src": "assets/img/photos/Web/nick-fran-5.jpg",
           "thumb": "assets/img/photos/Web/nick-fran-5-sm.jpg",
-          "alt": "Instant photos of the wedding guests scattered across a wooden table",
-          "caption": ""
+          "alt": "Instant photos of the wedding guests scattered across a wooden table"
         },
         {
           "src": "assets/img/photos/Web/nick-fran-6.jpg",
           "thumb": "assets/img/photos/Web/nick-fran-6-sm.jpg",
-          "alt": "Black-and-white photo of the bride and groom dancing surrounded by guests",
-          "caption": ""
+          "alt": "Black-and-white photo of the bride and groom dancing surrounded by guests"
         }
       ]
     },
