@@ -37,6 +37,12 @@
       "caption": "English Teacher live at Soup, Manchester"
     },
     {
+      "src": "assets/img/photos/Web/budapest-2.jpg",
+      "thumb": "assets/img/photos/Web/budapest-2-sm.jpg",
+      "alt": "Budapest from above: autumn trees and rooftops leading to the river and a hill topped with a monument",
+      "caption": "Budapest"
+    },
+    {
       "src": "assets/img/photos/Web/siv-jacobsen-at-gullivers-1.jpg",
       "thumb": "assets/img/photos/Web/siv-jacobsen-at-gullivers-1-sm.jpg",
       "alt": "Siv Jacobsen Live at Gullivers",
@@ -59,12 +65,6 @@
       "thumb": "assets/img/photos/Web/ed-portrait-1-sm.jpg",
       "alt": "Portrait of Ed in sunglasses and a leather jacket against a lattice railing in the sun",
       "caption": "Ed"
-    },
-    {
-      "src": "assets/img/photos/Web/budapest-2.jpg",
-      "thumb": "assets/img/photos/Web/budapest-2-sm.jpg",
-      "alt": "Budapest from above: autumn trees and rooftops leading to the river and a hill topped with a monument",
-      "caption": "Budapest"
     },
     {
       "src": "assets/img/photos/Web/victoria-baths-floor-and-window.jpg",
