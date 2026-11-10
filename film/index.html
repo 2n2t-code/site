@@ -30,6 +30,9 @@
   <link rel="icon" href="../favicon.ico" sizes="any">
   <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Cormorant+Garamond:wght@600&display=swap">
   <link rel="stylesheet" href="../style.css">
   <script>document.documentElement.classList.add("js")</script>
 </head>
@@ -51,29 +54,24 @@
     </nav>
   </header>
 
-  <main id="main" class="container">
-    <section class="page-intro">
+  <main id="main">
+    <section class="vp-intro">
+      <p class="vp-label">2N2T Productions</p>
       <h1>Video Production</h1>
       <p>Productions, music videos and edits &mdash; shot and cut in Manchester and beyond.</p>
     </section>
 
-    <!-- Showreel: the YouTube link set under Homepage in the CMS (data/home.json). -->
-    <section class="section showreel-section" aria-labelledby="showreel-title">
-      <h2 class="section-title" id="showreel-title">Showreel</h2>
-      <div id="showreel"></div>
-    </section>
-
-    <section class="section" aria-labelledby="lis-title">
-      <h2 class="section-title" id="lis-title">Live In Session</h2>
-      <div class="featured-grid" id="live-in-session"></div>
-    </section>
-
-    <section class="section" aria-labelledby="work-title">
-      <h2 class="section-title" id="work-title">Selected Work</h2>
-      <div class="grid" id="film-work"></div>
-    </section>
-    <noscript><p class="empty">Please enable JavaScript to watch the videos.</p></noscript>
+    <!-- One cinematic panel per video: the showreel (Homepage in the CMS), then
+         Live In Session, then the rest (Video work in the CMS). -->
+    <ol class="cine-list" id="cine-list" aria-label="Video work"></ol>
+    <noscript><p class="empty container">Please enable JavaScript to watch the videos.</p></noscript>
   </main>
+
+  <!-- Pop-up video player -->
+  <div class="video-modal" id="video-modal" role="dialog" aria-modal="true" aria-label="Video player" hidden>
+    <div class="video-modal-frame"></div>
+    <button class="lb-btn lb-close video-modal-close" type="button" aria-label="Close video (Esc)">&times;</button>
+  </div>
 
   <footer class="site-footer">
     <a class="footer-email" href="mailto:2n2tproductions@gmail.com">2n2tproductions@gmail.com</a>

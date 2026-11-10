@@ -55,13 +55,14 @@ content:
           - name: year
             label: Year (optional)
             type: string
+            description: Shown in the credits on the video's Video Production panel, like Client and Role below.
           - name: client
             label: Client (optional)
             type: string
           - name: role
             label: Your role (optional)
             type: string
-            description: e.g. "Shot & edited". Shown on the Video Production page.
+            description: e.g. "Shot & edited". Shown in the credits on the Video Production page.
 
   - name: home
     label: Homepage

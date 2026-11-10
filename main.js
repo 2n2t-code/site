@@ -178,37 +178,6 @@
     return "";
   }
 
-  function videoCard(v, featured) {
-    var frame = el("div", { class: "video-frame" });
-    var title = v.title || "Untitled";
-    var fullTitle = (v.category ? v.category + " — " : "") + title;
-
-    // Click-to-load: show a thumbnail; only load the player/iframe on click.
-    var btn = el("button", { class: "video-poster", type: "button", "aria-label": "Play video: " + fullTitle }, [
-      thumbImg(v, { width: "1280", height: "720" })
-    ]);
-    btn.addEventListener("click", function () {
-      var player = v.type === "mp4"
-        ? el("video", { controls: true, autoplay: true, playsinline: true, src: url(v.src), poster: videoThumb(v) || null, "aria-label": title })
-        : el("iframe", {
-            src: embedSrc(v),
-            title: fullTitle,
-            allow: "autoplay; fullscreen; picture-in-picture; encrypted-media",
-            allowfullscreen: true
-          });
-      frame.replaceChildren(player);
-      player.focus();
-    });
-    frame.appendChild(btn);
-
-    var caption = el("figcaption", null, [
-      v.category ? el("p", { class: "meta video-category", text: v.category }) : null,
-      el("h3", { text: title }),
-      el("p", { class: "meta", text: metaLine(v, ["client", "role", "year"]) })
-    ]);
-    return el("figure", { class: "video-card" }, [frame, caption]);
-  }
-
   function renderList(target, items, render, emptyText) {
     if (!target) return;
     if (!items || !items.length) {
@@ -218,22 +187,56 @@
     items.forEach(function (item, i) { target.appendChild(render(item, i)); });
   }
 
+  // Video Production page: one cinematic panel per video — the showreel first,
+  // then Live In Session, then everything else, in the CMS order.
   function renderFilm() {
-    // Big showreel at the top, from the YouTube link under Homepage in the CMS.
+    var list = document.getElementById("cine-list");
+    if (!list) return;
     var home = content.home || {};
+    var items = [];
     var reel = parseVideoLink(home.showreel);
-    var reelBox = document.getElementById("showreel");
-    if (reelBox && reel) {
-      reelBox.appendChild(videoCard(Object.assign({}, reel, { title: home.showreelTitle || "Showreel" }), false));
-    } else if (reelBox) {
-      reelBox.closest("section").hidden = true;
+    if (reel) {
+      // "The Silk Mill Recording Studios — Showreel 2026" → small label + big title
+      var parts = String(home.showreelTitle || "Showreel").split(/\s+[—–-]\s+/);
+      items.push(Object.assign({}, reel, {
+        category: parts.length > 1 ? parts[0] : "Showreel",
+        title: parts.length > 1 ? parts.slice(1).join(" — ") : parts[0],
+        isShowreel: true
+      }));
     }
-
     var videos = (content.film || {}).videos || [];
-    renderList(document.getElementById("live-in-session"), videos.filter(isLiveInSession),
-      function (v) { return videoCard(v, true); }, "Live In Session videos coming soon.");
-    renderList(document.getElementById("film-work"), videos.filter(function (v) { return !isLiveInSession(v); }),
-      function (v) { return videoCard(v, false); }, "More work coming soon.");
+    items = items.concat(videos.filter(isLiveInSession), videos.filter(function (v) { return !isLiveInSession(v); }));
+    if (!items.length) { list.appendChild(el("li", null, [el("p", { class: "empty", text: "Videos coming soon." })])); return; }
+
+    var total = String(items.length).padStart(2, "0");
+    items.forEach(function (v, i) {
+      var title = v.title || "Untitled";
+      var fullTitle = (v.category ? v.category + " — " : "") + title;
+      // Credits: type and venue from the label, plus year / client / role when set in the CMS.
+      var cat = String(v.isShowreel ? "" : (v.category || "")).split(/\s+at\s+/i);
+      var credits = [];
+      if (cat[0]) credits.push(["Type", cat[0]]);
+      if (cat[1]) credits.push(["Venue", cat[1]]);
+      if (v.client) credits.push(["Client", v.client]);
+      if (v.year) credits.push(["Year", v.year]);
+      if (v.role) credits.push(["Role", v.role]);
+      var dl = credits.length ? el("dl", { class: "cine-credits" }) : null;
+      credits.forEach(function (c) { dl.appendChild(el("dt", { text: c[0] })); dl.appendChild(el("dd", { text: c[1] })); });
+      var arrow = el("span", { "aria-hidden": "true" });
+      arrow.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12h15M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      var btn = el("button", { class: "cine", type: "button", "aria-label": "Play video: " + fullTitle }, [
+        thumbImg(v, { loading: i < 2 ? "eager" : "lazy" }),
+        el("span", { class: "cine-index", "aria-hidden": "true" }, [el("b", { text: String(i + 1).padStart(2, "0") }), document.createTextNode("/ " + total)]),
+        el("span", { class: "cine-body" }, [
+          v.category ? el("span", { class: "cine-kicker", text: v.category }) : null,
+          el("span", { class: "cine-title" + (title.length > 22 ? " long" : ""), text: title }),
+          dl
+        ]),
+        el("span", { class: "cine-watch", "aria-hidden": "true" }, [el("span", { text: "Watch" }), arrow])
+      ]);
+      btn.addEventListener("click", function () { openVideo(Object.assign({}, v, { title: fullTitle }), btn); });
+      list.appendChild(el("li", null, [btn]));
+    });
   }
 
   /* ---------- Homepage ---------- */
