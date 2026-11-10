@@ -183,13 +183,14 @@ content:
 
   - name: photos
     label: Photography
-    description: The Highlights slideshow and the category galleries. Export photos at about 2000px on the long edge before uploading, so pages stay fast.
+    description: The Featured photos on the main Photography page and the category galleries. Export photos at about 2000px on the long edge before uploading, so pages stay fast.
     type: file
     path: data/photos.json
     format: json
     fields:
       - name: highlights
-        label: Highlights slideshow
+        label: Featured photos
+        description: The main grid on the Photography page. Portrait and square photos go in a 3-across grid, landscape photos 2-across with their caption underneath. Each photo's shape is detected automatically; drag to reorder within each group.
         type: object
         list:
           collapsible:
@@ -207,7 +208,7 @@ content:
           - name: mobile
             label: Phone version (optional)
             type: image
-            description: Used instead of the photo on phones (screens under 640px wide), e.g. a portrait crop for the slideshow.
+            description: Used instead of the photo on phones (screens under 640px wide), e.g. a tighter crop.
           - name: alt
             label: Description
             type: string

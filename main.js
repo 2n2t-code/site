@@ -471,132 +471,52 @@
     }, "Photos coming soon.");
   }
 
-  // Highlights slideshow: one big photo with its neighbours peeking in,
-  // a slow zoom, and progress dots. Auto-advances every SLIDE_SECONDS;
-  // pauses when off screen, when the viewer is open, or when the visitor
-  // presses pause. Visitors with reduced motion get no autoplay or zoom.
-  var SLIDE_SECONDS = 5;
+  // Featured grid (main Photography page): portrait and square photos in a
+  // 3-across grid, then landscape photos 2-across with captions underneath.
+  // Each photo's shape is read from the image itself, so there's nothing to set.
+  function photoShape(p) {
+    return new Promise(function (resolve) {
+      var img = new Image(), done = false;
+      var finish = function (shape) { if (!done) { done = true; resolve(shape); } };
+      img.onload = function () { finish(img.naturalWidth > img.naturalHeight * 1.05 ? "landscape" : "portrait"); };
+      img.onerror = function () { finish("landscape"); };
+      setTimeout(function () { finish("landscape"); }, 6000);
+      img.src = url(pick(p.thumb || p.src, p.mobile));
+    });
+  }
 
-  function renderSlideshow(root, photos) {
+  function renderFeatured(root, photos) {
     if (!root) return;
     if (!photos || !photos.length) { root.appendChild(el("p", { class: "empty", text: "Photos coming soon." })); return; }
-
-    var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    var state = { index: 0, userPaused: reduced, offscreen: false, viewerOpen: false };
-    root.style.setProperty("--slide-duration", SLIDE_SECONDS + "s");
-    root.setAttribute("aria-roledescription", "carousel");
-
-    var track = el("ol", { class: "slideshow-track" });
-    var viewport = el("div", { class: "slideshow-viewport" }, [track]);
-    var dots = el("div", { class: "slideshow-dots" });
-    var playBtn = el("button", { class: "slideshow-play", type: "button" }, [el("span", { class: "play-glyph", "aria-hidden": "true" })]);
-    root.appendChild(viewport);
-    root.appendChild(el("div", { class: "slideshow-bar" }, [el("div", { class: "slideshow-controls" }, [dots, playBtn])]));
-
-    var open = setupLightbox(photos, {
-      onOpen: function () { state.viewerOpen = true; update(); },
-      onClose: function (i) { state.viewerOpen = false; go(i, true); }
+    root.setAttribute("aria-busy", "true");
+    Promise.all(photos.map(photoShape)).then(function (shapes) {
+      var portraits = [], landscapes = [];
+      photos.forEach(function (p, i) { (shapes[i] === "portrait" ? portraits : landscapes).push(p); });
+      // The viewer follows the order on screen: portraits, then landscapes.
+      var ordered = portraits.concat(landscapes);
+      var open = setupLightbox(ordered);
+      var tile = function (p, i, shape) {
+        var btn = el("button", { class: "feature-tile feature-tile--" + shape, type: "button", "aria-label": "Enlarge: " + (p.alt || "photo " + (i + 1)) }, [
+          el("span", { class: "feature-img" }, [
+            el("img", { src: url(pick(p.thumb || p.src, p.mobile)), alt: p.alt || "", loading: "lazy", decoding: "async" })
+          ]),
+          shape === "landscape" && p.caption ? el("span", { class: "feature-caption", text: p.caption }) : null
+        ]);
+        btn.addEventListener("click", function () { open(i, btn); });
+        return el("li", { class: "reveal" }, [btn]);
+      };
+      root.replaceChildren();
+      if (portraits.length) {
+        root.appendChild(el("ul", { class: "feature-grid feature-grid--portrait" },
+          portraits.map(function (p, i) { return tile(p, i, "portrait"); })));
+      }
+      if (landscapes.length) {
+        root.appendChild(el("ul", { class: "feature-grid feature-grid--landscape" },
+          landscapes.map(function (p, i) { return tile(p, portraits.length + i, "landscape"); })));
+      }
+      root.removeAttribute("aria-busy");
+      revealOnScroll();
     });
-
-    var slides = photos.map(function (p, i) {
-      var bg = el("span", { class: "slide-bg", "aria-hidden": "true" });
-      var img = el("img", { alt: p.alt || "", decoding: "async", draggable: "false" });
-      var cap = p.caption ? el("span", { class: "slide-caption", text: p.caption, "aria-hidden": "true" }) : null;
-      var btn = el("button", { class: "slide-btn", type: "button", "aria-label": (p.alt || "Photo " + (i + 1)) + " (open full size)" }, [bg, img, cap]);
-      btn.addEventListener("click", function () {
-        if (dragged) return;
-        if (i === state.index) open(i, btn); else go(i);
-      });
-      var li = el("li", { class: "slide", "aria-roledescription": "slide", "aria-label": (i + 1) + " of " + photos.length }, [btn]);
-      track.appendChild(li);
-      return { li: li, img: img, bg: bg, loaded: false };
-    });
-
-    var dotBtns = photos.map(function (p, i) {
-      var d = el("button", { class: "dot", type: "button", "aria-label": "Show photo " + (i + 1) }, [el("span", { class: "dot-fill" })]);
-      d.addEventListener("click", function () { go(i); });
-      dots.appendChild(d);
-      return d;
-    });
-
-    function load(i) {
-      var s = slides[(i + slides.length) % slides.length];
-      if (!s || s.loaded) return;
-      var p = photos[(i + slides.length) % slides.length];
-      s.img.src = url(pick(p.src, p.mobile));
-      s.bg.style.backgroundImage = "url('" + url(pick(p.thumb || p.src, p.mobile)) + "')";
-      s.loaded = true;
-    }
-
-    function position(animate) {
-      var s = slides[state.index].li;
-      var x = s.offsetLeft - (viewport.clientWidth - s.offsetWidth) / 2;
-      track.style.transition = animate ? "" : "none";
-      track.style.transform = "translate3d(" + (-x) + "px,0,0)";
-    }
-
-    function go(i, instant) {
-      state.index = (i + slides.length) % slides.length;
-      slides.forEach(function (s, n) {
-        var active = n === state.index;
-        s.li.classList.toggle("is-active", active);
-        s.li.querySelector(".slide-btn").tabIndex = active ? 0 : -1;
-      });
-      dotBtns.forEach(function (d, n) {
-        var active = n === state.index;
-        d.classList.remove("is-active");
-        d.setAttribute("aria-current", active ? "true" : "false");
-      });
-      // Restart the progress-fill animation on the new active dot.
-      void dots.offsetWidth;
-      dotBtns[state.index].classList.add("is-active");
-      [0, 1, -1, 2].forEach(function (o) { load(state.index + o); });
-      position(!instant);
-    }
-
-    function update() {
-      var paused = state.userPaused || state.offscreen || state.viewerOpen || document.hidden;
-      root.classList.toggle("is-paused", paused);
-      playBtn.setAttribute("aria-label", state.userPaused ? "Play slideshow" : "Pause slideshow");
-      playBtn.classList.toggle("is-playing", !state.userPaused);
-    }
-
-    // When the active dot's progress fill finishes, move to the next photo.
-    dots.addEventListener("animationend", function (e) {
-      if (e.target.classList.contains("dot-fill") && e.target.parentNode === dotBtns[state.index]) go(state.index + 1);
-    });
-
-    playBtn.addEventListener("click", function () { state.userPaused = !state.userPaused; update(); });
-    root.addEventListener("keydown", function (e) {
-      if (e.key === "ArrowRight") { go(state.index + 1); e.preventDefault(); }
-      if (e.key === "ArrowLeft") { go(state.index - 1); e.preventDefault(); }
-    });
-
-    // Swipe / drag between photos.
-    var startX = null, dragged = false;
-    viewport.addEventListener("pointerdown", function (e) { startX = e.clientX; dragged = false; });
-    viewport.addEventListener("pointerup", function (e) {
-      if (startX === null) return;
-      var dx = e.clientX - startX;
-      if (Math.abs(dx) > 40) { dragged = true; go(state.index + (dx < 0 ? 1 : -1)); setTimeout(function () { dragged = false; }, 0); }
-      startX = null;
-    });
-    viewport.addEventListener("pointercancel", function () { startX = null; });
-
-    if ("IntersectionObserver" in window) {
-      new IntersectionObserver(function (entries) {
-        state.offscreen = !entries[0].isIntersecting; update();
-      }, { threshold: 0.35 }).observe(root);
-    }
-    document.addEventListener("visibilitychange", update);
-    var resizeTimer;
-    window.addEventListener("resize", function () {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(function () { position(false); }, 100);
-    });
-
-    update();
-    go(0, true);
   }
 
   // Cards linking to each photography category page.
@@ -818,7 +738,7 @@
     if (page === "home") renderHome();
     if (page === "film") renderFilm();
     if (page === "photography") {
-      renderSlideshow(document.getElementById("highlights"), content.photos || []);
+      renderFeatured(document.getElementById("featured"), content.photos || []);
       renderPhotoCategories(document.getElementById("photo-categories"));
     }
     if (page === "photo-category") renderPhotoCategoryPage();

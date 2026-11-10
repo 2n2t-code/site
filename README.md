@@ -5,7 +5,7 @@ Plain HTML, CSS and vanilla JS. No framework and no build step. Content is edite
 ```
 index.html              Homepage (showreel hero, selected work, Photography/Music tiles)
 film/index.html         Video Production (Live In Session first, then other work)
-photography/index.html  Highlights slideshow + gallery cards
+photography/index.html  Featured photo grid + gallery cards
 photography/*/          Gallery pages (weddings, landscape, portraits, music, street, film)
 music/index.html        Bandcamp releases (albums, singles) + bands on Spotify
 about/index.html        About (portrait, bio, services)
@@ -45,7 +45,7 @@ The sections in the CMS:
 | **Video work** | `data/videos.json` | Homepage "Selected work" (in list order) and the Video Production page |
 | **Homepage** | `data/home.json` | Headline, small text, showreel video, Photography/Music tile images, bottom "Got a project" section |
 | **SEO** | `data/seo.json` | Meta Title and Meta Description for Home, Video Production, Photography, Music, About and Contact |
-| **Photography** | `data/photos.json` | Highlights slideshow and the six gallery pages |
+| **Photography** | `data/photos.json` | Featured photos (main Photography page) and the six gallery pages |
 | **Music** | `data/music.json` | Bandcamp releases and band Spotify players |
 | **About page** | `data/about.json` | Intro line, portrait, bio, "What I do" |
 | **Contact & social links** | `data/site.json` | Email (footer and contact form), location, Instagram/YouTube/Bandcamp/LinkedIn |
@@ -55,10 +55,10 @@ Notes:
 - **Photos:** export at about 2000px on the long edge before uploading. The CMS doesn't shrink images, and big camera files slow pages down. A "Smaller version" (about 800px wide) makes the gallery grids load faster still.
 - **Bandcamp:** paste the **embed code** from Bandcamp's Share / Embed button, not the page link. The site reads the release number from it and restyles the player to match. Albums and EPs go on their own row automatically.
 - **SEO:** each main page has a Meta Title (aim for 50–60 characters) and Meta Description (120–155) under **SEO**. Each gallery page has its own under **Photography → Galleries**. When the site publishes, GitHub writes them into the page files (`scripts/apply_seo.py`, run by `.github/workflows/pages.yml`), so Google and link previews in WhatsApp, Facebook and LinkedIn see them.
-- **Phone images:** most images have an optional "on phones" or "Phone version" field: video thumbnails, the showreel background, the homepage tiles, slideshow and gallery photos, gallery card images and the About portrait. On screens under 640px wide it's used instead of the normal image. Use it when the normal crop doesn't work on a small screen, for example a portrait-shaped crop for the slideshow.
+- **Phone images:** most images have an optional "on phones" or "Phone version" field: video thumbnails, the showreel background, the homepage tiles, featured and gallery photos, gallery card images and the About portrait. On screens under 640px wide it's used instead of the normal image. Use it when the normal crop doesn't work on a small screen, for example a tighter crop.
 - **Bio:** leave a blank line between paragraphs. The first paragraph is shown larger.
 - **New gallery pages:** a brand-new photography category needs its own page folder. Ask Claude, or copy `photography/street/`, change `data-category` and the page titles, add a matching entry under Galleries with that page address, and add it to `sitemap.xml`.
-- **Speed:** the Highlights slideshow moves on every 5 seconds. To change it, edit `SLIDE_SECONDS` in `main.js`.
+- **Featured photos:** the main Photography page shows portrait and square photos in a 3-across grid, then landscape photos 2-across with their caption underneath. The site detects each photo's shape automatically. Captions on portrait photos show in the full-size viewer.
 
 You can also edit the `data/*.json` files directly on GitHub, or ask Claude. Everything uses the same files.
 
