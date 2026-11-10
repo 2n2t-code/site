@@ -159,8 +159,7 @@
 
     // Click-to-load: show a thumbnail; only load the player/iframe on click.
     var btn = el("button", { class: "video-poster", type: "button", "aria-label": "Play video: " + fullTitle }, [
-      thumbImg(v, { width: "1280", height: "720" }),
-      el("span", { class: "play-icon", "aria-hidden": "true" })
+      thumbImg(v, { width: "1280", height: "720" })
     ]);
     btn.addEventListener("click", function () {
       var player = v.type === "mp4"
@@ -257,44 +256,44 @@
   // as the hero background. GitHub makes the web versions a few minutes after
   // the file is uploaded; until they exist, or if anything fails, the YouTube
   // showreel is used as before.
-  function setupHeroVideo(home) {
+  function setupHeroVideo(home, showPoster, showYouTubeThumb) {
     var media = document.querySelector(".hero-media");
     var ytBox = document.querySelector(".hero-yt[data-youtube-bg]");
     if (!home.showreelFile || !media) return;
     var base = "assets/video/Web/" + webVideoName(home.showreelFile);
     var ytId = ytBox && ytBox.getAttribute("data-youtube-bg");
-    if (ytBox) ytBox.removeAttribute("data-youtube-bg"); // hold YouTube back while we check
+    if (ytBox) ytBox.removeAttribute("data-youtube-bg"); // YouTube is only the fallback here
+    var fellBack = false;
     var useYouTube = function () {
+      if (fellBack) return;
+      fellBack = true;
+      showYouTubeThumb();
       if (!ytBox || !ytId) return;
       ytBox.setAttribute("data-youtube-bg", ytId);
       if (startYouTubeBackgrounds && document.readyState === "complete") startYouTubeBackgrounds();
     };
-    var check = new Image();
-    check.onerror = useYouTube; // web versions not made yet
-    check.onload = function () {
-      var posterSrc = url(pick(base + "-poster.jpg", home.showreelMobileImage));
-      var poster = document.querySelector(".hero-poster");
-      if (poster) { poster.onerror = null; poster.src = posterSrc; poster.classList.add("is-custom"); }
-      if (calm) return; // reduced motion / data saver: the still image only
-      var slow = navigator.connection && /(^|-)2g|3g/.test(navigator.connection.effectiveType || "");
-      var video = el("video", { class: "hero-video", muted: true, loop: true, playsinline: true, autoplay: true,
-        preload: "auto", poster: posterSrc, "aria-hidden": "true", tabindex: "-1" });
-      video.muted = true; video.defaultMuted = true;
-      video.src = url(base + (PHONE.matches || slow ? "-720.mp4" : "-1080.mp4"));
-      video.addEventListener("playing", function () { video.classList.add("is-playing"); });
-      video.addEventListener("error", function () { video.remove(); useYouTube(); });
-      media.appendChild(video);
-      var play = function () { var p = video.play(); if (p && p.catch) p.catch(function () {}); };
-      play();
-      // Pause while scrolled away or while the pop-up player is open.
-      var visible = true, modalOpen = false;
-      var update = function () { if (visible && !modalOpen) play(); else video.pause(); };
-      if ("IntersectionObserver" in window) {
-        new IntersectionObserver(function (en) { visible = en[0].isIntersecting; update(); }).observe(media);
-      }
-      document.addEventListener("videomodal", function (e) { modalOpen = e.detail; update(); });
-    };
-    check.src = url(base + "-poster.jpg");
+    // The still is the video's own first moments, so the switch to video is seamless.
+    // If it's missing, the web versions haven't been made yet: use YouTube for now.
+    var posterSrc = url(base + "-poster.jpg");
+    showPoster(posterSrc, true, useYouTube);
+    if (calm) return; // reduced motion / data saver: the still image only
+    var slow = navigator.connection && /(^|-)2g|3g/.test(navigator.connection.effectiveType || "");
+    var video = el("video", { class: "hero-video", muted: true, loop: true, playsinline: true, autoplay: true,
+      preload: "auto", poster: posterSrc, "aria-hidden": "true", tabindex: "-1" });
+    video.muted = true; video.defaultMuted = true;
+    video.src = url(base + (slow ? "-720.mp4" : "-1080.mp4"));
+    video.addEventListener("playing", function () { video.classList.add("is-playing"); });
+    video.addEventListener("error", function () { video.remove(); useYouTube(); });
+    media.appendChild(video);
+    var play = function () { var p = video.play(); if (p && p.catch) p.catch(function () {}); };
+    play();
+    // Pause while scrolled away or while the pop-up player is open.
+    var visible = true, modalOpen = false;
+    var update = function () { if (visible && !modalOpen) play(); else video.pause(); };
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (en) { visible = en[0].isIntersecting; update(); }).observe(media);
+    }
+    document.addEventListener("videomodal", function (e) { modalOpen = e.detail; update(); });
   }
 
   function renderHome() {
@@ -307,19 +306,29 @@
     setText(".home-cta p", home.ctaText);
     setText(".hero-tile-title", home.showreelTitle);
     var reel = parseVideoLink(home.showreel);
-    if (reel && reel.type === "youtube") {
-      var poster = document.querySelector(".hero-poster");
-      if (poster && PHONE.matches && home.showreelMobileImage) {
-        poster.onerror = null;
-        poster.src = url(home.showreelMobileImage);
-        poster.classList.add("is-custom");
-      } else if (poster && poster.src.indexOf(reel.id) === -1) {
-        poster.onerror = function () { poster.onerror = null; poster.src = "https://i.ytimg.com/vi/" + reel.id + "/hqdefault.jpg"; };
-        poster.src = "https://i.ytimg.com/vi/" + reel.id + "/maxresdefault.jpg";
-      }
-      document.querySelectorAll("[data-youtube-bg]").forEach(function (b) { b.setAttribute("data-youtube-bg", reel.id); });
-      document.querySelectorAll("[data-play-youtube]").forEach(function (b) { b.setAttribute("data-play-youtube", reel.id); });
+    var ytId = reel && reel.type === "youtube" ? reel.id : null;
+    if (ytId) {
+      document.querySelectorAll("[data-youtube-bg]").forEach(function (b) { b.setAttribute("data-youtube-bg", ytId); });
+      document.querySelectorAll("[data-play-youtube]").forEach(function (b) { b.setAttribute("data-play-youtube", ytId); });
     }
+
+    // The hero's still image starts empty (dark) and fades in once the right
+    // image has loaded, so the wrong one never flashes up first.
+    var poster = document.querySelector(".hero-poster");
+    var showPoster = function (src, custom, onFail) {
+      if (!poster || !src) return;
+      poster.classList.remove("is-loaded");
+      poster.classList.toggle("is-custom", !!custom); // custom images have no black bars to crop
+      poster.onload = function () { poster.classList.add("is-loaded"); };
+      poster.onerror = onFail || null;
+      poster.src = src;
+    };
+    var showYouTubeThumb = function () {
+      if (!ytId) return;
+      showPoster("https://i.ytimg.com/vi/" + ytId + "/maxresdefault.jpg", false, function () {
+        showPoster("https://i.ytimg.com/vi/" + ytId + "/hqdefault.jpg", false);
+      });
+    };
     document.querySelectorAll("[data-play-youtube]").forEach(function (b) {
       if (home.showreelTitle) b.setAttribute("data-play-title", home.showreelTitle);
     });
@@ -336,9 +345,13 @@
     // CMS, otherwise the YouTube showreel's thumbnail.
     if (PHONE.matches) {
       document.querySelectorAll(".hero-yt[data-youtube-bg]").forEach(function (b) { b.removeAttribute("data-youtube-bg"); });
-    } else {
+      if (home.showreelMobileImage) showPoster(url(home.showreelMobileImage), true, showYouTubeThumb);
+      else showYouTubeThumb();
+    } else if (home.showreelFile) {
       // HD background: your own showreel file, if one is set in the CMS.
-      setupHeroVideo(home);
+      setupHeroVideo(home, showPoster, showYouTubeThumb);
+    } else {
+      showYouTubeThumb();
     }
 
     // Showreel button in the hero.

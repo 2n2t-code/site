@@ -71,12 +71,13 @@
          below are fallbacks used until that file loads. -->
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-media">
-        <img class="hero-poster" src="https://i.ytimg.com/vi/a8pjf4iHd9c/maxresdefault.jpg" alt="" decoding="async" fetchpriority="high" width="1280" height="720"
-             onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/a8pjf4iHd9c/hqdefault.jpg'">
+        <!-- The still image is chosen by main.js (your video's first frame, or the
+             YouTube thumbnail) so the wrong image never flashes up first. -->
+        <img class="hero-poster" alt="" decoding="async" fetchpriority="high" width="1280" height="720">
+        <noscript><img class="hero-poster is-loaded" src="https://i.ytimg.com/vi/a8pjf4iHd9c/maxresdefault.jpg" alt="" width="1280" height="720"></noscript>
         <div class="hero-yt" data-youtube-bg="a8pjf4iHd9c" aria-hidden="true"></div>
         <!-- Phones only: the showreel as a tap-to-play tile, styled like the Selected work tiles. -->
         <button class="hero-tile" type="button" data-play-youtube="a8pjf4iHd9c" data-play-title="The Silk Mill Recording Studios — Showreel 2026" aria-label="Play the showreel">
-          <span class="play-icon" aria-hidden="true"></span>
           <span class="work-info">
             <span class="work-meta">Showreel</span>
             <span class="work-title hero-tile-title">The Silk Mill Recording Studios — Showreel 2026</span>
@@ -88,7 +89,6 @@
         <h1 class="hero-title" id="hero-title">Live sessions, music videos &amp; event films</h1>
         <div class="hero-actions">
           <button class="hero-play" type="button" data-play-youtube="a8pjf4iHd9c" data-play-title="The Silk Mill Recording Studios — Showreel 2026">
-            <span class="hero-play-icon" aria-hidden="true"></span>
             Watch the showreel
           </button>
           <a class="hero-link" href="film/">All video work <span aria-hidden="true">&rarr;</span></a>
