@@ -41,6 +41,10 @@ content:
             label: Custom thumbnail (optional)
             type: image
             description: Leave empty to use YouTube's thumbnail. Needed for Vimeo videos.
+          - name: mobileThumb
+            label: Phone thumbnail (optional)
+            type: image
+            description: A thumbnail used instead on phones (screens under 640px wide), e.g. a tighter crop. 16:9 works best.
           - name: year
             label: Year (optional)
             type: string
@@ -72,12 +76,110 @@ content:
       - name: showreelTitle
         label: Showreel title
         type: string
+      - name: showreelMobileImage
+        label: Showreel background on phones (optional)
+        type: image
+        description: Shown behind the headline on phones while the showreel loads (and instead of it for visitors with data saver on). A tall, portrait image works best. Leave empty to use YouTube's thumbnail.
+      - name: photographyTile
+        label: Photography tile image
+        type: image
+      - name: photographyTileMobile
+        label: Photography tile image on phones (optional)
+        type: image
+        description: Optional. A version cropped for phones (screens under 640px wide), used instead of the image above on phones.
+      - name: musicTile
+        label: Music tile image
+        type: image
+      - name: musicTileMobile
+        label: Music tile image on phones (optional)
+        type: image
+        description: Optional. A version cropped for phones (screens under 640px wide), used instead of the image above on phones.
       - name: ctaHeading
         label: "Bottom section: heading"
         type: string
       - name: ctaText
         label: "Bottom section: text"
         type: text
+
+  - name: seo
+    label: SEO
+    description: Meta Title and Meta Description for each main page. The six gallery pages have their own SEO fields under Photography → Galleries. Changes appear in Google once it next visits the page, which can take days.
+    type: file
+    path: data/seo.json
+    format: json
+    fields:
+      - name: home
+        label: Homepage
+        type: object
+        fields:
+          - name: title
+            label: Meta Title
+            type: string
+            description: Shown as the page title in Google results and browser tabs. Aim for 50–60 characters.
+          - name: description
+            label: Meta Description
+            type: text
+            description: Shown under the title in Google results and in link previews (WhatsApp, Facebook, LinkedIn). Aim for 120–155 characters.
+      - name: film
+        label: Video Production page
+        type: object
+        fields:
+          - name: title
+            label: Meta Title
+            type: string
+            description: Shown as the page title in Google results and browser tabs. Aim for 50–60 characters.
+          - name: description
+            label: Meta Description
+            type: text
+            description: Shown under the title in Google results and in link previews (WhatsApp, Facebook, LinkedIn). Aim for 120–155 characters.
+      - name: photography
+        label: Photography page
+        type: object
+        fields:
+          - name: title
+            label: Meta Title
+            type: string
+            description: Shown as the page title in Google results and browser tabs. Aim for 50–60 characters.
+          - name: description
+            label: Meta Description
+            type: text
+            description: Shown under the title in Google results and in link previews (WhatsApp, Facebook, LinkedIn). Aim for 120–155 characters.
+      - name: music
+        label: Music page
+        type: object
+        fields:
+          - name: title
+            label: Meta Title
+            type: string
+            description: Shown as the page title in Google results and browser tabs. Aim for 50–60 characters.
+          - name: description
+            label: Meta Description
+            type: text
+            description: Shown under the title in Google results and in link previews (WhatsApp, Facebook, LinkedIn). Aim for 120–155 characters.
+      - name: about
+        label: About page
+        type: object
+        fields:
+          - name: title
+            label: Meta Title
+            type: string
+            description: Shown as the page title in Google results and browser tabs. Aim for 50–60 characters.
+          - name: description
+            label: Meta Description
+            type: text
+            description: Shown under the title in Google results and in link previews (WhatsApp, Facebook, LinkedIn). Aim for 120–155 characters.
+      - name: contact
+        label: Contact page
+        type: object
+        fields:
+          - name: title
+            label: Meta Title
+            type: string
+            description: Shown as the page title in Google results and browser tabs. Aim for 50–60 characters.
+          - name: description
+            label: Meta Description
+            type: text
+            description: Shown under the title in Google results and in link previews (WhatsApp, Facebook, LinkedIn). Aim for 120–155 characters.
 
   - name: photos
     label: Photography
@@ -102,6 +204,10 @@ content:
             label: Smaller version (optional)
             type: image
             description: About 800px wide. Makes the gallery grids load faster; leave empty to use the main photo.
+          - name: mobile
+            label: Phone version (optional)
+            type: image
+            description: Used instead of the photo on phones (screens under 640px wide), e.g. a portrait crop for the slideshow.
           - name: alt
             label: Description
             type: string
@@ -132,6 +238,18 @@ content:
             label: Card image (optional)
             type: image
             description: Leave empty to use the gallery's first photo.
+          - name: coverMobile
+            label: Card image on phones (optional)
+            type: image
+            description: Optional. A version cropped for phones (screens under 640px wide), used instead of the image above on phones.
+          - name: metaTitle
+            label: "SEO: Meta Title"
+            type: string
+            description: The page title in Google results and browser tabs. Aim for 50–60 characters.
+          - name: metaDescription
+            label: "SEO: Meta Description"
+            type: text
+            description: The summary under the title in Google results and link previews. Aim for 120–155 characters.
           - name: slug
             label: Page address (don't change)
             type: string
@@ -217,6 +335,10 @@ content:
       - name: photo
         label: Portrait
         type: image
+      - name: photoMobile
+        label: Portrait on phones (optional)
+        type: image
+        description: Optional. A version cropped for phones (screens under 640px wide), used instead of the image above on phones.
       - name: photoAlt
         label: Portrait description
         type: string

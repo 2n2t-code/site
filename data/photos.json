@@ -123,7 +123,9 @@
           "alt": "Placeholder photo",
           "caption": ""
         }
-      ]
+      ],
+      "metaTitle": "Wedding Photography — 2N2T",
+      "metaDescription": "Wedding photography by 2N2T in Manchester and the North West: relaxed, story-led coverage of your day."
     },
     {
       "slug": "landscape",
@@ -156,7 +158,9 @@
           "alt": "Placeholder photo",
           "caption": ""
         }
-      ]
+      ],
+      "metaTitle": "Landscape Photography — 2N2T",
+      "metaDescription": "Landscape photography by 2N2T: hills, coastlines and big skies across the North West and beyond."
     },
     {
       "slug": "portraits",
@@ -189,7 +193,9 @@
           "alt": "Placeholder photo",
           "caption": ""
         }
-      ]
+      ],
+      "metaTitle": "Portrait Photography — 2N2T",
+      "metaDescription": "Portrait photography by 2N2T in Manchester: artist, press and personal portraits."
     },
     {
       "slug": "music",
@@ -222,7 +228,9 @@
           "alt": "Placeholder photo",
           "caption": ""
         }
-      ]
+      ],
+      "metaTitle": "Music Photography — 2N2T",
+      "metaDescription": "Music photography by 2N2T: live shows, festivals and behind-the-scenes with artists in Manchester."
     },
     {
       "slug": "street",
@@ -243,7 +251,9 @@
           "alt": "Fireworks bursting over Levenshulme station platform at night",
           "caption": "Levenshulme station, fireworks night"
         }
-      ]
+      ],
+      "metaTitle": "Street Photography — 2N2T",
+      "metaDescription": "Street photography by 2N2T: Manchester after dark, stations, trams and the city in motion."
     },
     {
       "slug": "film",
@@ -276,7 +286,9 @@
           "alt": "Placeholder photo",
           "caption": ""
         }
-      ]
+      ],
+      "metaTitle": "Film Photography — 2N2T",
+      "metaDescription": "Film photography by 2N2T, shot on 35mm and medium format."
     }
   ]
 }

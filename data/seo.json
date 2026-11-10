@@ -1,0 +1,26 @@
+{
+  "home": {
+    "title": "2N2T — Video Producer, Videographer & Editor in Manchester",
+    "description": "2N2T is a Manchester-based video producer, videographer and editor. Live sessions, music videos, brand films, photography and music."
+  },
+  "film": {
+    "title": "Video Production — 2N2T",
+    "description": "Video production by 2N2T in Manchester: Live In Session, showreels, music videos, brand films and edits."
+  },
+  "photography": {
+    "title": "Photography — 2N2T",
+    "description": "Photography by 2N2T in Manchester: wedding, landscape, portrait, music, street and film photography."
+  },
+  "music": {
+    "title": "Music — 2N2T",
+    "description": "Music by 2N2T: solo productions on Bandcamp, plus the bands Vordermann and This Sun No More."
+  },
+  "about": {
+    "title": "About — 2N2T",
+    "description": "About 2N2T: Alex, a Manchester-based video producer, videographer, editor and musician."
+  },
+  "contact": {
+    "title": "Contact — 2N2T",
+    "description": "Contact 2N2T for video production, Live In Session, photography and music in Manchester and the North West."
+  }
+}

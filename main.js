@@ -46,6 +46,9 @@
     "404": []
   };
 
+  // Which entry in data/seo.json belongs to each page.
+  var SEO_KEY = { home: "home", film: "film", photography: "photography", music: "music", about: "about", contact: "contact" };
+
   function loadJSON(name) {
     return fetch(ROOT + "data/" + name + ".json", { cache: "no-cache" })
       .then(function (r) { if (!r.ok) throw new Error(name + ".json: " + r.status); return r.json(); })
@@ -67,6 +70,7 @@
 
   function loadContent(page) {
     var names = ["site"].concat(PAGE_DATA[page] || []);
+    if (SEO_KEY[page]) names.push("seo");
     return Promise.all(names.map(loadJSON)).then(function (files) {
       var d = {};
       names.forEach(function (n, i) { d[n] = files[i] || {}; });
@@ -76,6 +80,7 @@
       }).filter(Boolean);
       return {
         site: d.site || {},
+        seo: d.seo || {},
         home: d.home || {},
         about: d.about || {},
         film: { videos: videos },
@@ -85,6 +90,25 @@
         bands: (d.music || {}).bands || []
       };
     });
+  }
+
+  /* ---------- Phone images ---------- */
+  // Any image can have an optional phone version (set in the CMS). On screens
+  // narrower than 640px it's used instead of the normal one.
+  var PHONE = window.matchMedia("(max-width: 639px)");
+  function pick(normal, phone) { return PHONE.matches && phone ? phone : normal; }
+
+  /* ---------- SEO (data/seo.json, and per gallery in data/photos.json) ---------- */
+  // GitHub also writes these into the page files when the site is published
+  // (scripts/apply_seo.py), so link previews in WhatsApp etc. pick them up.
+  function applySeo(title, description) {
+    var set = function (sel, attr, val) { var n = document.querySelector(sel); if (n && val) n.setAttribute(attr, val); };
+    if (title) document.title = title;
+    set('meta[name="description"]', "content", description);
+    set('meta[property="og:title"]', "content", title);
+    set('meta[property="og:description"]', "content", description);
+    set('meta[name="twitter:title"]', "content", title);
+    set('meta[name="twitter:description"]', "content", description);
   }
 
   /* ---------- Film ---------- */
@@ -98,10 +122,11 @@
   // video; if it's missing, fall back to the standard one, which has black
   // bars top and bottom, and zoom it slightly so the bars are cropped off.
   function thumbImg(v, attrs) {
-    var src = videoThumb(v);
+    var phone = PHONE.matches && v.mobileThumb;
+    var src = phone ? url(v.mobileThumb) : videoThumb(v);
     if (!src) return null;
     var img = el("img", Object.assign({ src: src, alt: "", loading: "lazy", decoding: "async" }, attrs || {}));
-    if (v.type === "youtube" && !v.thumb) {
+    if (v.type === "youtube" && !v.thumb && !phone) {
       var fallback = function () {
         if (img.getAttribute("data-fallback")) return;
         img.setAttribute("data-fallback", "1");
@@ -223,7 +248,11 @@
     var reel = parseVideoLink(home.showreel);
     if (reel && reel.type === "youtube") {
       var poster = document.querySelector(".hero-poster");
-      if (poster && poster.src.indexOf(reel.id) === -1) {
+      if (poster && PHONE.matches && home.showreelMobileImage) {
+        poster.onerror = null;
+        poster.src = url(home.showreelMobileImage);
+        poster.classList.add("is-custom");
+      } else if (poster && poster.src.indexOf(reel.id) === -1) {
         poster.onerror = function () { poster.onerror = null; poster.src = "https://i.ytimg.com/vi/" + reel.id + "/hqdefault.jpg"; };
         poster.src = "https://i.ytimg.com/vi/" + reel.id + "/maxresdefault.jpg";
       }
@@ -233,6 +262,13 @@
     document.querySelectorAll("[data-play-youtube]").forEach(function (b) {
       if (home.showreelTitle) b.setAttribute("data-play-title", home.showreelTitle);
     });
+    var tile = function (id, normal, phone) {
+      var img = document.getElementById(id);
+      var src = pick(normal, phone);
+      if (img && src) img.src = url(src);
+    };
+    tile("tile-photography", home.photographyTile, home.photographyTileMobile);
+    tile("tile-music", home.musicTile, home.musicTileMobile);
 
     // Showreel button in the hero.
     document.querySelectorAll("[data-play-youtube]").forEach(function (btn) {
@@ -294,7 +330,7 @@
     var intro = document.getElementById("about-intro");
     if (intro && a.intro) intro.textContent = a.intro;
     var img = document.getElementById("about-photo");
-    if (img && a.photo) { img.src = url(a.photo); img.alt = a.photoAlt || ""; }
+    if (img && a.photo) { img.src = url(pick(a.photo, a.photoMobile)); img.alt = a.photoAlt || ""; }
     var bio = document.getElementById("about-bio");
     if (bio && a.bio) {
       bio.replaceChildren();
@@ -370,13 +406,13 @@
     function show(i) {
       current = (i + photos.length) % photos.length;
       var p = photos[current];
-      img.src = url(p.src);
+      img.src = url(pick(p.src, p.mobile));
       img.alt = p.alt || "";
       cap.textContent = (p.caption ? p.caption + " — " : "") + (current + 1) + " / " + photos.length;
       // Preload neighbours so arrow navigation feels instant.
       [current + 1, current - 1].forEach(function (n) {
         var q = photos[(n + photos.length) % photos.length];
-        if (q) new Image().src = url(q.src);
+        if (q) new Image().src = url(pick(q.src, q.mobile));
       });
     }
     function open(i, trigger) {
@@ -428,7 +464,7 @@
     var open = setupLightbox(photos);
     renderList(document.getElementById("gallery"), photos, function (p, i) {
       var btn = el("button", { class: "gallery-item", type: "button", "aria-label": "Enlarge: " + (p.alt || "photo " + (i + 1)) }, [
-        el("img", { src: url(p.thumb || p.src), alt: p.alt || "", loading: "lazy", decoding: "async" })
+        el("img", { src: url(pick(p.thumb || p.src, p.mobile)), alt: p.alt || "", loading: "lazy", decoding: "async" })
       ]);
       btn.addEventListener("click", function () { open(i, btn); });
       return btn;
@@ -487,8 +523,8 @@
       var s = slides[(i + slides.length) % slides.length];
       if (!s || s.loaded) return;
       var p = photos[(i + slides.length) % slides.length];
-      s.img.src = url(p.src);
-      s.bg.style.backgroundImage = "url('" + url(p.thumb || p.src) + "')";
+      s.img.src = url(pick(p.src, p.mobile));
+      s.bg.style.backgroundImage = "url('" + url(pick(p.thumb || p.src, p.mobile)) + "')";
       s.loaded = true;
     }
 
@@ -569,7 +605,7 @@
     var cats = (content.photoCategories || []).filter(function (c) { return c.slug !== skipSlug; });
     renderList(target, cats, function (c) {
       var first = (c.photos || [])[0] || {};
-      var cover = c.cover || first.thumb || first.src;
+      var cover = pick(c.cover, c.coverMobile) || pick(first.thumb || first.src, first.mobile);
       var n = (c.photos || []).length;
       return el("a", { class: "category-card", href: ROOT + "photography/" + c.slug + "/" }, [
         cover ? el("img", { src: url(cover), alt: "", loading: "lazy", decoding: "async" }) : null,
@@ -590,6 +626,7 @@
       return;
     }
     if (intro && cat.intro) intro.textContent = cat.intro;
+    applySeo(cat.metaTitle, cat.metaDescription);
     renderPhotos(cat.photos);
     renderPhotoCategories(document.getElementById("more-categories"), slug);
   }
@@ -776,6 +813,8 @@
   loadContent(page).then(function (c) {
     content = c;
     applySite(page);
+    var seo = (content.seo || {})[SEO_KEY[page]];
+    if (seo) applySeo(seo.title, seo.description);
     if (page === "home") renderHome();
     if (page === "film") renderFilm();
     if (page === "photography") {
