@@ -256,6 +256,37 @@ main { display: block; }
 }
 @keyframes scroll-cue { 0% { opacity: 0; transform: translateY(0); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(14px); } }
 
+/* The tap-to-play showreel tile is for phones only (see the phone layout below). */
+.hero-tile { display: none; }
+
+/* Phones: no full-screen hero. Headline first, then the showreel as a 16:9
+   tile the same size as the Selected work tiles, then the link. */
+@media (max-width: 639px) {
+  .site-header--overlay { background: rgba(14, 14, 16, 0.92); border-bottom-color: var(--color-border); }
+  .hero {
+    height: auto; min-height: 0; overflow: visible; isolation: auto;
+    display: flex; flex-direction: column; align-items: stretch;
+    padding: calc(var(--header-height) + var(--space-6)) var(--gutter) 0;
+  }
+  .hero::after, .hero-scroll, .hero-play { display: none; }
+  .hero { padding-bottom: 0; }
+  .hero-content, .hero-actions { display: contents; }
+  .hero-eyebrow { order: 1; }
+  .hero-title { order: 2; margin-bottom: var(--space-5); font-size: clamp(2rem, 9vw, 2.6rem); }
+  .hero-media {
+    order: 3; position: relative; inset: auto; z-index: auto;
+    aspect-ratio: 16 / 9; overflow: hidden; container-type: normal;
+  }
+  .hero-link { display: none; } /* "All video work" is beside the Selected work heading just below */
+  .hero-tile {
+    display: block; position: absolute; inset: 0; width: 100%; padding: 0; border: 0; cursor: pointer;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.75), transparent 55%); color: var(--color-text); text-align: left;
+  }
+  .hero-tile .play-icon { width: 56px; height: 56px; }
+  .hero-tile .work-info { left: var(--space-4); right: var(--space-4); bottom: var(--space-4); }
+  .home-section:first-of-type, #work { padding-top: var(--space-7); }
+}
+
 /* Sections below the hero */
 .home-section { padding: var(--space-8) var(--gutter) 0; max-width: 1600px; margin: 0 auto; }
 .home-head {

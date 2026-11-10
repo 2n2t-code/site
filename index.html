@@ -70,10 +70,18 @@
          showreel video come from data/home.json (Homepage in Pages CMS); the values
          below are fallbacks used until that file loads. -->
     <section class="hero" aria-labelledby="hero-title">
-      <div class="hero-media" aria-hidden="true">
+      <div class="hero-media">
         <img class="hero-poster" src="https://i.ytimg.com/vi/a8pjf4iHd9c/maxresdefault.jpg" alt="" decoding="async" fetchpriority="high" width="1280" height="720"
              onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/a8pjf4iHd9c/hqdefault.jpg'">
-        <div class="hero-yt" data-youtube-bg="a8pjf4iHd9c"></div>
+        <div class="hero-yt" data-youtube-bg="a8pjf4iHd9c" aria-hidden="true"></div>
+        <!-- Phones only: the showreel as a tap-to-play tile, styled like the Selected work tiles. -->
+        <button class="hero-tile" type="button" data-play-youtube="a8pjf4iHd9c" data-play-title="The Silk Mill Recording Studios — Showreel 2026" aria-label="Play the showreel">
+          <span class="play-icon" aria-hidden="true"></span>
+          <span class="work-info">
+            <span class="work-meta">Showreel</span>
+            <span class="work-title hero-tile-title">The Silk Mill Recording Studios — Showreel 2026</span>
+          </span>
+        </button>
       </div>
       <div class="hero-content">
         <p class="hero-eyebrow">2N2T Productions &middot; Manchester</p>

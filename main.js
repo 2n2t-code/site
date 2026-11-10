@@ -305,6 +305,7 @@
     setText(".hero-title", home.headline);
     setText("#cta-title", home.ctaHeading);
     setText(".home-cta p", home.ctaText);
+    setText(".hero-tile-title", home.showreelTitle);
     var reel = parseVideoLink(home.showreel);
     if (reel && reel.type === "youtube") {
       var poster = document.querySelector(".hero-poster");
