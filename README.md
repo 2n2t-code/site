@@ -6,7 +6,7 @@ Plain HTML, CSS and vanilla JS. No framework, no build step, nothing to install.
 index.html              Homepage (showreel hero, selected work, Photography/Music tiles)
 about/index.html        About (bio, services)
 contact/index.html      Contact details + form (opens the visitor's email app)
-film/index.html         Film & productions
+film/index.html         Video Production (Live In Session first, then other work)
 photography/index.html  Highlights gallery + category cards
 photography/*/          Category pages (weddings, landscape, portraits, music, street, film)
 music/index.html        Track list
@@ -34,21 +34,22 @@ Then visit http://localhost:8000.
 Everything is in **`content.js`**. Copy an existing entry, paste it, and change the values.
 Mind the commas between entries.
 
-### Film
+### Video work
 
-Put feature videos in `film.liveInSession` (these show first, larger) and everything else in `film.work`.
+All videos are in one list, `film.videos` in `content.js`, in the order they appear in **Selected work** on the homepage. To reorder them, move the lines. To add one, copy a line:
 
 ```js
-{ type: "youtube", id: "dQw4w9WgXcQ", title: "Artist — Song (Live In Session)",
-  client: "Live In Session", role: "Directed & edited", year: "2026" }
+{ type: "youtube", id: "FGRNWgGfReA", category: "Live Concert", title: "Pierre Bensusan" },
 ```
 
-- **YouTube**: `id` is the part after `watch?v=`. The thumbnail is fetched automatically.
-- **Vimeo**: `id` is the number in the URL (`vimeo.com/76979871` → `"76979871"`). Add a `thumb` image, because Vimeo thumbnails aren't automatic.
+- `category` is the small label above the title, and `title` is the artist, client or event.
+- On the Video Production page, any video whose category includes "Live In Session" is featured at the top. The rest follow in list order.
+- **YouTube**: `id` is the part after `watch?v=`. The thumbnail is fetched automatically, in high resolution where YouTube has it.
+- **Vimeo**: `type: "vimeo"`, and `id` is the number in the URL. Add a `thumb` image, because Vimeo thumbnails aren't automatic.
 - **Self-hosted MP4**: `type: "mp4"`, `src: "assets/video/my-film.mp4"`, plus a `thumb`.
+- Optional extras: `year`, `client`, `role`. These show on the Video Production page.
 
-Videos show a thumbnail and play button. The player or embed loads only when someone clicks, so the page stays fast.
-Keep self-hosted MP4s small (H.264, `-movflags +faststart`). Big files are better on YouTube or Vimeo.
+Videos load only when someone clicks play, so the pages stay fast.
 
 ### Photography
 

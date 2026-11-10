@@ -9,94 +9,33 @@
 window.SITE_CONTENT = {
 
   /* ------------------------------------------------------------------------
-     FILM
-     Each video needs a "type":
-       "youtube" -> id: the bit after watch?v=  (e.g. "dQw4w9WgXcQ")
-       "vimeo"   -> id: the number in the Vimeo URL (e.g. "76979871")
-       "mp4"     -> src: path or URL to the .mp4 file
-     Optional on every video:
-       thumb  -> poster image. YouTube thumbs are automatic if you leave it out.
-       client, year, role -> shown under the title.
+     VIDEO WORK
+     One list, in the order it appears on the homepage ("Selected work").
+     On the Video Production page, videos whose category includes
+     "Live In Session" are featured at the top; the rest follow in order.
+
+     Each video:
+       type     -> "youtube" (id = the bit after watch?v=, e.g. "FGRNWgGfReA")
+                   "vimeo"   (id = the number in the Vimeo link)
+                   "mp4"     (src = path or link to an .mp4 file)
+       category -> small label above the title, e.g. "Live Event"
+       title    -> the artist, client or event
+     Optional:
+       thumb    -> your own thumbnail image (YouTube thumbnails are automatic)
+       year, client, role -> shown as extra detail on the Video Production page
      ------------------------------------------------------------------------ */
   film: {
-    // Shown first, larger, under "Live In Session".
-    liveInSession: [
-      {
-        type: "youtube",
-        id: "aqz-KE-bpKQ",
-        title: "Artist Name — Song Title (Live In Session)",
-        client: "Live In Session",
-        year: "2026",
-        role: "Directed, shot & edited",
-        thumb: "assets/img/film/film-1.jpg"
-      },
-      {
-        type: "vimeo",
-        id: "76979871",
-        title: "Another Artist — Track (Live In Session)",
-        client: "Live In Session",
-        year: "2026",
-        role: "Multi-cam production",
-        thumb: "assets/img/film/film-2.jpg"
-      }
-    ],
-
-    // The grid of other work.
-    work: [
-      {
-        type: "mp4",
-        src: "assets/video/film-loop.mp4",
-        title: "Brand Film — Placeholder",
-        client: "Client Name",
-        year: "2026",
-        role: "Producer / Editor",
-        thumb: "assets/img/film/film-3.jpg"
-      },
-      {
-        type: "youtube",
-        id: "aqz-KE-bpKQ",
-        title: "Music Video — Placeholder",
-        client: "Record Label",
-        year: "2025",
-        role: "Director / DOP",
-        thumb: "assets/img/film/film-4.jpg"
-      },
-      {
-        type: "vimeo",
-        id: "76979871",
-        title: "Event Highlights — Placeholder",
-        client: "Venue, Manchester",
-        year: "2025",
-        role: "Videographer",
-        thumb: "assets/img/film/film-5.jpg"
-      },
-      {
-        type: "youtube",
-        id: "aqz-KE-bpKQ",
-        title: "Documentary Short — Placeholder",
-        client: "Independent",
-        year: "2025",
-        role: "Editor",
-        thumb: "assets/img/film/film-6.jpg"
-      },
-      {
-        type: "youtube",
-        id: "aqz-KE-bpKQ",
-        title: "Social Campaign — Placeholder",
-        client: "Client Name",
-        year: "2024",
-        role: "Shoot & edit",
-        thumb: "assets/img/film/film-7.jpg"
-      },
-      {
-        type: "mp4",
-        src: "assets/video/film-loop.mp4",
-        title: "Showreel Cut — Placeholder",
-        client: "2N2T",
-        year: "2024",
-        role: "Edit & grade",
-        thumb: "assets/img/film/film-8.jpg"
-      }
+    videos: [
+      { type: "youtube", id: "FGRNWgGfReA", category: "Live Concert", title: "Pierre Bensusan" },
+      { type: "youtube", id: "AzLkLzCOuoA", category: "Live In Session at Silk Mill Studios", title: "Chief Springs" },
+      { type: "youtube", id: "IkFYZh9kbAk", category: "Music Video", title: "Paul Walker & Karen Pfeiffer" },
+      { type: "youtube", id: "TS9bDqmXpWc", category: "Live Event", title: "Dirty Weekend at The Edge Festival, Solva" },
+      { type: "youtube", id: "UYP-mWkQISc", category: "Live Event", title: "Discoteca at O2 Victoria Warehouse, Manchester" },
+      { type: "youtube", id: "xAbLxqtVRqo", category: "Wedding Entertainment Highlights", title: "Peckforton Castle" },
+      { type: "youtube", id: "6tPhsQtXXog", category: "Live In Session", title: "Algorhythm" },
+      { type: "youtube", id: "XldxVfA5WPk", category: "Wedding Band Highlights", title: "Dirty Weekend Festival Wedding" },
+      { type: "youtube", id: "_a9PFn6zo1c", category: "Fire Performer Promo", title: "Kat Fire" },
+      { type: "youtube", id: "nIYWaXC5TNk", category: "Live In Session at Hope Mill Studios", title: "The Beautiful Failures" }
     ]
   },
 

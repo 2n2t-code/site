@@ -36,9 +36,32 @@
   /* ---------- Film ---------- */
   function videoThumb(v) {
     if (v.thumb) return url(v.thumb);
-    if (v.type === "youtube") return "https://i.ytimg.com/vi/" + encodeURIComponent(v.id) + "/hqdefault.jpg";
+    if (v.type === "youtube") return "https://i.ytimg.com/vi/" + encodeURIComponent(v.id) + "/maxresdefault.jpg";
     return "";
   }
+
+  // Thumbnail <img>. YouTube's high-res thumbnail doesn't exist for every
+  // video; if it's missing, fall back to the standard one, which has black
+  // bars top and bottom, and zoom it slightly so the bars are cropped off.
+  function thumbImg(v, attrs) {
+    var src = videoThumb(v);
+    if (!src) return null;
+    var img = el("img", Object.assign({ src: src, alt: "", loading: "lazy", decoding: "async" }, attrs || {}));
+    if (v.type === "youtube" && !v.thumb) {
+      var fallback = function () {
+        if (img.getAttribute("data-fallback")) return;
+        img.setAttribute("data-fallback", "1");
+        img.classList.add("thumb-letterboxed");
+        img.src = "https://i.ytimg.com/vi/" + encodeURIComponent(v.id) + "/hqdefault.jpg";
+      };
+      img.addEventListener("error", fallback);
+      // A missing high-res thumbnail comes back as a tiny 120px placeholder, not an error.
+      img.addEventListener("load", function () { if (img.naturalWidth > 0 && img.naturalWidth <= 120) fallback(); });
+    }
+    return img;
+  }
+
+  function isLiveInSession(v) { return /live in session/i.test(v.category || ""); }
 
   function embedSrc(v) {
     if (v.type === "youtube") {
@@ -53,10 +76,11 @@
   function videoCard(v, featured) {
     var frame = el("div", { class: "video-frame" });
     var title = v.title || "Untitled";
+    var fullTitle = (v.category ? v.category + " — " : "") + title;
 
     // Click-to-load: show a thumbnail; only load the player/iframe on click.
-    var btn = el("button", { class: "video-poster", type: "button", "aria-label": "Play video: " + title }, [
-      videoThumb(v) ? el("img", { src: videoThumb(v), alt: "", loading: "lazy", decoding: "async", width: "1280", height: "720" }) : null,
+    var btn = el("button", { class: "video-poster", type: "button", "aria-label": "Play video: " + fullTitle }, [
+      thumbImg(v, { width: "1280", height: "720" }),
       el("span", { class: "play-icon", "aria-hidden": "true" })
     ]);
     btn.addEventListener("click", function () {
@@ -64,7 +88,7 @@
         ? el("video", { controls: true, autoplay: true, playsinline: true, src: url(v.src), poster: videoThumb(v) || null, "aria-label": title })
         : el("iframe", {
             src: embedSrc(v),
-            title: title,
+            title: fullTitle,
             allow: "autoplay; fullscreen; picture-in-picture; encrypted-media",
             allowfullscreen: true
           });
@@ -73,9 +97,8 @@
     });
     frame.appendChild(btn);
 
-    if (featured) frame.appendChild(el("span", { class: "badge", text: "Live In Session" }));
-
     var caption = el("figcaption", null, [
+      v.category ? el("p", { class: "meta video-category", text: v.category }) : null,
       el("h3", { text: title }),
       el("p", { class: "meta", text: metaLine(v, ["client", "role", "year"]) })
     ]);
@@ -92,10 +115,10 @@
   }
 
   function renderFilm() {
-    var film = content.film || {};
-    renderList(document.getElementById("live-in-session"), film.liveInSession,
+    var videos = (content.film || {}).videos || [];
+    renderList(document.getElementById("live-in-session"), videos.filter(isLiveInSession),
       function (v) { return videoCard(v, true); }, "Live In Session videos coming soon.");
-    renderList(document.getElementById("film-work"), film.work,
+    renderList(document.getElementById("film-work"), videos.filter(function (v) { return !isLiveInSession(v); }),
       function (v) { return videoCard(v, false); }, "More work coming soon.");
   }
 
@@ -143,21 +166,19 @@
       });
     });
 
-    // Selected work: Live In Session first, then the rest (up to 7 tiles).
-    var film = content.film || {};
-    var videos = (film.liveInSession || []).concat(film.work || []).slice(0, 7);
+    // Selected work: every video in content.js, in the order listed there.
+    var videos = (content.film || {}).videos || [];
     renderList(document.getElementById("home-work"), videos, function (v) {
-      var thumb = videoThumb(v);
-      var meta = metaLine(v, ["client", "year"]);
-      var btn = el("button", { class: "work-tile", type: "button", "aria-label": "Play video: " + (v.title || "Untitled") }, [
-        thumb ? el("img", { src: thumb, alt: "", loading: "lazy", decoding: "async" }) : null,
+      var fullTitle = (v.category ? v.category + " — " : "") + (v.title || "Untitled");
+      var btn = el("button", { class: "work-tile", type: "button", "aria-label": "Play video: " + fullTitle }, [
+        thumbImg(v),
         el("span", { class: "work-play", "aria-hidden": "true", text: "Play" }),
         el("span", { class: "work-info" }, [
-          meta ? el("span", { class: "work-meta", text: meta }) : null,
+          v.category ? el("span", { class: "work-meta", text: v.category }) : null,
           el("span", { class: "work-title", text: v.title || "Untitled" })
         ])
       ]);
-      btn.addEventListener("click", function () { openVideo(v, btn); });
+      btn.addEventListener("click", function () { openVideo(Object.assign({}, v, { title: fullTitle }), btn); });
       return el("li", { class: "reveal" }, [btn]);
     }, "Video work coming soon.");
 

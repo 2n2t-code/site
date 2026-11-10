@@ -297,6 +297,10 @@ main { display: block; }
 .work-tile:hover .work-play, .work-tile:focus-visible .work-play { opacity: 1; transform: none; }
 .work-tile:focus-visible { outline-offset: -3px; }
 
+/* Fallback YouTube thumbnails have black bars; zoom to crop them off. */
+img.thumb-letterboxed { scale: 1.34; }
+.video-poster img.thumb-letterboxed { scale: 1.34; }
+
 /* Photography / Music tiles */
 .more-grid { display: grid; gap: var(--space-4); grid-template-columns: 1fr; }
 .more-tile {
@@ -342,6 +346,7 @@ main { display: block; }
 .video-card figcaption { padding-top: var(--space-3); }
 .video-card h3 { font-size: var(--text-lg); margin: 0 0 var(--space-1); }
 .video-card .meta { font-size: var(--text-sm); color: var(--color-muted); margin: 0; }
+.video-card .video-category { font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.14em; color: var(--color-accent); margin-bottom: var(--space-1); }
 .video-frame {
   position: relative; aspect-ratio: 16 / 9; width: 100%;
   background: var(--color-surface); border-radius: var(--radius); overflow: hidden;
@@ -665,7 +670,7 @@ main { display: block; }
   }
   .site-header--overlay .site-nav a:hover, .site-header--overlay .site-nav a:focus-visible { background: none; color: var(--color-accent); }
   .work-grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-5); }
-  .work-grid > li:first-child { grid-column: 1 / -1; }
+  .work-grid > li:first-child, .work-grid > li:last-child:nth-child(even) { grid-column: 1 / -1; }
   .work-grid > li:first-child .work-tile { aspect-ratio: 21 / 9; }
   .work-grid > li:first-child .work-title { font-size: clamp(1.5rem, 1rem + 1.6vw, 2.75rem); }
   .more-grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-5); }
