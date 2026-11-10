@@ -27,20 +27,29 @@ jobs:
           python-version: "3.12"
       - name: Install image tools
         run: pip install pillow pillow-heif
-      - name: Make web versions
-        run: python3 scripts/make_web_images.py
-      - name: Save them to the repository
+      - name: Make web versions and save them
+        id: save
+        # Several uploads in a row start several runs. If someone else saved
+        # first, start again from the latest version and only redo what's
+        # still missing, rather than failing on a conflict.
         run: |
-          git add assets/img/photos/Web
-          if git diff --cached --quiet; then
-            echo "Nothing new."
-            exit 0
-          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "Make web versions of new photos"
-          for attempt in 1 2 3; do
-            git pull --rebase origin main && git push origin HEAD:main && exit 0
+          for attempt in 1 2 3 4 5; do
+            git fetch -q origin main
+            git reset -q --hard origin/main
+            python3 scripts/make_web_images.py
+            git add assets/img/photos/Web
+            if git diff --cached --quiet; then
+              echo "Nothing new."
+              exit 0
+            fi
+            git commit -q -m "Make web versions of new photos"
+            if git push -q origin HEAD:main; then
+              echo "pushed=true" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            echo "Someone else saved first; trying again."
             sleep $((attempt * 5))
           done
           exit 1
