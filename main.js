@@ -522,7 +522,8 @@
   // Cards linking to each photography category page.
   function renderPhotoCategories(target, skipSlug) {
     if (!target) return;
-    var cats = (content.photoCategories || []).filter(function (c) { return c.slug !== skipSlug; });
+    // Galleries with no photos yet are left out until photos are added.
+    var cats = (content.photoCategories || []).filter(function (c) { return c.slug !== skipSlug && (c.photos || []).length; });
     renderList(target, cats, function (c) {
       var first = (c.photos || [])[0] || {};
       var cover = pick(c.cover, c.coverMobile) || pick(first.thumb || first.src, first.mobile);

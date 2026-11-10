@@ -1,20 +1,20 @@
 {
   "highlights": [
     {
-      "src": "assets/img/photos/rival-consoles-live.jpg",
-      "thumb": "assets/img/photos/rival-consoles-live-sm.jpg",
+      "src": "assets/img/photos/Web/rival-consoles-live.jpg",
+      "thumb": "assets/img/photos/Web/rival-consoles-live-sm.jpg",
       "alt": "Rival Consoles performing in silhouette under red and blue laser beams",
       "caption": "Rival Consoles, live"
     },
     {
-      "src": "assets/img/photos/levenshulme-fireworks.jpg",
-      "thumb": "assets/img/photos/levenshulme-fireworks-sm.jpg",
+      "src": "assets/img/photos/Web/levenshulme-fireworks.jpg",
+      "thumb": "assets/img/photos/Web/levenshulme-fireworks-sm.jpg",
       "alt": "Fireworks bursting over Levenshulme station platform at night",
       "caption": "Levenshulme station, fireworks night"
     },
     {
-      "src": "assets/img/photos/vw-camper-tram-trails.jpg",
-      "thumb": "assets/img/photos/vw-camper-tram-trails-sm.jpg",
+      "src": "assets/img/photos/Web/vw-camper-tram-trails.jpg",
+      "thumb": "assets/img/photos/Web/vw-camper-tram-trails-sm.jpg",
       "alt": "A cream VW camper van parked at night as a passing tram leaves light trails behind it",
       "caption": "Camper and tram trails"
     }
@@ -27,28 +27,7 @@
       "metaTitle": "Wedding Photography — 2N2T",
       "metaDescription": "Wedding photography by 2N2T in Manchester and the North West: relaxed, story-led coverage of your day.",
       "slug": "weddings",
-      "photos": [
-        {
-          "src": "assets/img/photos/photo-2.jpg",
-          "thumb": "assets/img/photos/photo-2-sm.jpg",
-          "alt": "Placeholder photo"
-        },
-        {
-          "src": "assets/img/photos/photo-4.jpg",
-          "thumb": "assets/img/photos/photo-4-sm.jpg",
-          "alt": "Placeholder photo"
-        },
-        {
-          "src": "assets/img/photos/photo-7.jpg",
-          "thumb": "assets/img/photos/photo-7-sm.jpg",
-          "alt": "Placeholder photo"
-        },
-        {
-          "src": "assets/img/photos/photo-10.jpg",
-          "thumb": "assets/img/photos/photo-10-sm.jpg",
-          "alt": "Placeholder photo"
-        }
-      ]
+      "photos": []
     },
     {
       "title": "Landscape Photography",
@@ -57,28 +36,7 @@
       "metaTitle": "Landscape Photography — 2N2T",
       "metaDescription": "Landscape photography by 2N2T: hills, coastlines and big skies across the North West and beyond.",
       "slug": "landscape",
-      "photos": [
-        {
-          "src": "assets/img/photos/photo-6.jpg",
-          "thumb": "assets/img/photos/photo-6-sm.jpg",
-          "alt": "Placeholder photo"
-        },
-        {
-          "src": "assets/img/photos/photo-11.jpg",
-          "thumb": "assets/img/photos/photo-11-sm.jpg",
-          "alt": "Placeholder photo"
-        },
-        {
-          "src": "assets/img/photos/photo-1.jpg",
-          "thumb": "assets/img/photos/photo-1-sm.jpg",
-          "alt": "Placeholder photo"
-        },
-        {
-          "src": "assets/img/photos/photo-9.jpg",
-          "thumb": "assets/img/photos/photo-9-sm.jpg",
-          "alt": "Placeholder photo"
-        }
-      ]
+      "photos": []
     },
     {
       "title": "Portrait Photography",
@@ -87,28 +45,7 @@
       "metaTitle": "Portrait Photography — 2N2T",
       "metaDescription": "Portrait photography by 2N2T in Manchester: artist, press and personal portraits.",
       "slug": "portraits",
-      "photos": [
-        {
-          "src": "assets/img/photos/photo-5.jpg",
-          "thumb": "assets/img/photos/photo-5-sm.jpg",
-          "alt": "Placeholder photo"
-        },
-        {
-          "src": "assets/img/photos/photo-8.jpg",
-          "thumb": "assets/img/photos/photo-8-sm.jpg",
-          "alt": "Placeholder photo"
-        },
-        {
-          "src": "assets/img/photos/photo-12.jpg",
-          "thumb": "assets/img/photos/photo-12-sm.jpg",
-          "alt": "Placeholder photo"
-        },
-        {
-          "src": "assets/img/photos/photo-3.jpg",
-          "thumb": "assets/img/photos/photo-3-sm.jpg",
-          "alt": "Placeholder photo"
-        }
-      ]
+      "photos": []
     },
     {
       "title": "Music Photography",
@@ -119,25 +56,10 @@
       "slug": "music",
       "photos": [
         {
-          "src": "assets/img/photos/rival-consoles-live.jpg",
-          "thumb": "assets/img/photos/rival-consoles-live-sm.jpg",
+          "src": "assets/img/photos/Web/rival-consoles-live.jpg",
+          "thumb": "assets/img/photos/Web/rival-consoles-live-sm.jpg",
           "alt": "Rival Consoles performing in silhouette under red and blue laser beams",
           "caption": "Rival Consoles, live"
-        },
-        {
-          "src": "assets/img/photos/photo-1.jpg",
-          "thumb": "assets/img/photos/photo-1-sm.jpg",
-          "alt": "Placeholder photo"
-        },
-        {
-          "src": "assets/img/photos/photo-9.jpg",
-          "thumb": "assets/img/photos/photo-9-sm.jpg",
-          "alt": "Placeholder photo"
-        },
-        {
-          "src": "assets/img/photos/photo-3.jpg",
-          "thumb": "assets/img/photos/photo-3-sm.jpg",
-          "alt": "Placeholder photo"
         }
       ]
     },
@@ -150,14 +72,14 @@
       "slug": "street",
       "photos": [
         {
-          "src": "assets/img/photos/vw-camper-tram-trails.jpg",
-          "thumb": "assets/img/photos/vw-camper-tram-trails-sm.jpg",
+          "src": "assets/img/photos/Web/vw-camper-tram-trails.jpg",
+          "thumb": "assets/img/photos/Web/vw-camper-tram-trails-sm.jpg",
           "alt": "A cream VW camper van parked at night as a passing tram leaves light trails behind it",
           "caption": "Camper and tram trails"
         },
         {
-          "src": "assets/img/photos/levenshulme-fireworks.jpg",
-          "thumb": "assets/img/photos/levenshulme-fireworks-sm.jpg",
+          "src": "assets/img/photos/Web/levenshulme-fireworks.jpg",
+          "thumb": "assets/img/photos/Web/levenshulme-fireworks-sm.jpg",
           "alt": "Fireworks bursting over Levenshulme station platform at night",
           "caption": "Levenshulme station, fireworks night"
         }
@@ -170,28 +92,7 @@
       "metaTitle": "Film Photography — 2N2T",
       "metaDescription": "Film photography by 2N2T, shot on 35mm and medium format.",
       "slug": "film",
-      "photos": [
-        {
-          "src": "assets/img/photos/photo-4.jpg",
-          "thumb": "assets/img/photos/photo-4-sm.jpg",
-          "alt": "Placeholder photo"
-        },
-        {
-          "src": "assets/img/photos/photo-12.jpg",
-          "thumb": "assets/img/photos/photo-12-sm.jpg",
-          "alt": "Placeholder photo"
-        },
-        {
-          "src": "assets/img/photos/photo-6.jpg",
-          "thumb": "assets/img/photos/photo-6-sm.jpg",
-          "alt": "Placeholder photo"
-        },
-        {
-          "src": "assets/img/photos/photo-8.jpg",
-          "thumb": "assets/img/photos/photo-8-sm.jpg",
-          "alt": "Placeholder photo"
-        }
-      ]
+      "photos": []
     }
   ]
 }
