@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
-"""Write the SEO text from the CMS into the page files.
+"""Write the SEO text and site address from the CMS into the page files.
 
 Reads data/seo.json (main pages) and data/photos.json (gallery pages) and
 updates each page's <title>, meta description and the matching Open Graph /
 Twitter tags. GitHub runs this automatically when the site is published
 (.github/workflows/pages.yml), so search engines and link previews (WhatsApp,
 Facebook, LinkedIn) see the text without running any JavaScript.
+
+It also applies the "Site address" from data/site.json: every page address,
+preview image link, sitemap.xml and robots.txt is switched to it (e.g. when
+moving from https://2n2t-code.github.io/site to https://2n2t.com).
 
 Run it by hand from the site folder with:  python3 scripts/apply_seo.py
 """
@@ -64,8 +68,31 @@ def apply(page_file, title, description):
     return False
 
 
-def main():
+def apply_site_address():
+    """Swap the site address used in absolute links for the one set in the CMS."""
+    new = (load("site.json").get("siteUrl") or "").strip().rstrip("/")
+    if not re.fullmatch(r"https?://[^\s\"'<>]+", new):
+        return 0
+    home = (ROOT / "index.html").read_text(encoding="utf-8")
+    m = re.search(r'<link rel="canonical" href="([^"]+?)/?">', home)
+    old = m.group(1).rstrip("/") if m else ""
+    if not old or old == new:
+        return 0
     changed = 0
+    files = list(ROOT.glob("**/*.html")) + [ROOT / "sitemap.xml", ROOT / "robots.txt"]
+    for path in files:
+        if ".git" in path.parts or not path.exists():
+            continue
+        text = path.read_text(encoding="utf-8")
+        if old in text:
+            path.write_text(text.replace(old, new), encoding="utf-8")
+            changed += 1
+    print(f"Site address {old} -> {new} in {changed} file(s).")
+    return changed
+
+
+def main():
+    changed = apply_site_address()
     seo = load("seo.json")
     for key, page_file in PAGES.items():
         entry = seo.get(key) or {}

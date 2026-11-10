@@ -89,7 +89,7 @@ The fonts are system fonts, so nothing downloads. To use a web font, add its `<l
 ## SEO checklist when you go live
 
 - Every page has a title, description, canonical URL, Open Graph and Twitter tags. Update the wording in each page's `<head>` if you like.
-- These tags and `sitemap.xml` use `https://2n2t.com`. If the domain changes, find and replace it.
+- Page addresses, preview images, `sitemap.xml` and `robots.txt` use the **Site address** under **Contact & social links** in the CMS (currently `https://2n2t-code.github.io/site`). When you get a domain, change it there. The next publish updates every page (`scripts/apply_seo.py`).
 - The homepage includes schema.org `ProfessionalService` data. Update the email and `sameAs` social links there too.
 
 ## Deploy
@@ -128,4 +128,4 @@ The fonts are system fonts, so nothing downloads. To use a web font, add its `<l
 
 All links between pages are relative, so the site works both at `2n2t-code.github.io/site/` and on a custom domain. `404.html` works out where the site's root is when it loads.
 
-The page titles, social-media preview tags, `sitemap.xml` and `robots.txt` already use `https://2n2t.com`. They'll be correct once that domain points at the site.
+When you add a custom domain, also change **Site address** in the CMS (Contact & social links) so page addresses, link previews and the sitemap use it.
