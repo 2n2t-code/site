@@ -489,13 +489,16 @@
       var dark = Number(site.backgroundDarkness);
       if (!isFinite(dark)) dark = 70;
       dark = Math.min(95, Math.max(0, dark)) / 100;
+      // Use the full address: a relative one inside a CSS variable is resolved from
+      // style.css's folder, not this page's, which breaks under /site/ on GitHub Pages.
+      var full = new URL(url(bg), document.baseURI).href;
       var pre = new Image();
       pre.onload = function () {
-        document.body.style.setProperty("--wallpaper", "url('" + url(bg) + "')");
+        document.body.style.setProperty("--wallpaper", "url('" + full.replace(/'/g, "%27") + "')");
         document.body.style.setProperty("--wallpaper-dim", dark);
         document.body.classList.add("has-wallpaper");
       };
-      pre.src = url(bg);
+      pre.src = full;
     }
 
     var loc = document.getElementById("contact-location");
