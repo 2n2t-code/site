@@ -86,7 +86,7 @@ content:
         options:
           media: videos
           categories: [video]
-        description: "For a crisp HD background: upload a 20–40 second cut to Videos → Original (1080p or higher, MP4 or MOV, no audio needed, no black bars, under 100 MB) and pick it here. About 2–3 minutes after uploading, GitHub makes the web versions; until then the YouTube showreel is used. Leave empty to use YouTube."
+        description: "For a crisp HD background. The CMS can't upload videos (its limit is about 3 MB), so upload a 20–40 second cut (1080p, H.264 MP4, no audio, no black bars, under 25 MB) on GitHub at github.com/2n2t-code/site/upload/main/assets/video/Original, then pick it here from Videos → Original. About 5 minutes later the HD version is live; until then the YouTube showreel is used. Leave empty to use YouTube."
       - name: showreelTitle
         label: Showreel title
         type: string
@@ -197,7 +197,7 @@ content:
 
   - name: photos
     label: Photography
-    description: The Featured photos on the main Photography page and the category galleries. Upload full-size photos to the photos/Original folder in Media; about a minute later GitHub adds web versions to photos/Web (name.jpg, and name-sm.jpg for the Smaller version). Pick those here, not the originals.
+    description: The Featured photos on the main Photography page and the category galleries. Upload full-size photos to the photos/Original folder in Media (photos over about 3 MB, or big batches, upload on GitHub instead at github.com/2n2t-code/site/upload/main/assets/img/photos/Original); about a minute later GitHub adds web versions to photos/Web (name.jpg, and name-sm.jpg for the Smaller version). Pick those here, not the originals.
     type: file
     path: data/photos.json
     format: json
