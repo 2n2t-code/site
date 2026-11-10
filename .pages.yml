@@ -65,7 +65,7 @@ content:
 
   - name: home
     label: Homepage
-    description: The text and showreel at the top of the homepage.
+    description: The showreel, headline and introduction at the top of the homepage.
     type: file
     path: data/home.json
     format: json
@@ -76,6 +76,10 @@ content:
       - name: headline
         label: Headline
         type: string
+      - name: intro
+        label: Introduction
+        type: text
+        description: A short introduction to you and the site, shown under the headline below the showreel. Leave a blank line between paragraphs. While it's empty, nothing shows.
       - name: showreel
         label: Showreel (YouTube link)
         type: string

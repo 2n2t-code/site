@@ -313,6 +313,13 @@
     setText("#cta-title", home.ctaHeading);
     setText(".home-cta p", home.ctaText);
     setText(".hero-tile-title", home.showreelTitle);
+    // Introduction (Homepage → Introduction in the CMS). Blank lines start new paragraphs.
+    var intro = document.getElementById("home-intro-text");
+    if (intro) {
+      var paras = String(home.intro || "").split(/\n\s*\n/).map(function (t) { return t.trim(); }).filter(Boolean);
+      intro.replaceChildren.apply(intro, paras.map(function (t) { return el("p", { text: t }); }));
+      intro.hidden = !paras.length;
+    }
     var reel = parseVideoLink(home.showreel);
     var ytId = reel && reel.type === "youtube" ? reel.id : null;
     if (ytId) {

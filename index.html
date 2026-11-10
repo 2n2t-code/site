@@ -69,7 +69,7 @@
     <!-- HERO: full-screen showreel, muted and looping. The headline, small text and
          showreel video come from data/home.json (Homepage in Pages CMS); the values
          below are fallbacks used until that file loads. -->
-    <section class="hero" aria-labelledby="hero-title">
+    <section class="hero" aria-label="Showreel">
       <div class="hero-media">
         <!-- The still image is chosen by main.js (your video's first frame, or the
              YouTube thumbnail) so the wrong image never flashes up first. -->
@@ -84,9 +84,17 @@
           </span>
         </button>
       </div>
-      <div class="hero-content">
+      <a class="hero-scroll" href="#intro" aria-label="Scroll down"><span aria-hidden="true"></span></a>
+    </section>
+
+    <!-- Intro: headline, your introduction (Homepage → Introduction in the CMS) and links. -->
+    <section class="home-intro" id="intro" aria-labelledby="hero-title">
+      <div class="home-intro-head">
         <p class="hero-eyebrow">2N2T Productions &middot; Manchester</p>
         <h1 class="hero-title" id="hero-title">Live sessions, music videos &amp; event films</h1>
+      </div>
+      <div class="home-intro-body">
+        <div class="home-intro-text" id="home-intro-text" hidden></div>
         <div class="hero-actions">
           <button class="hero-play" type="button" data-play-youtube="a8pjf4iHd9c" data-play-title="The Silk Mill Recording Studios — Showreel 2026">
             Watch the showreel
@@ -94,7 +102,6 @@
           <a class="hero-link" href="film/">All video work <span aria-hidden="true">&rarr;</span></a>
         </div>
       </div>
-      <a class="hero-scroll" href="#work" aria-label="Scroll to selected work"><span aria-hidden="true"></span></a>
     </section>
 
     <section class="home-section" id="work" aria-labelledby="work-title">
