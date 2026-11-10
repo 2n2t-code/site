@@ -201,7 +201,7 @@ content:
 
   - name: photos
     label: Photography
-    description: The Featured photos on the main Photography page and the category galleries. Upload full-size photos to the photos/Original folder in Media (photos over about 3 MB, or big batches, upload on GitHub instead at github.com/2n2t-code/site/upload/main/assets/img/photos/Original); about a minute later GitHub adds web versions to photos/Web (name.jpg, and name-sm.jpg for the Smaller version). Pick those here, not the originals.
+    description: "Featured photos: drag the thumbnails to reorder, + to add, × to remove. Each one's description and caption come from its gallery, or from Featured photo details (only needed for a photo that isn't in a gallery). Galleries: a gallery only appears on the Photography page once it has a photo. Upload full-size photos to photos/Original (over 3 MB: upload on GitHub at github.com/2n2t-code/site/upload/main/assets/img/photos/Original); web versions appear in photos/Web a minute later — pick name.jpg, and name-sm.jpg as the smaller version."
     type: file
     path: data/photos.json
     format: json
@@ -211,10 +211,9 @@ content:
         type: image
         options:
           multiple: true
-        description: "The main grid on the Photography page, in this order. Drag the thumbnails to reorder, + to add (pick name.jpg from photos/Web, not the -sm version), × to remove. Each photo's description and caption come from its gallery automatically, or from Featured photo details below."
+        description: "The main grid on the Photography page, in this order. Drag to reorder; pick name.jpg (not -sm) from photos/Web to add."
       - name: highlights
         label: Featured photo details (optional)
-        description: Only needed for a featured photo that isn't in any gallery, or to give it a different description or caption here. Adding or removing entries here doesn't change what's featured; use the Featured photos thumbnails above.
         type: object
         list:
           collapsible:
@@ -243,7 +242,6 @@ content:
             type: string
       - name: categories
         label: Galleries
-        description: A gallery only appears on the Photography page once it has at least one photo.
         type: object
         list:
           collapsible:
@@ -293,14 +291,13 @@ content:
 
   - name: music
     label: Music
-    description: Your Bandcamp releases and your bands.
+    description: Your Bandcamp releases and your bands. Albums and EPs are sorted onto their own row automatically; single tracks go under Singles.
     type: file
     path: data/music.json
     format: json
     fields:
       - name: releases
         label: Bandcamp releases
-        description: Albums and EPs are sorted onto their own row automatically; single tracks go under Singles.
         type: object
         list:
           collapsible:
