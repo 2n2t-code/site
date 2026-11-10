@@ -107,6 +107,12 @@
       "thumb": "assets/img/photos/Web/spring-flowers-castlefield-viaduct-sm.jpg",
       "alt": "Spring Flowers, Castlefield Viaduct, Manchester",
       "caption": "Spring Flowers, Castlefield Viaduct, Manchester"
+    },
+    {
+      "src": "assets/img/photos/Web/budapest-2.jpg",
+      "thumb": "assets/img/photos/Web/budapest-2-sm.jpg",
+      "alt": "A view in Budapest",
+      "caption": "A view in Budapest"
     }
   ],
   "categories": [
