@@ -99,11 +99,13 @@
     {
       "src": "assets/img/photos/Web/glasgow-leaf-oct-2025-26.jpg",
       "thumb": "assets/img/photos/Web/glasgow-leaf-oct-2025-26-sm.jpg",
+      "alt": "Big Leaves, Glasgow",
       "caption": "Big Leaves, Glasgow"
     },
     {
       "src": "assets/img/photos/Web/spring-flowers-castlefield-viaduct.jpg",
       "thumb": "assets/img/photos/Web/spring-flowers-castlefield-viaduct-sm.jpg",
+      "alt": "Spring Flowers, Castlefield Viaduct, Manchester",
       "caption": "Spring Flowers, Castlefield Viaduct, Manchester"
     }
   ],
