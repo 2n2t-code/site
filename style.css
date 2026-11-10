@@ -308,18 +308,14 @@ main { display: block; }
 .work-info { position: absolute; left: var(--space-5); right: var(--space-5); bottom: var(--space-5); display: grid; gap: var(--space-1); }
 .work-meta { font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.16em; color: rgba(255, 255, 255, 0.75); }
 .work-title { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.15rem, 0.9rem + 1vw, 1.75rem); line-height: 1.1; }
+/* Hover play mark: a thin, hollow white triangle in the top-right corner. */
 .work-play {
   position: absolute; top: var(--space-5); right: var(--space-5);
-  display: inline-flex; align-items: center; gap: var(--space-2);
-  padding: var(--space-2) var(--space-4); border-radius: 999px;
-  background: rgba(255, 255, 255, 0.92); color: var(--color-bg);
-  font-size: var(--text-sm); font-weight: 700;
+  width: 40px; height: 40px; color: #fff;
+  filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.45));
   opacity: 0; transform: translateY(-6px); transition: opacity 0.4s ease, transform 0.4s ease;
 }
-.work-play::before {
-  content: ""; border-style: solid; border-width: 5px 0 5px 8px;
-  border-color: transparent transparent transparent var(--color-bg);
-}
+.work-play svg { display: block; }
 .work-tile:hover img, .work-tile:focus-visible img { transform: scale(1.05); filter: brightness(1); }
 .work-tile:hover .work-play, .work-tile:focus-visible .work-play { opacity: 1; transform: none; }
 .work-tile:focus-visible { outline-offset: -3px; }

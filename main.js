@@ -296,6 +296,14 @@
     document.addEventListener("videomodal", function (e) { modalOpen = e.detail; update(); });
   }
 
+  // Thin, hollow white play triangle (shown on tile hover).
+  function playMark() {
+    var span = el("span", { class: "work-play", "aria-hidden": "true" });
+    span.innerHTML = '<svg viewBox="0 0 24 24" width="100%" height="100%" focusable="false">' +
+      '<path d="M7 4.5v15l12.5-7.5z" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round"/></svg>';
+    return span;
+  }
+
   function renderHome() {
     // Editable homepage text and showreel (data/home.json).
     var home = content.home || {};
@@ -367,7 +375,7 @@
       var fullTitle = (v.category ? v.category + " — " : "") + (v.title || "Untitled");
       var btn = el("button", { class: "work-tile", type: "button", "aria-label": "Play video: " + fullTitle }, [
         thumbImg(v),
-        el("span", { class: "work-play", "aria-hidden": "true", text: "Play" }),
+        playMark(),
         el("span", { class: "work-info" }, [
           v.category ? el("span", { class: "work-meta", text: v.category }) : null,
           el("span", { class: "work-title", text: v.title || "Untitled" })
