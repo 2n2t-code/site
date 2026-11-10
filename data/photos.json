@@ -42,7 +42,16 @@
       "slug": "weddings",
       "photos": [
         {
-          "src": "assets/img/photos/Web/nick-fran-3.jpg"
+          "src": "assets/img/photos/Web/nick-fran-3.jpg",
+          "alt": "Confetti throw"
+        },
+        {
+          "src": "assets/img/photos/Web/nick-fran-1.jpg",
+          "alt": "Happy couple"
+        },
+        {
+          "src": "assets/img/photos/Web/nick-fran-4.jpg",
+          "alt": "Drayton Court Hotel"
         }
       ]
     },
