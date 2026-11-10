@@ -52,6 +52,48 @@
       "thumb": "assets/img/photos/Web/germanymay2026-21-sm.jpg",
       "alt": "Crossing the road to Mannheim Water Tower",
       "caption": "Mannheim Water Town"
+    },
+    {
+      "src": "assets/img/photos/Web/ed-portrait-1.jpg",
+      "thumb": "assets/img/photos/Web/ed-portrait-1-sm.jpg",
+      "alt": "Portrait of Ed in sunglasses and a leather jacket against a lattice railing in the sun",
+      "caption": "Ed"
+    },
+    {
+      "src": "assets/img/photos/Web/budapest-2.jpg",
+      "thumb": "assets/img/photos/Web/budapest-2-sm.jpg",
+      "alt": "Budapest from above: autumn trees and rooftops leading to the river and a hill topped with a monument",
+      "caption": "Budapest"
+    },
+    {
+      "src": "assets/img/photos/Web/victoria-baths-floor-and-window.jpg",
+      "thumb": "assets/img/photos/Web/victoria-baths-floor-and-window-sm.jpg",
+      "alt": "Light from a stained-glass window falling across the floor in a dark corridor at Victoria Baths",
+      "caption": "Victoria Baths"
+    },
+    {
+      "src": "assets/img/photos/Web/euan-portrait-1.jpg",
+      "thumb": "assets/img/photos/Web/euan-portrait-1-sm.jpg",
+      "alt": "Portrait of Euan in a beige jacket leaning on a rusted iron railing",
+      "caption": "Euan"
+    },
+    {
+      "src": "assets/img/photos/Web/stone-station-on-a-foggy-night.jpg",
+      "thumb": "assets/img/photos/Web/stone-station-on-a-foggy-night-sm.jpg",
+      "alt": "Stone station footbridge and platform under street lights on a foggy night",
+      "caption": "Stone station on a foggy night"
+    },
+    {
+      "src": "assets/img/photos/Web/nature-tv-gullivers-2.jpg",
+      "thumb": "assets/img/photos/Web/nature-tv-gullivers-2-sm.jpg",
+      "alt": "Nature TV's guitarist mid-song with a sunburst guitar, lit in purple at Gullivers",
+      "caption": "Nature TV at Gullivers"
+    },
+    {
+      "src": "assets/img/photos/Web/stone-beech-xmas-light-trails.jpg",
+      "thumb": "assets/img/photos/Web/stone-beech-xmas-light-trails-sm.jpg",
+      "alt": "Christmas lights streaking into colourful trails in a zoom-burst long exposure",
+      "caption": "Christmas light trails, Stone"
     }
   ],
   "categories": [
@@ -75,6 +117,24 @@
         {
           "src": "assets/img/photos/Web/nick-fran-4.jpg",
           "alt": "Drayton Court Hotel"
+        },
+        {
+          "src": "assets/img/photos/Web/nick-fran-2.jpg",
+          "thumb": "assets/img/photos/Web/nick-fran-2-sm.jpg",
+          "alt": "Bride and groom smiling outside the venue doorway, the bride holding a bouquet of pink peonies",
+          "caption": ""
+        },
+        {
+          "src": "assets/img/photos/Web/nick-fran-5.jpg",
+          "thumb": "assets/img/photos/Web/nick-fran-5-sm.jpg",
+          "alt": "Instant photos of the wedding guests scattered across a wooden table",
+          "caption": ""
+        },
+        {
+          "src": "assets/img/photos/Web/nick-fran-6.jpg",
+          "thumb": "assets/img/photos/Web/nick-fran-6-sm.jpg",
+          "alt": "Black-and-white photo of the bride and groom dancing surrounded by guests",
+          "caption": ""
         }
       ]
     },
@@ -84,7 +144,33 @@
       "intro": "Hills, coastlines and big skies across the North West and beyond.",
       "metaTitle": "Landscape Photography — 2N2T",
       "metaDescription": "Landscape photography by 2N2T: hills, coastlines and big skies across the North West and beyond.",
-      "slug": "landscape"
+      "slug": "landscape",
+      "photos": [
+        {
+          "src": "assets/img/photos/Web/levenshulme-station-sunset-nov26.jpg",
+          "thumb": "assets/img/photos/Web/levenshulme-station-sunset-nov26-sm.jpg",
+          "alt": "Sunset over Levenshulme from the station platform",
+          "caption": "Sunset from Levenshulme Station"
+        },
+        {
+          "src": "assets/img/photos/Web/budapest-2.jpg",
+          "thumb": "assets/img/photos/Web/budapest-2-sm.jpg",
+          "alt": "Budapest from above: autumn trees and rooftops leading to the river and a hill topped with a monument",
+          "caption": "Budapest"
+        },
+        {
+          "src": "assets/img/photos/Web/budapest-bridge-view-1.jpg",
+          "thumb": "assets/img/photos/Web/budapest-bridge-view-1-sm.jpg",
+          "alt": "Budapest street curving down to the Danube, with a green bridge in the distance",
+          "caption": "Budapest, bridge view"
+        },
+        {
+          "src": "assets/img/photos/Web/spring-flowers-castlefield-viaduct.jpg",
+          "thumb": "assets/img/photos/Web/spring-flowers-castlefield-viaduct-sm.jpg",
+          "alt": "Daffodils and tulips in bloom on Castlefield Viaduct",
+          "caption": "Spring flowers, Castlefield Viaduct"
+        }
+      ]
     },
     {
       "title": "Portrait Photography",
@@ -92,7 +178,21 @@
       "intro": "Artist, press and personal portraits, on location or in the studio.",
       "metaTitle": "Portrait Photography — 2N2T",
       "metaDescription": "Portrait photography by 2N2T in Manchester: artist, press and personal portraits.",
-      "slug": "portraits"
+      "slug": "portraits",
+      "photos": [
+        {
+          "src": "assets/img/photos/Web/ed-portrait-1.jpg",
+          "thumb": "assets/img/photos/Web/ed-portrait-1-sm.jpg",
+          "alt": "Portrait of Ed in sunglasses and a leather jacket against a lattice railing in the sun",
+          "caption": "Ed"
+        },
+        {
+          "src": "assets/img/photos/Web/euan-portrait-1.jpg",
+          "thumb": "assets/img/photos/Web/euan-portrait-1-sm.jpg",
+          "alt": "Portrait of Euan in a beige jacket leaning on a rusted iron railing",
+          "caption": "Euan"
+        }
+      ]
     },
     {
       "title": "Music Photography",
@@ -107,6 +207,60 @@
           "thumb": "assets/img/photos/Web/rival-consoles-live-sm.jpg",
           "alt": "Rival Consoles performing in silhouette under red and blue laser beams",
           "caption": "Rival Consoles, live"
+        },
+        {
+          "src": "assets/img/photos/Web/black-belt-eagle-scout-at-night-and-day.jpg",
+          "thumb": "assets/img/photos/Web/black-belt-eagle-scout-at-night-and-day-sm.jpg",
+          "alt": "Black Belt Eagle Scout singing into a microphone with a pink guitar, a second guitarist beside her, lit in red",
+          "caption": "Black Belt Eagle Scout at Night & Day Cafe"
+        },
+        {
+          "src": "assets/img/photos/Web/black-belt-eagle-scout-02.jpg",
+          "thumb": "assets/img/photos/Web/black-belt-eagle-scout-02-sm.jpg",
+          "alt": "Black Belt Eagle Scout singing and playing a pink electric guitar under pink stage light, surrounded by mirror-ball reflections",
+          "caption": "Black Belt Eagle Scout"
+        },
+        {
+          "src": "assets/img/photos/Web/fabiana-palladino-at-yes-pink-room-1.jpg",
+          "thumb": "assets/img/photos/Web/fabiana-palladino-at-yes-pink-room-1-sm.jpg",
+          "alt": "Fabiana Palladino singing in a red dress under deep pink light at YES",
+          "caption": "Fabiana Palladino at YES (Pink Room)"
+        },
+        {
+          "src": "assets/img/photos/Web/fabiana-palladino-at-yes-pink-room-2.jpg",
+          "thumb": "assets/img/photos/Web/fabiana-palladino-at-yes-pink-room-2-sm.jpg",
+          "alt": "Fabiana Palladino singing to the crowd in the Pink Room at YES",
+          "caption": "Fabiana Palladino at YES (Pink Room)"
+        },
+        {
+          "src": "assets/img/photos/Web/nature-tv-gullivers-1.jpg",
+          "thumb": "assets/img/photos/Web/nature-tv-gullivers-1-sm.jpg",
+          "alt": "Nature TV's singer and guitarist performing under magenta stage lights at Gullivers",
+          "caption": "Nature TV at Gullivers"
+        },
+        {
+          "src": "assets/img/photos/Web/nature-tv-gullivers-2.jpg",
+          "thumb": "assets/img/photos/Web/nature-tv-gullivers-2-sm.jpg",
+          "alt": "Nature TV's guitarist mid-song with a sunburst guitar, lit in purple at Gullivers",
+          "caption": "Nature TV at Gullivers"
+        },
+        {
+          "src": "assets/img/photos/Web/siv-jacobsen-at-gullivers-1.jpg",
+          "thumb": "assets/img/photos/Web/siv-jacobsen-at-gullivers-1-sm.jpg",
+          "alt": "Siv Jacobsen playing acoustic guitar beside a flower-covered microphone stand at Gullivers",
+          "caption": "Siv Jacobsen at Gullivers"
+        },
+        {
+          "src": "assets/img/photos/Web/siv-jacobsen-at-gullivers-4.jpg",
+          "thumb": "assets/img/photos/Web/siv-jacobsen-at-gullivers-4-sm.jpg",
+          "alt": "Siv Jacobsen smiling as she plays acoustic guitar on stage at Gullivers, framed by flowers",
+          "caption": "Siv Jacobsen at Gullivers"
+        },
+        {
+          "src": "assets/img/photos/Web/english-teacher-at-soup.jpg",
+          "thumb": "assets/img/photos/Web/english-teacher-at-soup-sm.jpg",
+          "alt": "English Teacher's singer performing under the red neon SOUP sign",
+          "caption": "English Teacher at SOUP"
         }
       ]
     },
@@ -129,6 +283,42 @@
           "thumb": "assets/img/photos/Web/levenshulme-fireworks-sm.jpg",
           "alt": "Fireworks bursting over Levenshulme station platform at night",
           "caption": "Levenshulme station, fireworks night"
+        },
+        {
+          "src": "assets/img/photos/Web/germanymay2026-21.jpg",
+          "thumb": "assets/img/photos/Web/germanymay2026-21-sm.jpg",
+          "alt": "Crossing the road to Mannheim Water Tower, a red umbrella in the foreground",
+          "caption": "Mannheim Water Tower"
+        },
+        {
+          "src": "assets/img/photos/Web/stone-station-on-a-foggy-night.jpg",
+          "thumb": "assets/img/photos/Web/stone-station-on-a-foggy-night-sm.jpg",
+          "alt": "Stone station footbridge and platform under street lights on a foggy night",
+          "caption": "Stone station on a foggy night"
+        },
+        {
+          "src": "assets/img/photos/Web/rail-bridge-over-trent-and-mersey-stone.jpg",
+          "thumb": "assets/img/photos/Web/rail-bridge-over-trent-and-mersey-stone-sm.jpg",
+          "alt": "Underside of a rail bridge over a weathered, peeling brick wall by the Trent & Mersey canal",
+          "caption": "Rail bridge over the Trent & Mersey, Stone"
+        },
+        {
+          "src": "assets/img/photos/Web/stone-beech-xmas-light-trails.jpg",
+          "thumb": "assets/img/photos/Web/stone-beech-xmas-light-trails-sm.jpg",
+          "alt": "Christmas lights streaking into colourful trails in a zoom-burst long exposure",
+          "caption": "Christmas light trails, Stone"
+        },
+        {
+          "src": "assets/img/photos/Web/victoria-baths-floor-and-window.jpg",
+          "thumb": "assets/img/photos/Web/victoria-baths-floor-and-window-sm.jpg",
+          "alt": "Light from a stained-glass window falling across the floor in a dark corridor at Victoria Baths",
+          "caption": "Victoria Baths"
+        },
+        {
+          "src": "assets/img/photos/Web/victoria-baths-floor.jpg",
+          "thumb": "assets/img/photos/Web/victoria-baths-floor-sm.jpg",
+          "alt": "Pool of window light on the floor at Victoria Baths",
+          "caption": "Victoria Baths"
         }
       ]
     },
