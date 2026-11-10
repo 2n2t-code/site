@@ -387,7 +387,7 @@ content:
 
   - name: site
     label: Contact & social links
-    description: Used in the footer of every page and on the Contact page.
+    description: Used in the footer of every page and on the Contact page. Also the site address and the page backgrounds.
     type: file
     path: data/site.json
     format: json
@@ -424,3 +424,22 @@ content:
       - name: linkedin
         label: LinkedIn
         type: string
+      - name: backgroundVideo
+        label: "Page background: Video Production"
+        type: image
+        description: Fills the page behind the content and stays still while you scroll. Leave empty for the plain dark background.
+      - name: backgroundPhotography
+        label: "Page background: Photography (and its gallery pages)"
+        type: image
+      - name: backgroundMusic
+        label: "Page background: Music"
+        type: image
+      - name: backgroundDarkness
+        label: Page background darkness (%)
+        type: number
+        default: 70
+        options:
+          min: 0
+          max: 95
+          step: 5
+        description: How much the background images are darkened so text stays readable. 0 = full colour, 95 = almost black. Around 60–80 works best.

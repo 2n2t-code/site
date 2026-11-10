@@ -51,7 +51,7 @@ The sections in the CMS:
 | **Photography** | `data/photos.json` | Featured photos (main Photography page) and the six gallery pages |
 | **Music** | `data/music.json` | Bandcamp releases and band Spotify players |
 | **About page** | `data/about.json` | Intro line, portrait, bio, "What I do" |
-| **Contact & social links** | `data/site.json` | Email (footer and contact form), location, Instagram/YouTube/Bandcamp/LinkedIn |
+| **Contact & social links** | `data/site.json` | Email (footer and contact form), location, social links, Site address, and the **page backgrounds** for Video Production, Photography and Music with a darkness setting |
 
 Notes:
 - **Videos:** paste the YouTube or Vimeo link as it appears in your browser. Playlist parts on the end of the link are fine. Anything whose label includes "Live In Session" is featured at the top of the Video Production page. Vimeo videos need a custom thumbnail.

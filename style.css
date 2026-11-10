@@ -88,6 +88,21 @@ h1, h2, h3 {
 }
 .skip-link:focus { top: var(--space-4); }
 
+/* ---------- Page background images (set in the CMS) ----------
+   A fixed layer behind everything, darkened so text stays readable. It fades
+   in once loaded. Fixed with a pseudo-element (not background-attachment)
+   so it also stays still on phones. */
+body::before {
+  content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    linear-gradient(rgba(14, 14, 16, var(--wallpaper-dim, 0.7)), rgba(14, 14, 16, var(--wallpaper-dim, 0.7))),
+    var(--wallpaper, none) center / cover no-repeat;
+  opacity: 0; transition: opacity 0.8s ease;
+}
+body.has-wallpaper::before { opacity: 1; }
+/* Footer sits on a solid band so it stays easy to read. */
+body.has-wallpaper .site-footer { background: rgba(14, 14, 16, 0.85); }
+
 /* ---------- Header + dropdown menu ---------- */
 .site-header {
   position: sticky; top: 0; z-index: 50;

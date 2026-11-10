@@ -8,5 +8,9 @@
   "instagramMusic": "https://www.instagram.com/2n2tmusic/",
   "youtube": "https://www.youtube.com/@2n2tproductions",
   "bandcamp": "https://2n2t.bandcamp.com/",
-  "linkedin": "https://www.linkedin.com/in/alexpbennett/"
+  "linkedin": "https://www.linkedin.com/in/alexpbennett/",
+  "backgroundVideo": "assets/img/photos/Web/plantwallpaper1.jpg",
+  "backgroundPhotography": "assets/img/photos/Web/snakewallpaper2000px.jpg",
+  "backgroundMusic": "assets/img/photos/Web/plantwallpaper2.jpg",
+  "backgroundDarkness": 70
 }

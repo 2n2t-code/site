@@ -482,6 +482,22 @@
       var form = document.getElementById("contact-form");
       if (form) { form.setAttribute("data-email", email); form.setAttribute("action", "mailto:" + email); }
     }
+    // Page background images (set under Contact & social links in the CMS).
+    var bg = { film: site.backgroundVideo, photography: site.backgroundPhotography,
+      "photo-category": site.backgroundPhotography, music: site.backgroundMusic }[page];
+    if (bg) {
+      var dark = Number(site.backgroundDarkness);
+      if (!isFinite(dark)) dark = 70;
+      dark = Math.min(95, Math.max(0, dark)) / 100;
+      var pre = new Image();
+      pre.onload = function () {
+        document.body.style.setProperty("--wallpaper", "url('" + url(bg) + "')");
+        document.body.style.setProperty("--wallpaper-dim", dark);
+        document.body.classList.add("has-wallpaper");
+      };
+      pre.src = url(bg);
+    }
+
     var loc = document.getElementById("contact-location");
     if (loc && site.location) loc.textContent = site.location;
 
