@@ -35,7 +35,8 @@ window.SITE_CONTENT = {
       { type: "youtube", id: "6tPhsQtXXog", category: "Live In Session", title: "Algorhythm" },
       { type: "youtube", id: "XldxVfA5WPk", category: "Wedding Band Highlights", title: "Dirty Weekend Festival Wedding" },
       { type: "youtube", id: "_a9PFn6zo1c", category: "Fire Performer Promo", title: "Kat Fire" },
-      { type: "youtube", id: "nIYWaXC5TNk", category: "Live In Session at Hope Mill Studios", title: "The Beautiful Failures" }
+      { type: "youtube", id: "nIYWaXC5TNk", category: "Live In Session at Hope Mill Studios", title: "The Beautiful Failures" },
+      { type: "youtube", id: "M54RmO3AlNU", category: "Live In Session at Silk Mill Studios", title: "The Futuristic Gramophones" }
     ]
   },
 
