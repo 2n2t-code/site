@@ -3,7 +3,7 @@
 Plain HTML, CSS and vanilla JS. No framework, no build step, nothing to install.
 
 ```
-index.html              Homepage (Film / Photography / Music panels)
+index.html              Homepage (showreel hero, selected work, Photography/Music tiles)
 about/index.html        About (bio, services)
 contact/index.html      Contact details + form (opens the visitor's email app)
 film/index.html         Film & productions
@@ -107,14 +107,16 @@ Album, track and playlist links work too, and so does Spotify's embed code.
 
 Only one track plays at a time. Audio downloads only when someone presses play.
 
-### Homepage panels
+### Homepage
 
-Edit the three `<a class="panel">` blocks in `index.html`.
+`index.html` has four parts:
 
-- **Video Production** has a muted, looping YouTube video as its background (currently the Silk Mill showreel, `a8pjf4iHd9c`). To change it, replace that video ID in the `<img>` and `data-youtube-bg` lines. The video's thumbnail shows first. The video fades in after the page has loaded, and it's skipped for visitors with reduced motion or data saver on.
-- **Photography** and **Music** use images in `assets/img/home/`. Replace those files, or change the `src`.
+1. **Hero:** your showreel (YouTube `a8pjf4iHd9c`) plays full-screen, muted and looping, behind the headline. To use a different video, replace that ID in all four places inside the `<section class="hero">` block. The headline and the small text above it are plain text in the same block. The thumbnail shows first. Visitors with reduced motion or data saver on only see the thumbnail. **Watch the showreel** opens the video with sound in a pop-up player.
+2. **Selected work:** big video tiles, built from `content.js`. It takes the Live In Session videos first, then the other work, up to 7. The first tile runs full width. Clicking a tile plays that video in the pop-up player.
+3. **Also by 2N2T:** tiles linking to Photography and Music, using the images in `assets/img/home/`.
+4. **Get in touch:** a short call to action linking to the Contact page.
 
-The Video Production page still lives at `/film/`, so existing links keep working.
+On the homepage, the menu links sit across the top right on screens 900px and wider. Smaller screens get the menu button instead. The header is see-through over the video and turns solid once you scroll.
 
 ### About and Contact pages
 

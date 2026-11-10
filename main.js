@@ -99,6 +99,99 @@
       function (v) { return videoCard(v, false); }, "More work coming soon.");
   }
 
+  /* ---------- Homepage ---------- */
+  // Pop-up video player. Loads the video only when opened (with sound,
+  // because the visitor asked for it), and removes it on close so it stops.
+  var videoModal = document.getElementById("video-modal");
+  var modalLastFocus = null;
+  function openVideo(v, trigger) {
+    if (!videoModal) return;
+    var frame = videoModal.querySelector(".video-modal-frame");
+    var player = v.type === "mp4"
+      ? el("video", { controls: true, autoplay: true, playsinline: true, src: url(v.src) })
+      : el("iframe", { src: embedSrc(v), title: v.title || "Video", allow: "autoplay; fullscreen; picture-in-picture; encrypted-media", allowfullscreen: true });
+    frame.replaceChildren(player);
+    modalLastFocus = trigger || null;
+    videoModal.hidden = false;
+    document.body.classList.add("no-scroll");
+    videoModal.querySelector(".video-modal-close").focus();
+    document.dispatchEvent(new CustomEvent("videomodal", { detail: true }));
+  }
+  function closeVideo() {
+    if (!videoModal || videoModal.hidden) return;
+    videoModal.querySelector(".video-modal-frame").replaceChildren();
+    videoModal.hidden = true;
+    document.body.classList.remove("no-scroll");
+    if (modalLastFocus) modalLastFocus.focus();
+    document.dispatchEvent(new CustomEvent("videomodal", { detail: false }));
+  }
+  if (videoModal) {
+    videoModal.querySelector(".video-modal-close").addEventListener("click", closeVideo);
+    videoModal.addEventListener("click", function (e) { if (e.target === videoModal) closeVideo(); });
+    document.addEventListener("keydown", function (e) {
+      if (videoModal.hidden) return;
+      if (e.key === "Escape") closeVideo();
+      if (e.key === "Tab") { e.preventDefault(); videoModal.querySelector(".video-modal-close").focus(); }
+    });
+  }
+
+  function renderHome() {
+    // Showreel button in the hero.
+    document.querySelectorAll("[data-play-youtube]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        openVideo({ type: "youtube", id: btn.getAttribute("data-play-youtube"), title: btn.getAttribute("data-play-title") }, btn);
+      });
+    });
+
+    // Selected work: Live In Session first, then the rest (up to 7 tiles).
+    var film = content.film || {};
+    var videos = (film.liveInSession || []).concat(film.work || []).slice(0, 7);
+    renderList(document.getElementById("home-work"), videos, function (v) {
+      var thumb = videoThumb(v);
+      var meta = metaLine(v, ["client", "year"]);
+      var btn = el("button", { class: "work-tile", type: "button", "aria-label": "Play video: " + (v.title || "Untitled") }, [
+        thumb ? el("img", { src: thumb, alt: "", loading: "lazy", decoding: "async" }) : null,
+        el("span", { class: "work-play", "aria-hidden": "true", text: "Play" }),
+        el("span", { class: "work-info" }, [
+          meta ? el("span", { class: "work-meta", text: meta }) : null,
+          el("span", { class: "work-title", text: v.title || "Untitled" })
+        ])
+      ]);
+      btn.addEventListener("click", function () { openVideo(v, btn); });
+      return el("li", { class: "reveal" }, [btn]);
+    }, "Video work coming soon.");
+
+    // Header goes from see-through to solid once you scroll past the top.
+    var header = document.querySelector(".site-header--overlay");
+    if (header) {
+      var onScroll = function () { header.classList.toggle("is-solid", window.scrollY > 40); };
+      window.addEventListener("scroll", onScroll, { passive: true });
+      onScroll();
+    }
+
+    // Pause the background showreel while the pop-up player is open.
+    document.addEventListener("videomodal", function (e) {
+      document.querySelectorAll(".hero-yt iframe").forEach(function (f) {
+        try { f.contentWindow.postMessage(JSON.stringify({ event: "command", func: e.detail ? "pauseVideo" : "playVideo", args: [] }), "*"); } catch (err) {}
+      });
+    });
+  }
+
+  // Fade sections in as they scroll into view.
+  function revealOnScroll() {
+    var items = document.querySelectorAll(".reveal");
+    if (!("IntersectionObserver" in window)) {
+      items.forEach(function (n) { n.classList.add("is-visible"); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add("is-visible"); io.unobserve(en.target); }
+      });
+    }, { rootMargin: "0px 0px -8% 0px" });
+    items.forEach(function (n) { io.observe(n); });
+  }
+
   /* ---------- Photography + lightbox ---------- */
   // Sets up the full-screen photo viewer for a list of photos and returns
   // open(index, triggerElement). Optional hooks run when it opens/closes.
@@ -485,7 +578,7 @@
         var iframe = el("iframe", {
           src: "https://www.youtube-nocookie.com/embed/" + id +
             "?autoplay=1&mute=1&loop=1&playlist=" + id +
-            "&controls=0&playsinline=1&rel=0&disablekb=1&iv_load_policy=3&modestbranding=1",
+            "&controls=0&playsinline=1&rel=0&disablekb=1&iv_load_policy=3&modestbranding=1&enablejsapi=1",
           title: "Background video",
           allow: "autoplay; encrypted-media; picture-in-picture",
           tabindex: "-1",
@@ -517,6 +610,7 @@
   }
 
   var page = document.body.getAttribute("data-page");
+  if (page === "home") renderHome();
   if (page === "film") renderFilm();
   if (page === "photography") {
     renderSlideshow(document.getElementById("highlights"), content.photos || []);
@@ -524,4 +618,6 @@
   }
   if (page === "photo-category") renderPhotoCategoryPage();
   if (page === "music") renderMusic();
+
+  revealOnScroll();
 })();
