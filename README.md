@@ -177,8 +177,9 @@ The fonts are system fonts, so nothing downloads. To use a web font, add its `<l
 
 2. On a free GitHub account, Pages only works for **public** repositories. To make yours public, open **Settings → General → Danger Zone → Change visibility**.
 3. In the repo, open **Settings → Pages → Build and deployment**. Choose **Deploy from a branch**, then **main**, then **/ (root)**.
-4. The `CNAME` file already contains `2n2t.com`. At your DNS provider, add the four GitHub Pages `A` records for the apex domain (or a `CNAME` for `www`) as shown in GitHub's docs. Then tick **Enforce HTTPS**.
-   If you're not using the custom domain, delete `CNAME`.
+4. The site is then live at `https://2n2t-code.github.io/site/`.
+5. **Adding a custom domain later (for example 2n2t.com):** in **Settings → Pages → Custom domain**, enter the domain and save. GitHub adds a `CNAME` file to the repository. At your domain provider, add GitHub's four `A` records for the domain (`185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`) and a `CNAME` record for `www` pointing to `2n2t-code.github.io`. Then tick **Enforce HTTPS**.
 
-All links between pages are relative, so the site also works at `username.github.io/repo/`.
-The only exception is `404.html`, which uses root paths and works best on a custom domain.
+All links between pages are relative, so the site works both at `2n2t-code.github.io/site/` and on a custom domain. `404.html` works out where the site's root is when it loads.
+
+The page titles, social-media preview tags, `sitemap.xml` and `robots.txt` already use `https://2n2t.com`. They'll be correct once that domain points at the site.
