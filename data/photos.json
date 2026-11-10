@@ -34,6 +34,24 @@
       "src": "assets/img/photos/Web/nick-fran-1.jpg",
       "thumb": "assets/img/photos/Web/nick-fran-1-sm.jpg",
       "alt": "Mr & Mrs Bennett"
+    },
+    {
+      "src": "assets/img/photos/Web/english-teacher-at-soup.jpg",
+      "thumb": "assets/img/photos/Web/english-teacher-at-soup-sm.jpg",
+      "alt": "English Teacher live at Soup",
+      "caption": "English Teacher live at Soup, Manchester"
+    },
+    {
+      "src": "assets/img/photos/Web/siv-jacobsen-at-gullivers-1.jpg",
+      "thumb": "assets/img/photos/Web/siv-jacobsen-at-gullivers-1-sm.jpg",
+      "alt": "Siv Jacobsen Live at Gullivers",
+      "caption": "Siv Jacobsen at Gullivers"
+    },
+    {
+      "src": "assets/img/photos/Web/black-belt-eagle-scout-at-night-and-day.jpg",
+      "thumb": "assets/img/photos/Web/black-belt-eagle-scout-at-night-and-day-sm.jpg",
+      "alt": "Black Belt Eagle Scout Live at Night And Day Cafe",
+      "caption": "Black Belt Eagle Scout at Night & Day Cafe"
     }
   ],
   "categories": [
