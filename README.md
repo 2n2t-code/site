@@ -18,6 +18,7 @@ style.css               ← All colours, fonts and spacing (CSS variables at the
 assets/img/             Images (CMS uploads go here too)
 favicon.svg / .ico      Favicons
 scripts/apply_seo.py    Writes the CMS's SEO text into the pages when publishing
+scripts/make_web_images.py  Makes web-sized copies of photos added to photos/Original
 .github/workflows/      GitHub's publishing steps
 robots.txt, sitemap.xml, .nojekyll
 ```
@@ -52,7 +53,7 @@ The sections in the CMS:
 
 Notes:
 - **Videos:** paste the YouTube or Vimeo link as it appears in your browser. Playlist parts on the end of the link are fine. Anything whose label includes "Live In Session" is featured at the top of the Video Production page. Vimeo videos need a custom thumbnail.
-- **Photos:** export at about 2000px on the long edge before uploading. The CMS doesn't shrink images, and big camera files slow pages down. A "Smaller version" (about 800px wide) makes the gallery grids load faster still.
+- **Photos:** upload full-size photos to **photos/Original** in the CMS's Media section. Within a minute or two, GitHub automatically makes web versions in **photos/Web**: `name.jpg` (2000px on the long edge) and `name-sm.jpg` (800px wide). It turns phone photos the right way up, removes camera data such as GPS location, and handles JPG, PNG, WebP, TIFF and iPhone HEIC. Reload the media library, then pick `name.jpg` as the Photo and `name-sm.jpg` as the Smaller version. Re-uploading a changed photo with the same name remakes its web versions. The originals are kept in the repository but left out of the published site. (`scripts/make_web_images.py`, run by `.github/workflows/web-images.yml`.)
 - **Bandcamp:** paste the **embed code** from Bandcamp's Share / Embed button, not the page link. The site reads the release number from it and restyles the player to match. Albums and EPs go on their own row automatically.
 - **SEO:** each main page has a Meta Title (aim for 50–60 characters) and Meta Description (120–155) under **SEO**. Each gallery page has its own under **Photography → Galleries**. When the site publishes, GitHub writes them into the page files (`scripts/apply_seo.py`, run by `.github/workflows/pages.yml`), so Google and link previews in WhatsApp, Facebook and LinkedIn see them.
 - **Phone images:** most images have an optional "on phones" or "Phone version" field: video thumbnails, the showreel background, the homepage tiles, featured and gallery photos, gallery card images and the About portrait. On screens under 640px wide it's used instead of the normal image. Use it when the normal crop doesn't work on a small screen, for example a tighter crop.

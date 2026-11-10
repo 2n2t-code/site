@@ -183,7 +183,7 @@ content:
 
   - name: photos
     label: Photography
-    description: The Featured photos on the main Photography page and the category galleries. Export photos at about 2000px on the long edge before uploading, so pages stay fast.
+    description: The Featured photos on the main Photography page and the category galleries. Upload full-size photos to the photos/Original folder in Media; about a minute later GitHub adds web versions to photos/Web (name.jpg, and name-sm.jpg for the Smaller version). Pick those here, not the originals.
     type: file
     path: data/photos.json
     format: json
@@ -201,10 +201,11 @@ content:
             label: Photo
             type: image
             required: true
+            description: Pick from photos/Web (e.g. name.jpg), not photos/Original.
           - name: thumb
             label: Smaller version (optional)
             type: image
-            description: About 800px wide. Makes the gallery grids load faster; leave empty to use the main photo.
+            description: The matching name-sm.jpg from photos/Web. Makes the grids load faster; leave empty to use the main photo.
           - name: mobile
             label: Phone version (optional)
             type: image
