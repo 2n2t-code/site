@@ -501,8 +501,20 @@
     else window.addEventListener("load", startYouTubeBackgrounds);
   }
 
-  var sent = document.getElementById("form-success");
-  if (sent && /[?&]sent=1/.test(location.search)) sent.hidden = false;
+  // Contact form: build an email from the fields and open the visitor's
+  // email app. No server or form service needed, so it works on any host.
+  var form = document.getElementById("contact-form");
+  if (form) {
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var f = form.elements;
+      var subject = "Website enquiry: " + f.type.value + " (from " + f.name.value + ")";
+      var body = f.message.value + "\n\n— " + f.name.value + "\n" + f.email.value;
+      window.location.href = "mailto:" + form.getAttribute("data-email") +
+        "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+      document.getElementById("form-success").hidden = false;
+    });
+  }
 
   var page = document.body.getAttribute("data-page");
   if (page === "film") renderFilm();

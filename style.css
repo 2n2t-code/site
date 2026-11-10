@@ -521,6 +521,8 @@ main { display: block; }
 .field textarea { resize: vertical; min-height: 140px; }
 .field input:focus, .field select:focus, .field textarea:focus { outline: 2px solid var(--color-accent); outline-offset: 0; border-color: transparent; }
 .contact-form .button { justify-self: start; }
+.form-note { margin: 0; font-size: var(--text-sm); color: var(--color-muted); }
+.form-success a { color: var(--color-accent); }
 .form-success {
   margin: 0; padding: var(--space-3) var(--space-4); border-radius: var(--radius);
   background: var(--color-surface-2); border-left: 3px solid var(--color-accent);

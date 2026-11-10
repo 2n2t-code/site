@@ -5,7 +5,7 @@ Plain HTML, CSS and vanilla JS. No framework, no build step, nothing to install.
 ```
 index.html              Homepage (Film / Photography / Music panels)
 about/index.html        About (bio, services)
-contact/index.html      Contact details + form (Netlify Forms)
+contact/index.html      Contact details + form (opens the visitor's email app)
 film/index.html         Film & productions
 photography/index.html  Highlights gallery + category cards
 photography/*/          Category pages (weddings, landscape, portraits, music, street, film)
@@ -120,9 +120,7 @@ The Video Production page still lives at `/film/`, so existing links keep workin
 
 - **About** (`about/index.html`): the bio and the "What I do" list are plain HTML, marked with an `EDIT ME` comment. Replace the placeholder text. The portrait is `assets/img/about/alex-portrait.jpg`, a web-sized copy of your upload `alex2n2t-contact.jpg`.
 - **Contact** (`contact/index.html`): your email, location and links, plus a contact form.
-  The form uses **Netlify Forms**, which is free and needs no setup beyond deploying to Netlify. Messages appear in Netlify under **Forms**. To get them by email, go to **Site configuration → Notifications → Form submission notifications**.
-  After someone sends a message, they return to the Contact page and see a thank-you note.
-  On GitHub Pages the form won't work. Delete the `<form>…</form>` block and keep the email link.
+  The form needs no service. Pressing **Send message** opens the visitor's email app with a message to 2n2tproductions@gmail.com already filled in: their name, email, what it's about and the message. They just press send. To change the address, edit `data-email` and the `mailto:` on the `<form>` in `contact/index.html`.
 
 ### Header, footer, email and socials
 
@@ -177,8 +175,9 @@ The fonts are system fonts, so nothing downloads. To use a web font, add its `<l
    git push -u origin main
    ```
 
-2. In the repo, open **Settings → Pages → Build and deployment**. Choose **Deploy from a branch**, then **main**, then **/ (root)**.
-3. The `CNAME` file already contains `2n2t.com`. At your DNS provider, add the four GitHub Pages `A` records for the apex domain (or a `CNAME` for `www`) as shown in GitHub's docs. Then tick **Enforce HTTPS**.
+2. On a free GitHub account, Pages only works for **public** repositories. To make yours public, open **Settings → General → Danger Zone → Change visibility**.
+3. In the repo, open **Settings → Pages → Build and deployment**. Choose **Deploy from a branch**, then **main**, then **/ (root)**.
+4. The `CNAME` file already contains `2n2t.com`. At your DNS provider, add the four GitHub Pages `A` records for the apex domain (or a `CNAME` for `www`) as shown in GitHub's docs. Then tick **Enforce HTTPS**.
    If you're not using the custom domain, delete `CNAME`.
 
 All links between pages are relative, so the site also works at `username.github.io/repo/`.

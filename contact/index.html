@@ -77,13 +77,12 @@
         </ul>
       </div>
 
-      <!-- Contact form: handled by Netlify Forms (free). Submissions appear in
-           your Netlify dashboard under Forms, and can be emailed to you. -->
-      <form class="contact-form" name="contact" method="POST" action="../contact/?sent=1" data-netlify="true" netlify-honeypot="company">
-        <input type="hidden" name="form-name" value="contact">
-        <p class="visually-hidden"><label>Leave this empty: <input name="company" tabindex="-1" autocomplete="off"></label></p>
-
-        <p class="form-success" id="form-success" role="status" hidden>Thanks, your message has been sent. I'll be in touch soon.</p>
+      <!-- Contact form: works on any host. Pressing Send opens the visitor's
+           email app with the message filled in, addressed to the email below.
+           To change the address, edit data-email (and the mailto: in action). -->
+      <form class="contact-form" id="contact-form" name="contact" method="post" enctype="text/plain"
+            action="mailto:2n2tproductions@gmail.com" data-email="2n2tproductions@gmail.com">
+        <p class="form-success" id="form-success" role="status" hidden>Your email app should now be open with your message ready. Just press send. If nothing opened, email <a href="mailto:2n2tproductions@gmail.com">2n2tproductions@gmail.com</a> directly.</p>
 
         <div class="field">
           <label for="name">Name</label>
@@ -108,6 +107,7 @@
           <textarea id="message" name="message" rows="6" required placeholder="Dates, location, budget, links: anything that helps."></textarea>
         </div>
         <button class="button" type="submit">Send message</button>
+        <p class="form-note">This opens your email app with your message ready to send.</p>
       </form>
     </section>
   </main>
