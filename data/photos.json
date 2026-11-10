@@ -17,192 +17,106 @@
       "thumb": "assets/img/photos/vw-camper-tram-trails-sm.jpg",
       "alt": "A cream VW camper van parked at night as a passing tram leaves light trails behind it",
       "caption": "Camper and tram trails"
-    },
-    {
-      "src": "assets/img/photos/photo-1.jpg",
-      "thumb": "assets/img/photos/photo-1-sm.jpg",
-      "alt": "Placeholder photo 1",
-      "caption": "Live at a Manchester venue"
-    },
-    {
-      "src": "assets/img/photos/photo-2.jpg",
-      "thumb": "assets/img/photos/photo-2-sm.jpg",
-      "alt": "Placeholder photo 2",
-      "caption": "Portrait session"
-    },
-    {
-      "src": "assets/img/photos/photo-3.jpg",
-      "thumb": "assets/img/photos/photo-3-sm.jpg",
-      "alt": "Placeholder photo 3",
-      "caption": "Behind the scenes"
-    },
-    {
-      "src": "assets/img/photos/photo-4.jpg",
-      "thumb": "assets/img/photos/photo-4-sm.jpg",
-      "alt": "Placeholder photo 4",
-      "caption": ""
-    },
-    {
-      "src": "assets/img/photos/photo-5.jpg",
-      "thumb": "assets/img/photos/photo-5-sm.jpg",
-      "alt": "Placeholder photo 5",
-      "caption": "Northern Quarter"
-    },
-    {
-      "src": "assets/img/photos/photo-6.jpg",
-      "thumb": "assets/img/photos/photo-6-sm.jpg",
-      "alt": "Placeholder photo 6",
-      "caption": ""
-    },
-    {
-      "src": "assets/img/photos/photo-7.jpg",
-      "thumb": "assets/img/photos/photo-7-sm.jpg",
-      "alt": "Placeholder photo 7",
-      "caption": "Studio session"
-    },
-    {
-      "src": "assets/img/photos/photo-8.jpg",
-      "thumb": "assets/img/photos/photo-8-sm.jpg",
-      "alt": "Placeholder photo 8",
-      "caption": ""
-    },
-    {
-      "src": "assets/img/photos/photo-9.jpg",
-      "thumb": "assets/img/photos/photo-9-sm.jpg",
-      "alt": "Placeholder photo 9",
-      "caption": "Festival season"
-    },
-    {
-      "src": "assets/img/photos/photo-10.jpg",
-      "thumb": "assets/img/photos/photo-10-sm.jpg",
-      "alt": "Placeholder photo 10",
-      "caption": ""
-    },
-    {
-      "src": "assets/img/photos/photo-11.jpg",
-      "thumb": "assets/img/photos/photo-11-sm.jpg",
-      "alt": "Placeholder photo 11",
-      "caption": ""
-    },
-    {
-      "src": "assets/img/photos/photo-12.jpg",
-      "thumb": "assets/img/photos/photo-12-sm.jpg",
-      "alt": "Placeholder photo 12",
-      "caption": "Golden hour"
     }
   ],
   "categories": [
     {
-      "slug": "weddings",
       "title": "Wedding Photography",
       "label": "Weddings",
       "intro": "Relaxed, story-led wedding photography, from getting ready to the last dance.",
-      "cover": "",
+      "metaTitle": "Wedding Photography — 2N2T",
+      "metaDescription": "Wedding photography by 2N2T in Manchester and the North West: relaxed, story-led coverage of your day.",
+      "slug": "weddings",
       "photos": [
         {
           "src": "assets/img/photos/photo-2.jpg",
           "thumb": "assets/img/photos/photo-2-sm.jpg",
-          "alt": "Placeholder photo",
-          "caption": ""
+          "alt": "Placeholder photo"
         },
         {
           "src": "assets/img/photos/photo-4.jpg",
           "thumb": "assets/img/photos/photo-4-sm.jpg",
-          "alt": "Placeholder photo",
-          "caption": ""
+          "alt": "Placeholder photo"
         },
         {
           "src": "assets/img/photos/photo-7.jpg",
           "thumb": "assets/img/photos/photo-7-sm.jpg",
-          "alt": "Placeholder photo",
-          "caption": ""
+          "alt": "Placeholder photo"
         },
         {
           "src": "assets/img/photos/photo-10.jpg",
           "thumb": "assets/img/photos/photo-10-sm.jpg",
-          "alt": "Placeholder photo",
-          "caption": ""
+          "alt": "Placeholder photo"
         }
-      ],
-      "metaTitle": "Wedding Photography — 2N2T",
-      "metaDescription": "Wedding photography by 2N2T in Manchester and the North West: relaxed, story-led coverage of your day."
+      ]
     },
     {
-      "slug": "landscape",
       "title": "Landscape Photography",
       "label": "Landscape",
       "intro": "Hills, coastlines and big skies across the North West and beyond.",
-      "cover": "",
+      "metaTitle": "Landscape Photography — 2N2T",
+      "metaDescription": "Landscape photography by 2N2T: hills, coastlines and big skies across the North West and beyond.",
+      "slug": "landscape",
       "photos": [
         {
           "src": "assets/img/photos/photo-6.jpg",
           "thumb": "assets/img/photos/photo-6-sm.jpg",
-          "alt": "Placeholder photo",
-          "caption": ""
+          "alt": "Placeholder photo"
         },
         {
           "src": "assets/img/photos/photo-11.jpg",
           "thumb": "assets/img/photos/photo-11-sm.jpg",
-          "alt": "Placeholder photo",
-          "caption": ""
+          "alt": "Placeholder photo"
         },
         {
           "src": "assets/img/photos/photo-1.jpg",
           "thumb": "assets/img/photos/photo-1-sm.jpg",
-          "alt": "Placeholder photo",
-          "caption": ""
+          "alt": "Placeholder photo"
         },
         {
           "src": "assets/img/photos/photo-9.jpg",
           "thumb": "assets/img/photos/photo-9-sm.jpg",
-          "alt": "Placeholder photo",
-          "caption": ""
+          "alt": "Placeholder photo"
         }
-      ],
-      "metaTitle": "Landscape Photography — 2N2T",
-      "metaDescription": "Landscape photography by 2N2T: hills, coastlines and big skies across the North West and beyond."
+      ]
     },
     {
-      "slug": "portraits",
       "title": "Portrait Photography",
       "label": "Portraits",
       "intro": "Artist, press and personal portraits, on location or in the studio.",
-      "cover": "",
+      "metaTitle": "Portrait Photography — 2N2T",
+      "metaDescription": "Portrait photography by 2N2T in Manchester: artist, press and personal portraits.",
+      "slug": "portraits",
       "photos": [
         {
           "src": "assets/img/photos/photo-5.jpg",
           "thumb": "assets/img/photos/photo-5-sm.jpg",
-          "alt": "Placeholder photo",
-          "caption": ""
+          "alt": "Placeholder photo"
         },
         {
           "src": "assets/img/photos/photo-8.jpg",
           "thumb": "assets/img/photos/photo-8-sm.jpg",
-          "alt": "Placeholder photo",
-          "caption": ""
+          "alt": "Placeholder photo"
         },
         {
           "src": "assets/img/photos/photo-12.jpg",
           "thumb": "assets/img/photos/photo-12-sm.jpg",
-          "alt": "Placeholder photo",
-          "caption": ""
+          "alt": "Placeholder photo"
         },
         {
           "src": "assets/img/photos/photo-3.jpg",
           "thumb": "assets/img/photos/photo-3-sm.jpg",
-          "alt": "Placeholder photo",
-          "caption": ""
+          "alt": "Placeholder photo"
         }
-      ],
-      "metaTitle": "Portrait Photography — 2N2T",
-      "metaDescription": "Portrait photography by 2N2T in Manchester: artist, press and personal portraits."
+      ]
     },
     {
-      "slug": "music",
       "title": "Music Photography",
       "label": "Music",
       "intro": "Live shows, festivals and behind-the-scenes with artists.",
-      "cover": "",
+      "metaTitle": "Music Photography — 2N2T",
+      "metaDescription": "Music photography by 2N2T: live shows, festivals and behind-the-scenes with artists in Manchester.",
+      "slug": "music",
       "photos": [
         {
           "src": "assets/img/photos/rival-consoles-live.jpg",
@@ -213,31 +127,27 @@
         {
           "src": "assets/img/photos/photo-1.jpg",
           "thumb": "assets/img/photos/photo-1-sm.jpg",
-          "alt": "Placeholder photo",
-          "caption": ""
+          "alt": "Placeholder photo"
         },
         {
           "src": "assets/img/photos/photo-9.jpg",
           "thumb": "assets/img/photos/photo-9-sm.jpg",
-          "alt": "Placeholder photo",
-          "caption": ""
+          "alt": "Placeholder photo"
         },
         {
           "src": "assets/img/photos/photo-3.jpg",
           "thumb": "assets/img/photos/photo-3-sm.jpg",
-          "alt": "Placeholder photo",
-          "caption": ""
+          "alt": "Placeholder photo"
         }
-      ],
-      "metaTitle": "Music Photography — 2N2T",
-      "metaDescription": "Music photography by 2N2T: live shows, festivals and behind-the-scenes with artists in Manchester."
+      ]
     },
     {
-      "slug": "street",
       "title": "Street Photography",
       "label": "Street",
       "intro": "Manchester after dark: stations, trams and the city in motion.",
-      "cover": "",
+      "metaTitle": "Street Photography — 2N2T",
+      "metaDescription": "Street photography by 2N2T: Manchester after dark, stations, trams and the city in motion.",
+      "slug": "street",
       "photos": [
         {
           "src": "assets/img/photos/vw-camper-tram-trails.jpg",
@@ -251,44 +161,37 @@
           "alt": "Fireworks bursting over Levenshulme station platform at night",
           "caption": "Levenshulme station, fireworks night"
         }
-      ],
-      "metaTitle": "Street Photography — 2N2T",
-      "metaDescription": "Street photography by 2N2T: Manchester after dark, stations, trams and the city in motion."
+      ]
     },
     {
-      "slug": "film",
       "title": "Film Photography",
       "label": "Film",
       "intro": "Shot on 35mm and medium format film.",
-      "cover": "",
+      "metaTitle": "Film Photography — 2N2T",
+      "metaDescription": "Film photography by 2N2T, shot on 35mm and medium format.",
+      "slug": "film",
       "photos": [
         {
           "src": "assets/img/photos/photo-4.jpg",
           "thumb": "assets/img/photos/photo-4-sm.jpg",
-          "alt": "Placeholder photo",
-          "caption": ""
+          "alt": "Placeholder photo"
         },
         {
           "src": "assets/img/photos/photo-12.jpg",
           "thumb": "assets/img/photos/photo-12-sm.jpg",
-          "alt": "Placeholder photo",
-          "caption": ""
+          "alt": "Placeholder photo"
         },
         {
           "src": "assets/img/photos/photo-6.jpg",
           "thumb": "assets/img/photos/photo-6-sm.jpg",
-          "alt": "Placeholder photo",
-          "caption": ""
+          "alt": "Placeholder photo"
         },
         {
           "src": "assets/img/photos/photo-8.jpg",
           "thumb": "assets/img/photos/photo-8-sm.jpg",
-          "alt": "Placeholder photo",
-          "caption": ""
+          "alt": "Placeholder photo"
         }
-      ],
-      "metaTitle": "Film Photography — 2N2T",
-      "metaDescription": "Film photography by 2N2T, shot on 35mm and medium format."
+      ]
     }
   ]
 }
