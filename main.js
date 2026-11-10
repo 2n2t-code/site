@@ -1,11 +1,11 @@
 /* ==========================================================================
-   2N2T — renders content.js into the Film, Photography and Music pages.
-   You shouldn't need to edit this file to add content.
+   2N2T — loads the content files in data/ (edited in Pages CMS) and builds
+   the pages from them. You shouldn't need to edit this file to add content.
    ========================================================================== */
 (function () {
   "use strict";
 
-  var content = window.SITE_CONTENT || {};
+  var content = {}; // filled from data/*.json before the pages are built
   var ROOT = document.body.getAttribute("data-root") || "";
 
   /* ---------- helpers ---------- */
@@ -31,6 +31,60 @@
 
   function metaLine(item, keys) {
     return keys.map(function (k) { return item[k]; }).filter(Boolean).join(" · ");
+  }
+
+  /* ---------- Content loading ---------- */
+  // Which data files each page needs (site.json is loaded on every page).
+  var PAGE_DATA = {
+    home: ["videos", "home"],
+    film: ["videos"],
+    photography: ["photos"],
+    "photo-category": ["photos"],
+    music: ["music"],
+    about: ["about"],
+    contact: [],
+    "404": []
+  };
+
+  function loadJSON(name) {
+    return fetch(ROOT + "data/" + name + ".json", { cache: "no-cache" })
+      .then(function (r) { if (!r.ok) throw new Error(name + ".json: " + r.status); return r.json(); })
+      .catch(function (err) { console.error("Couldn't load content:", err); return {}; });
+  }
+
+  // Turn a pasted YouTube / Vimeo link (or a bare ID) into { type, id }.
+  function parseVideoLink(link) {
+    var s = String(link || "").trim();
+    var m = s.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+    if (m) return { type: "youtube", id: m[1] };
+    m = s.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+    if (m) return { type: "vimeo", id: m[1] };
+    if (/\.mp4(\?|$)/i.test(s)) return { type: "mp4", src: s };
+    if (/^[A-Za-z0-9_-]{11}$/.test(s)) return { type: "youtube", id: s };
+    if (/^\d+$/.test(s)) return { type: "vimeo", id: s };
+    return null;
+  }
+
+  function loadContent(page) {
+    var names = ["site"].concat(PAGE_DATA[page] || []);
+    return Promise.all(names.map(loadJSON)).then(function (files) {
+      var d = {};
+      names.forEach(function (n, i) { d[n] = files[i] || {}; });
+      var videos = ((d.videos || {}).videos || []).map(function (v) {
+        var parsed = parseVideoLink(v.link || v.id);
+        return parsed ? Object.assign({}, v, parsed) : null;
+      }).filter(Boolean);
+      return {
+        site: d.site || {},
+        home: d.home || {},
+        about: d.about || {},
+        film: { videos: videos },
+        photos: (d.photos || {}).highlights || [],
+        photoCategories: (d.photos || {}).categories || [],
+        tracks: (d.music || {}).releases || [],
+        bands: (d.music || {}).bands || []
+      };
+    });
   }
 
   /* ---------- Film ---------- */
@@ -159,6 +213,27 @@
   }
 
   function renderHome() {
+    // Editable homepage text and showreel (data/home.json).
+    var home = content.home || {};
+    var setText = function (sel, val) { var n = document.querySelector(sel); if (n && val) n.textContent = val; };
+    setText(".hero-eyebrow", home.eyebrow);
+    setText(".hero-title", home.headline);
+    setText("#cta-title", home.ctaHeading);
+    setText(".home-cta p", home.ctaText);
+    var reel = parseVideoLink(home.showreel);
+    if (reel && reel.type === "youtube") {
+      var poster = document.querySelector(".hero-poster");
+      if (poster && poster.src.indexOf(reel.id) === -1) {
+        poster.onerror = function () { poster.onerror = null; poster.src = "https://i.ytimg.com/vi/" + reel.id + "/hqdefault.jpg"; };
+        poster.src = "https://i.ytimg.com/vi/" + reel.id + "/maxresdefault.jpg";
+      }
+      document.querySelectorAll("[data-youtube-bg]").forEach(function (b) { b.setAttribute("data-youtube-bg", reel.id); });
+      document.querySelectorAll("[data-play-youtube]").forEach(function (b) { b.setAttribute("data-play-youtube", reel.id); });
+    }
+    document.querySelectorAll("[data-play-youtube]").forEach(function (b) {
+      if (home.showreelTitle) b.setAttribute("data-play-title", home.showreelTitle);
+    });
+
     // Showreel button in the hero.
     document.querySelectorAll("[data-play-youtube]").forEach(function (btn) {
       btn.addEventListener("click", function () {
@@ -166,7 +241,7 @@
       });
     });
 
-    // Selected work: every video in content.js, in the order listed there.
+    // Selected work: every video in data/videos.json, in the order listed there.
     var videos = (content.film || {}).videos || [];
     renderList(document.getElementById("home-work"), videos, function (v) {
       var fullTitle = (v.category ? v.category + " — " : "") + (v.title || "Untitled");
@@ -211,6 +286,74 @@
       });
     }, { rootMargin: "0px 0px -8% 0px" });
     items.forEach(function (n) { io.observe(n); });
+  }
+
+  /* ---------- About ---------- */
+  function renderAbout() {
+    var a = content.about || {};
+    var intro = document.getElementById("about-intro");
+    if (intro && a.intro) intro.textContent = a.intro;
+    var img = document.getElementById("about-photo");
+    if (img && a.photo) { img.src = url(a.photo); img.alt = a.photoAlt || ""; }
+    var bio = document.getElementById("about-bio");
+    if (bio && a.bio) {
+      bio.replaceChildren();
+      String(a.bio).split(/\n\s*\n/).map(function (t) { return t.trim(); }).filter(Boolean).forEach(function (t, i) {
+        bio.appendChild(el("p", { class: i === 0 ? "lede" : null, text: t }));
+      });
+    }
+    var list = document.getElementById("about-services");
+    if (list && a.services && a.services.length) {
+      list.replaceChildren();
+      a.services.forEach(function (sv) {
+        list.appendChild(el("li", null, [el("strong", { text: sv.name }), el("span", { text: sv.description || "" })]));
+      });
+    }
+  }
+
+  /* ---------- Footer, contact details (data/site.json) ---------- */
+  function applySite(page) {
+    var site = content.site || {};
+    var email = site.email;
+    if (email) {
+      document.querySelectorAll(".footer-email, .contact-email").forEach(function (a) { a.href = "mailto:" + email; a.textContent = email; });
+      document.querySelectorAll(".form-success a[href^='mailto:']").forEach(function (a) { a.href = "mailto:" + email; a.textContent = email; });
+      var form = document.getElementById("contact-form");
+      if (form) { form.setAttribute("data-email", email); form.setAttribute("action", "mailto:" + email); }
+    }
+    var loc = document.getElementById("contact-location");
+    if (loc && site.location) loc.textContent = site.location;
+
+    // Footer links: the Instagram account matches the section you're in.
+    var insta = { film: site.instagramVideo, photography: site.instagramPhotography, "photo-category": site.instagramPhotography, music: site.instagramMusic }[page] || site.instagramMain;
+    var links = [["Instagram", insta], ["YouTube", site.youtube]];
+    if (page === "music") links.push(["Bandcamp", site.bandcamp]);
+    links.push(["LinkedIn", site.linkedin]);
+    var social = document.querySelector(".site-footer .social");
+    if (social && (insta || site.youtube || site.linkedin)) {
+      social.replaceChildren();
+      links.forEach(function (l) {
+        if (l[1]) social.appendChild(el("li", null, [el("a", { href: l[1], rel: "me noopener", target: "_blank", text: l[0] })]));
+      });
+    }
+
+    // Contact page: every account, with its handle.
+    var all = document.getElementById("contact-social");
+    if (all) {
+      var handle = function (u) { var m = String(u || "").replace(/\/+$/, "").match(/([^\/]+)$/); return m ? m[1].replace(/^@?/, "@") : ""; };
+      var items = [
+        ["Instagram", site.instagramMain], ["Instagram", site.instagramVideo], ["Instagram", site.instagramPhotography],
+        ["Instagram", site.instagramMusic], ["YouTube", site.youtube], ["Bandcamp", site.bandcamp], ["LinkedIn", site.linkedin]
+      ].filter(function (i) { return i[1]; });
+      if (items.length) {
+        all.replaceChildren();
+        items.forEach(function (i) {
+          var label = i[0] === "Bandcamp" ? "Bandcamp · " + String(i[1]).replace(/^https?:\/\//, "").replace(/\.bandcamp\.com.*$/, "")
+            : i[0] === "LinkedIn" ? "LinkedIn" : i[0] + " · " + handle(i[1]);
+          all.appendChild(el("li", null, [el("a", { href: i[1], rel: "noopener", target: "_blank", text: label })]));
+        });
+      }
+    }
   }
 
   /* ---------- Photography + lightbox ---------- */
@@ -443,7 +586,7 @@
     var cat = (content.photoCategories || []).filter(function (c) { return c.slug === slug; })[0];
     var intro = document.getElementById("category-intro");
     if (!cat) {
-      if (intro) intro.textContent = "This gallery isn't set up yet. Add it to photoCategories in content.js.";
+      if (intro) intro.textContent = "This gallery isn't set up yet. Add it under Photography in the CMS (data/photos.json).";
       return;
     }
     if (intro && cat.intro) intro.textContent = cat.intro;
@@ -457,13 +600,13 @@
   function bandcampPlayer(t) {
     var code = String(t.bandcamp);
     var ids = code.match(/(album|track)=\d+/g);
-    if (!ids) return el("p", { class: "notes", text: "Bandcamp embed code not recognised — check content.js." });
+    if (!ids) return el("p", { class: "notes", text: "Bandcamp embed code not recognised. Paste the code from Bandcamp's Share / Embed button." });
     var isAlbum = /album=/.test(ids.join(""));
     // Albums show their track list unless the embed code (or tracklist: false) says otherwise.
     var tracklist = isAlbum && (t.tracklist !== undefined ? !!t.tracklist : !/tracklist=false/.test(code));
     // Use the height Bandcamp chose for this release, so the artwork fits exactly.
     var h = code.match(/height:\s*(\d+)px/);
-    var height = h ? +h[1] : (tracklist ? 720 : 442);
+    var height = tracklist ? (h && +h[1] > 500 ? +h[1] : 720) : 442;
     var src = "https://bandcamp.com/EmbeddedPlayer/" + ids.join("/") +
       "/size=large/bgcol=18181b/linkcol=f05a32/tracklist=" + (tracklist ? "true" : "false") +
       "/transparent=true/";
@@ -581,6 +724,7 @@
 
   // Homepage background videos: always muted, only start if the visitor
   // hasn't asked for reduced motion and isn't on a data-saver connection.
+  var startYouTubeBackgrounds = null;
   var calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
     (navigator.connection && navigator.connection.saveData);
   if (!calm) {
@@ -593,7 +737,7 @@
 
     // YouTube background: muted, looping, no controls. Loaded after the page
     // has finished loading so it never slows down the first view.
-    var startYouTubeBackgrounds = function () {
+    startYouTubeBackgrounds = function () {
       document.querySelectorAll("[data-youtube-bg]").forEach(function (box) {
         var id = encodeURIComponent(box.getAttribute("data-youtube-bg"));
         var iframe = el("iframe", {
@@ -611,8 +755,6 @@
         box.appendChild(iframe);
       });
     };
-    if (document.readyState === "complete") startYouTubeBackgrounds();
-    else window.addEventListener("load", startYouTubeBackgrounds);
   }
 
   // Contact form: build an email from the fields and open the visitor's
@@ -631,14 +773,24 @@
   }
 
   var page = document.body.getAttribute("data-page");
-  if (page === "home") renderHome();
-  if (page === "film") renderFilm();
-  if (page === "photography") {
-    renderSlideshow(document.getElementById("highlights"), content.photos || []);
-    renderPhotoCategories(document.getElementById("photo-categories"));
-  }
-  if (page === "photo-category") renderPhotoCategoryPage();
-  if (page === "music") renderMusic();
+  loadContent(page).then(function (c) {
+    content = c;
+    applySite(page);
+    if (page === "home") renderHome();
+    if (page === "film") renderFilm();
+    if (page === "photography") {
+      renderSlideshow(document.getElementById("highlights"), content.photos || []);
+      renderPhotoCategories(document.getElementById("photo-categories"));
+    }
+    if (page === "photo-category") renderPhotoCategoryPage();
+    if (page === "music") renderMusic();
+    if (page === "about") renderAbout();
+    revealOnScroll();
 
-  revealOnScroll();
+    // Start the homepage background video once its ID is known and the page has loaded.
+    if (startYouTubeBackgrounds) {
+      if (document.readyState === "complete") startYouTubeBackgrounds();
+      else window.addEventListener("load", startYouTubeBackgrounds);
+    }
+  });
 })();

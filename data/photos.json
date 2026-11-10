@@ -1,0 +1,282 @@
+{
+  "highlights": [
+    {
+      "src": "assets/img/photos/rival-consoles-live.jpg",
+      "thumb": "assets/img/photos/rival-consoles-live-sm.jpg",
+      "alt": "Rival Consoles performing in silhouette under red and blue laser beams",
+      "caption": "Rival Consoles, live"
+    },
+    {
+      "src": "assets/img/photos/levenshulme-fireworks.jpg",
+      "thumb": "assets/img/photos/levenshulme-fireworks-sm.jpg",
+      "alt": "Fireworks bursting over Levenshulme station platform at night",
+      "caption": "Levenshulme station, fireworks night"
+    },
+    {
+      "src": "assets/img/photos/vw-camper-tram-trails.jpg",
+      "thumb": "assets/img/photos/vw-camper-tram-trails-sm.jpg",
+      "alt": "A cream VW camper van parked at night as a passing tram leaves light trails behind it",
+      "caption": "Camper and tram trails"
+    },
+    {
+      "src": "assets/img/photos/photo-1.jpg",
+      "thumb": "assets/img/photos/photo-1-sm.jpg",
+      "alt": "Placeholder photo 1",
+      "caption": "Live at a Manchester venue"
+    },
+    {
+      "src": "assets/img/photos/photo-2.jpg",
+      "thumb": "assets/img/photos/photo-2-sm.jpg",
+      "alt": "Placeholder photo 2",
+      "caption": "Portrait session"
+    },
+    {
+      "src": "assets/img/photos/photo-3.jpg",
+      "thumb": "assets/img/photos/photo-3-sm.jpg",
+      "alt": "Placeholder photo 3",
+      "caption": "Behind the scenes"
+    },
+    {
+      "src": "assets/img/photos/photo-4.jpg",
+      "thumb": "assets/img/photos/photo-4-sm.jpg",
+      "alt": "Placeholder photo 4",
+      "caption": ""
+    },
+    {
+      "src": "assets/img/photos/photo-5.jpg",
+      "thumb": "assets/img/photos/photo-5-sm.jpg",
+      "alt": "Placeholder photo 5",
+      "caption": "Northern Quarter"
+    },
+    {
+      "src": "assets/img/photos/photo-6.jpg",
+      "thumb": "assets/img/photos/photo-6-sm.jpg",
+      "alt": "Placeholder photo 6",
+      "caption": ""
+    },
+    {
+      "src": "assets/img/photos/photo-7.jpg",
+      "thumb": "assets/img/photos/photo-7-sm.jpg",
+      "alt": "Placeholder photo 7",
+      "caption": "Studio session"
+    },
+    {
+      "src": "assets/img/photos/photo-8.jpg",
+      "thumb": "assets/img/photos/photo-8-sm.jpg",
+      "alt": "Placeholder photo 8",
+      "caption": ""
+    },
+    {
+      "src": "assets/img/photos/photo-9.jpg",
+      "thumb": "assets/img/photos/photo-9-sm.jpg",
+      "alt": "Placeholder photo 9",
+      "caption": "Festival season"
+    },
+    {
+      "src": "assets/img/photos/photo-10.jpg",
+      "thumb": "assets/img/photos/photo-10-sm.jpg",
+      "alt": "Placeholder photo 10",
+      "caption": ""
+    },
+    {
+      "src": "assets/img/photos/photo-11.jpg",
+      "thumb": "assets/img/photos/photo-11-sm.jpg",
+      "alt": "Placeholder photo 11",
+      "caption": ""
+    },
+    {
+      "src": "assets/img/photos/photo-12.jpg",
+      "thumb": "assets/img/photos/photo-12-sm.jpg",
+      "alt": "Placeholder photo 12",
+      "caption": "Golden hour"
+    }
+  ],
+  "categories": [
+    {
+      "slug": "weddings",
+      "title": "Wedding Photography",
+      "label": "Weddings",
+      "intro": "Relaxed, story-led wedding photography, from getting ready to the last dance.",
+      "cover": "",
+      "photos": [
+        {
+          "src": "assets/img/photos/photo-2.jpg",
+          "thumb": "assets/img/photos/photo-2-sm.jpg",
+          "alt": "Placeholder photo",
+          "caption": ""
+        },
+        {
+          "src": "assets/img/photos/photo-4.jpg",
+          "thumb": "assets/img/photos/photo-4-sm.jpg",
+          "alt": "Placeholder photo",
+          "caption": ""
+        },
+        {
+          "src": "assets/img/photos/photo-7.jpg",
+          "thumb": "assets/img/photos/photo-7-sm.jpg",
+          "alt": "Placeholder photo",
+          "caption": ""
+        },
+        {
+          "src": "assets/img/photos/photo-10.jpg",
+          "thumb": "assets/img/photos/photo-10-sm.jpg",
+          "alt": "Placeholder photo",
+          "caption": ""
+        }
+      ]
+    },
+    {
+      "slug": "landscape",
+      "title": "Landscape Photography",
+      "label": "Landscape",
+      "intro": "Hills, coastlines and big skies across the North West and beyond.",
+      "cover": "",
+      "photos": [
+        {
+          "src": "assets/img/photos/photo-6.jpg",
+          "thumb": "assets/img/photos/photo-6-sm.jpg",
+          "alt": "Placeholder photo",
+          "caption": ""
+        },
+        {
+          "src": "assets/img/photos/photo-11.jpg",
+          "thumb": "assets/img/photos/photo-11-sm.jpg",
+          "alt": "Placeholder photo",
+          "caption": ""
+        },
+        {
+          "src": "assets/img/photos/photo-1.jpg",
+          "thumb": "assets/img/photos/photo-1-sm.jpg",
+          "alt": "Placeholder photo",
+          "caption": ""
+        },
+        {
+          "src": "assets/img/photos/photo-9.jpg",
+          "thumb": "assets/img/photos/photo-9-sm.jpg",
+          "alt": "Placeholder photo",
+          "caption": ""
+        }
+      ]
+    },
+    {
+      "slug": "portraits",
+      "title": "Portrait Photography",
+      "label": "Portraits",
+      "intro": "Artist, press and personal portraits, on location or in the studio.",
+      "cover": "",
+      "photos": [
+        {
+          "src": "assets/img/photos/photo-5.jpg",
+          "thumb": "assets/img/photos/photo-5-sm.jpg",
+          "alt": "Placeholder photo",
+          "caption": ""
+        },
+        {
+          "src": "assets/img/photos/photo-8.jpg",
+          "thumb": "assets/img/photos/photo-8-sm.jpg",
+          "alt": "Placeholder photo",
+          "caption": ""
+        },
+        {
+          "src": "assets/img/photos/photo-12.jpg",
+          "thumb": "assets/img/photos/photo-12-sm.jpg",
+          "alt": "Placeholder photo",
+          "caption": ""
+        },
+        {
+          "src": "assets/img/photos/photo-3.jpg",
+          "thumb": "assets/img/photos/photo-3-sm.jpg",
+          "alt": "Placeholder photo",
+          "caption": ""
+        }
+      ]
+    },
+    {
+      "slug": "music",
+      "title": "Music Photography",
+      "label": "Music",
+      "intro": "Live shows, festivals and behind-the-scenes with artists.",
+      "cover": "",
+      "photos": [
+        {
+          "src": "assets/img/photos/rival-consoles-live.jpg",
+          "thumb": "assets/img/photos/rival-consoles-live-sm.jpg",
+          "alt": "Rival Consoles performing in silhouette under red and blue laser beams",
+          "caption": "Rival Consoles, live"
+        },
+        {
+          "src": "assets/img/photos/photo-1.jpg",
+          "thumb": "assets/img/photos/photo-1-sm.jpg",
+          "alt": "Placeholder photo",
+          "caption": ""
+        },
+        {
+          "src": "assets/img/photos/photo-9.jpg",
+          "thumb": "assets/img/photos/photo-9-sm.jpg",
+          "alt": "Placeholder photo",
+          "caption": ""
+        },
+        {
+          "src": "assets/img/photos/photo-3.jpg",
+          "thumb": "assets/img/photos/photo-3-sm.jpg",
+          "alt": "Placeholder photo",
+          "caption": ""
+        }
+      ]
+    },
+    {
+      "slug": "street",
+      "title": "Street Photography",
+      "label": "Street",
+      "intro": "Manchester after dark: stations, trams and the city in motion.",
+      "cover": "",
+      "photos": [
+        {
+          "src": "assets/img/photos/vw-camper-tram-trails.jpg",
+          "thumb": "assets/img/photos/vw-camper-tram-trails-sm.jpg",
+          "alt": "A cream VW camper van parked at night as a passing tram leaves light trails behind it",
+          "caption": "Camper and tram trails"
+        },
+        {
+          "src": "assets/img/photos/levenshulme-fireworks.jpg",
+          "thumb": "assets/img/photos/levenshulme-fireworks-sm.jpg",
+          "alt": "Fireworks bursting over Levenshulme station platform at night",
+          "caption": "Levenshulme station, fireworks night"
+        }
+      ]
+    },
+    {
+      "slug": "film",
+      "title": "Film Photography",
+      "label": "Film",
+      "intro": "Shot on 35mm and medium format film.",
+      "cover": "",
+      "photos": [
+        {
+          "src": "assets/img/photos/photo-4.jpg",
+          "thumb": "assets/img/photos/photo-4-sm.jpg",
+          "alt": "Placeholder photo",
+          "caption": ""
+        },
+        {
+          "src": "assets/img/photos/photo-12.jpg",
+          "thumb": "assets/img/photos/photo-12-sm.jpg",
+          "alt": "Placeholder photo",
+          "caption": ""
+        },
+        {
+          "src": "assets/img/photos/photo-6.jpg",
+          "thumb": "assets/img/photos/photo-6-sm.jpg",
+          "alt": "Placeholder photo",
+          "caption": ""
+        },
+        {
+          "src": "assets/img/photos/photo-8.jpg",
+          "thumb": "assets/img/photos/photo-8-sm.jpg",
+          "alt": "Placeholder photo",
+          "caption": ""
+        }
+      ]
+    }
+  ]
+}

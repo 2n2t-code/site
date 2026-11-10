@@ -1,0 +1,276 @@
+# Pages CMS settings (https://app.pagescms.org).
+# This file tells the CMS which content files exist and which fields to show.
+# The website reads the same files from the data/ folder.
+
+media:
+  input: assets/img
+  output: assets/img
+  categories: [image]
+
+content:
+  - name: videos
+    label: Video work
+    description: Your videos, in the order they appear in "Selected work" on the homepage. Drag to reorder. On the Video Production page, videos whose label includes "Live In Session" are featured at the top.
+    type: file
+    path: data/videos.json
+    format: json
+    fields:
+      - name: videos
+        label: Videos
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{category} — {title}"
+        fields:
+          - name: category
+            label: Label
+            type: string
+            description: Small text above the title, e.g. "Live In Session at Silk Mill Studios", "Live Event", "Music Video".
+          - name: title
+            label: Title
+            type: string
+            required: true
+            description: The artist, client or event, e.g. "Chief Springs".
+          - name: link
+            label: Video link
+            type: string
+            required: true
+            description: Paste the YouTube or Vimeo link (e.g. https://www.youtube.com/watch?v=...). Playlist bits on the end are fine.
+          - name: thumb
+            label: Custom thumbnail (optional)
+            type: image
+            description: Leave empty to use YouTube's thumbnail. Needed for Vimeo videos.
+          - name: year
+            label: Year (optional)
+            type: string
+          - name: client
+            label: Client (optional)
+            type: string
+          - name: role
+            label: Your role (optional)
+            type: string
+            description: e.g. "Shot & edited". Shown on the Video Production page.
+
+  - name: home
+    label: Homepage
+    description: The text and showreel at the top of the homepage.
+    type: file
+    path: data/home.json
+    format: json
+    fields:
+      - name: eyebrow
+        label: Small text above the headline
+        type: string
+      - name: headline
+        label: Headline
+        type: string
+      - name: showreel
+        label: Showreel (YouTube link)
+        type: string
+        description: Plays muted in the background, and with sound when someone presses "Watch the showreel".
+      - name: showreelTitle
+        label: Showreel title
+        type: string
+      - name: ctaHeading
+        label: "Bottom section: heading"
+        type: string
+      - name: ctaText
+        label: "Bottom section: text"
+        type: text
+
+  - name: photos
+    label: Photography
+    description: The Highlights slideshow and the category galleries. Export photos at about 2000px on the long edge before uploading, so pages stay fast.
+    type: file
+    path: data/photos.json
+    format: json
+    fields:
+      - name: highlights
+        label: Highlights slideshow
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{alt}"
+        fields: &photo_fields
+          - name: src
+            label: Photo
+            type: image
+            required: true
+          - name: thumb
+            label: Smaller version (optional)
+            type: image
+            description: About 800px wide. Makes the gallery grids load faster; leave empty to use the main photo.
+          - name: alt
+            label: Description
+            type: string
+            description: Describe the photo for people using screen readers, and for Google.
+          - name: caption
+            label: Caption (optional)
+            type: string
+      - name: categories
+        label: Galleries
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{title}"
+        fields:
+          - name: title
+            label: Page heading
+            type: string
+            description: e.g. "Street Photography".
+          - name: label
+            label: Short name on the gallery card
+            type: string
+            description: e.g. "Street".
+          - name: intro
+            label: Intro
+            type: text
+          - name: cover
+            label: Card image (optional)
+            type: image
+            description: Leave empty to use the gallery's first photo.
+          - name: slug
+            label: Page address (don't change)
+            type: string
+            readonly: true
+            description: Links this gallery to its page, e.g. "street" = /photography/street/. Ask Claude to add a brand-new gallery page.
+          - name: photos
+            label: Photos
+            type: object
+            list:
+              collapsible:
+                collapsed: true
+                summary: "{alt}"
+            fields: *photo_fields
+
+  - name: music
+    label: Music
+    description: Your Bandcamp releases and your bands.
+    type: file
+    path: data/music.json
+    format: json
+    fields:
+      - name: releases
+        label: Bandcamp releases
+        description: Albums and EPs are sorted onto their own row automatically; single tracks go under Singles.
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{title}"
+        fields:
+          - name: title
+            label: Title
+            type: string
+            required: true
+          - name: artist
+            label: Artist
+            type: string
+          - name: year
+            label: Year (optional)
+            type: string
+          - name: notes
+            label: Notes (optional)
+            type: text
+          - name: bandcamp
+            label: Bandcamp embed code
+            type: text
+            required: true
+            description: On Bandcamp, open the release, click Share / Embed → Embed this album (or track), pick any style and paste the code it gives you here.
+          - name: tracklist
+            label: Show the album's track list
+            type: boolean
+            default: true
+            description: Albums only.
+      - name: bands
+        label: Bands
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{name}"
+        fields:
+          - name: name
+            label: Band name
+            type: string
+            required: true
+          - name: spotify
+            label: Spotify link
+            type: string
+            description: On Spotify, open the band (or an album), click ... → Share → Copy link, and paste it here.
+          - name: notes
+            label: Notes (optional)
+            type: text
+
+  - name: about
+    label: About page
+    type: file
+    path: data/about.json
+    format: json
+    fields:
+      - name: intro
+        label: Line under the "About" heading
+        type: string
+      - name: photo
+        label: Portrait
+        type: image
+      - name: photoAlt
+        label: Portrait description
+        type: string
+      - name: bio
+        label: Bio
+        type: text
+        description: Leave a blank line between paragraphs. The first paragraph is shown larger.
+      - name: services
+        label: What I do
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{name}"
+        fields:
+          - name: name
+            label: Service
+            type: string
+          - name: description
+            label: Description
+            type: string
+
+  - name: site
+    label: Contact & social links
+    description: Used in the footer of every page and on the Contact page.
+    type: file
+    path: data/site.json
+    format: json
+    fields:
+      - name: email
+        label: Email address
+        type: string
+        description: Where the contact form sends messages, and shown in the footer.
+      - name: location
+        label: Location
+        type: string
+      - name: instagramMain
+        label: Instagram (homepage, About, Contact)
+        type: string
+      - name: instagramVideo
+        label: Instagram (Video Production page)
+        type: string
+      - name: instagramPhotography
+        label: Instagram (Photography pages)
+        type: string
+      - name: instagramMusic
+        label: Instagram (Music page)
+        type: string
+      - name: youtube
+        label: YouTube
+        type: string
+      - name: bandcamp
+        label: Bandcamp (shown on the Music page)
+        type: string
+      - name: linkedin
+        label: LinkedIn
+        type: string

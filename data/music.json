@@ -1,0 +1,48 @@
+{
+  "releases": [
+    {
+      "title": "Chugga",
+      "artist": "2N2T",
+      "year": "",
+      "notes": "",
+      "bandcamp": "<iframe style=\"border: 0; width: 350px; height: 442px;\" src=\"https://bandcamp.com/EmbeddedPlayer/track=1068435607/size=large/bgcol=ffffff/linkcol=333333/tracklist=false/transparent=true/\" seamless><a href=\"https://2n2t.bandcamp.com/track/chugga\">Chugga by 2N2T</a></iframe>",
+      "tracklist": true
+    },
+    {
+      "title": "Highfields",
+      "artist": "2N2T",
+      "year": "",
+      "notes": "",
+      "bandcamp": "<iframe style=\"border: 0; width: 350px; height: 442px;\" src=\"https://bandcamp.com/EmbeddedPlayer/track=2351636420/size=large/bgcol=ffffff/linkcol=333333/tracklist=false/transparent=true/\" seamless><a href=\"https://2n2t.bandcamp.com/track/highfields\">Highfields by 2N2T</a></iframe>",
+      "tracklist": true
+    },
+    {
+      "title": "LKDWN (demos)",
+      "artist": "2N2T",
+      "year": "",
+      "notes": "",
+      "bandcamp": "<iframe style=\"border: 0; width: 350px; height: 720px;\" src=\"https://bandcamp.com/EmbeddedPlayer/album=2459414514/size=large/bgcol=ffffff/linkcol=333333/transparent=true/\" seamless><a href=\"https://2n2t.bandcamp.com/album/lkdwn-demos\">LKDWN (demos) by 2N2T</a></iframe>",
+      "tracklist": true
+    },
+    {
+      "title": "TWIN PEAKS EP",
+      "artist": "2N2T",
+      "year": "",
+      "notes": "",
+      "bandcamp": "<iframe style=\"border: 0; width: 350px; height: 753px;\" src=\"https://bandcamp.com/EmbeddedPlayer/album=3959238659/size=large/bgcol=ffffff/linkcol=333333/transparent=true/\" seamless><a href=\"https://2n2t.bandcamp.com/album/twin-peaks-ep\">TWIN PEAKS EP by 2N2T</a></iframe>",
+      "tracklist": true
+    }
+  ],
+  "bands": [
+    {
+      "name": "Vordermann",
+      "spotify": "https://open.spotify.com/artist/6q8MQV9ZLqQtv1UN44SgwN",
+      "notes": ""
+    },
+    {
+      "name": "This Sun No More",
+      "spotify": "https://open.spotify.com/artist/5z5jmWVA2F4Pcpx7eXJfTP",
+      "notes": ""
+    }
+  ]
+}

@@ -66,10 +66,9 @@
   </header>
 
   <main id="main">
-    <!-- HERO: full-screen showreel, muted and looping.
-         To change the video, replace the YouTube ID (a8pjf4iHd9c) in all
-         four places in this section. The thumbnail shows first, and stays for
-         visitors with reduced motion or data saver on. -->
+    <!-- HERO: full-screen showreel, muted and looping. The headline, small text and
+         showreel video come from data/home.json (Homepage in Pages CMS); the values
+         below are fallbacks used until that file loads. -->
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-media" aria-hidden="true">
         <img class="hero-poster" src="https://i.ytimg.com/vi/a8pjf4iHd9c/maxresdefault.jpg" alt="" decoding="async" fetchpriority="high" width="1280" height="720"
@@ -95,7 +94,7 @@
         <h2 id="work-title">Selected work</h2>
         <a href="film/">All video work <span aria-hidden="true">&rarr;</span></a>
       </div>
-      <!-- Filled from content.js (film → liveInSession, then work). -->
+      <!-- Filled from data/videos.json (Video work in Pages CMS), in that order. -->
       <ul class="work-grid" id="home-work"></ul>
     </section>
 
@@ -137,7 +136,6 @@
     </ul>
     <p>&copy; <span id="year">2026</span> 2N2T &middot; Manchester, UK</p>
   </footer>
-  <script src="content.js" defer></script>
   <script src="main.js" defer></script>
 </body>
 </html>

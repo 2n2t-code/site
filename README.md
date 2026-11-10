@@ -1,27 +1,28 @@
 # 2N2T — portfolio site
 
-Plain HTML, CSS and vanilla JS. No framework, no build step, nothing to install.
+Plain HTML, CSS and vanilla JS. No framework and no build step. Content is edited in **Pages CMS** (https://app.pagescms.org), which saves to the `data/` folder in this repository.
 
 ```
 index.html              Homepage (showreel hero, selected work, Photography/Music tiles)
-about/index.html        About (bio, services)
-contact/index.html      Contact details + form (opens the visitor's email app)
 film/index.html         Video Production (Live In Session first, then other work)
-photography/index.html  Highlights gallery + category cards
-photography/*/          Category pages (weddings, landscape, portraits, music, street, film)
-music/index.html        Track list
+photography/index.html  Highlights slideshow + gallery cards
+photography/*/          Gallery pages (weddings, landscape, portraits, music, street, film)
+music/index.html        Bandcamp releases (albums, singles) + bands on Spotify
+about/index.html        About (portrait, bio, services)
+contact/index.html      Contact details + form (opens the visitor's email app)
 404.html                Not-found page
-content.js              ← ALL videos, photos and tracks live here
-main.js                 Renders content.js into the pages (no need to edit)
+data/*.json             ← ALL content (edited in Pages CMS)
+.pages.yml              Tells Pages CMS which fields to show
+main.js                 Loads data/*.json and builds the pages (no need to edit)
 style.css               ← All colours, fonts and spacing (CSS variables at the top)
-assets/                 Images, audio, video, OG image, icons
+assets/img/             Images (CMS uploads go here too)
 favicon.svg / .ico      Favicons
-robots.txt, sitemap.xml, CNAME, .nojekyll
+robots.txt, sitemap.xml, .nojekyll
 ```
 
 ## Preview locally
 
-Open `index.html` in a browser, or run a tiny local server (recommended, so the folder URLs work):
+The pages load their content from `data/`, which browsers block when you open a file directly. Run a tiny local server instead:
 
 ```bash
 python3 -m http.server 8000
@@ -29,109 +30,45 @@ python3 -m http.server 8000
 
 Then visit http://localhost:8000.
 
-## Adding content
+## Editing content (Pages CMS)
 
-Everything is in **`content.js`**. Copy an existing entry, paste it, and change the values.
-Mind the commas between entries.
+1. Go to https://app.pagescms.org and sign in with GitHub.
+2. Open the **2n2t-code/site** repository. On the first visit, Pages CMS asks you to install its GitHub app on this repository.
+3. Edit, then **Save**. Each save is a change on GitHub, and GitHub Pages publishes it within a minute or two.
 
-### Video work
+The sections in the CMS:
 
-All videos are in one list, `film.videos` in `content.js`, in the order they appear in **Selected work** on the homepage. To reorder them, move the lines. To add one, copy a line:
+| CMS section | File | What it controls |
+|---|---|---|
+| **Video work** | `data/videos.json` | Homepage "Selected work" (in list order) and the Video Production page |
+| **Homepage** | `data/home.json` | Headline, small text, showreel video, bottom "Got a project" section |
+| **Photography** | `data/photos.json` | Highlights slideshow and the six gallery pages |
+| **Music** | `data/music.json` | Bandcamp releases and band Spotify players |
+| **About page** | `data/about.json` | Intro line, portrait, bio, "What I do" |
+| **Contact & social links** | `data/site.json` | Email (footer and contact form), location, Instagram/YouTube/Bandcamp/LinkedIn |
 
-```js
-{ type: "youtube", id: "FGRNWgGfReA", category: "Live Concert", title: "Pierre Bensusan" },
-```
+Notes:
+- **Videos:** paste the YouTube or Vimeo link as it appears in your browser. Playlist parts on the end of the link are fine. Anything whose label includes "Live In Session" is featured at the top of the Video Production page. Vimeo videos need a custom thumbnail.
+- **Photos:** export at about 2000px on the long edge before uploading. The CMS doesn't shrink images, and big camera files slow pages down. A "Smaller version" (about 800px wide) makes the gallery grids load faster still.
+- **Bandcamp:** paste the **embed code** from Bandcamp's Share / Embed button, not the page link. The site reads the release number from it and restyles the player to match. Albums and EPs go on their own row automatically.
+- **Bio:** leave a blank line between paragraphs. The first paragraph is shown larger.
+- **New gallery pages:** a brand-new photography category needs its own page folder. Ask Claude, or copy `photography/street/`, change `data-category` and the page titles, add a matching entry under Galleries with that page address, and add it to `sitemap.xml`.
+- **Speed:** the Highlights slideshow moves on every 5 seconds. To change it, edit `SLIDE_SECONDS` in `main.js`.
 
-- `category` is the small label above the title, and `title` is the artist, client or event.
-- On the Video Production page, any video whose category includes "Live In Session" is featured at the top. The rest follow in list order.
-- **YouTube**: `id` is the part after `watch?v=`. The thumbnail is fetched automatically, in high resolution where YouTube has it.
-- **Vimeo**: `type: "vimeo"`, and `id` is the number in the URL. Add a `thumb` image, because Vimeo thumbnails aren't automatic.
-- **Self-hosted MP4**: `type: "mp4"`, `src: "assets/video/my-film.mp4"`, plus a `thumb`.
-- Optional extras: `year`, `client`, `role`. These show on the Video Production page.
+You can also edit the `data/*.json` files directly on GitHub, or ask Claude. Everything uses the same files.
 
-Videos load only when someone clicks play, so the pages stay fast.
+### Homepage layout
 
-### Photography
+1. **Hero:** the showreel plays full-screen, muted and looping. Visitors with reduced motion or data saver on see only its thumbnail. **Watch the showreel** plays it with sound in a pop-up player.
+2. **Selected work:** a tile for every video in Video work, in list order. The first tile runs full width. With an even number of videos the last one is full width too, and an odd number keeps the rest in pairs.
+3. **Also by 2N2T:** Photography and Music tiles (images in `assets/img/home/`, set in `index.html`).
+4. **Got a project in mind?** with a link to the Contact page.
 
-```js
-{ src: "assets/img/photos/gig.jpg", thumb: "assets/img/photos/gig-sm.jpg",
-  alt: "Singer on stage at Band on the Wall", caption: "Band on the Wall, 2026" }
-```
+On the homepage the menu links sit across the top right on screens 900px and wider. Smaller screens and the other pages use the menu button.
 
-- `src` is the large image shown in the lightbox (about 1600–2000px on the long edge).
-- `thumb` is the grid image (about 800px wide). It's optional, but much faster.
-- Always write a real `alt` description.
+### Menu
 
-The `photos` list is the **Highlights** slideshow at the top of `/photography/`.
-- It moves to the next photo every 5 seconds. To change that, edit `SLIDE_SECONDS` near the slideshow code in `main.js`.
-- Each photo is shown whole, with a blurred copy filling the frame behind it, so portrait-shaped photos aren't cropped.
-- Captions appear on the photo.
-- It pauses when it's scrolled out of view or the full-size viewer is open. Visitors who've turned on reduced motion get no autoplay or zoom.
-
-**Category galleries:** the `photoCategories` list in `content.js` holds six categories: Weddings, Landscape, Portraits, Music, Street and Film. Each has its own page at `/photography/<slug>/`, and the Photography page lists them as cards under Highlights. To add photos to a category, add entries to that category's `photos` list. They use the same format as above.
-
-To add a brand-new category:
-1. Copy one of the folders (for example `photography/street/`) and rename it, say to `photography/events/`.
-2. In the copy's `index.html`, change `data-category="street"` to `data-category="events"`. Also change the page title, description, `canonical`/`og:url` and the `<h1>`.
-3. Add a matching entry to `photoCategories` in `content.js` with `slug: "events"`.
-4. Add the new page's address to `sitemap.xml`.
-
-Lightbox controls: click to open, ← / → to move, Esc to close, swipe on phones.
-
-### Music
-
-**Bandcamp:** open your track or album on Bandcamp and click **Share / Embed → Embed this album**. Pick any style, copy the code, and paste it between backticks:
-
-```js
-{ bandcamp: `<iframe ... src="https://bandcamp.com/EmbeddedPlayer/album=123.../" ...></iframe>`,
-  title: "My EP", artist: "2N2T", year: "2026", notes: "Out now." }
-```
-
-The site picks out the album/track number and shows Bandcamp's large player with full artwork, recoloured to match the site. It keeps the player height Bandcamp gave you so the artwork fits. Albums show their track list. Add `tracklist: false` to hide it.
-
-**Your own audio file:**
-
-```js
-{ src: "assets/audio/track.mp3", title: "Track", artist: "2N2T",
-  year: "2026", duration: "3:41", notes: "A sentence about it." }
-```
-
-Releases are split into two rows automatically: Bandcamp albums and EPs go under **Albums & EPs**, and everything else under **Singles**. Add `type: "album"` or `type: "single"` to a release to override this.
-
-**Bands:** the `bands` list in `content.js` sets the Spotify players under **Bands**. On Spotify, open the band and click **… → Share → Copy link to artist**, then paste the link:
-
-```js
-{ name: "Vordermann", spotify: "https://open.spotify.com/artist/...", notes: "" }
-```
-
-Album, track and playlist links work too, and so does Spotify's embed code.
-
-Only one track plays at a time. Audio downloads only when someone presses play.
-
-### Homepage
-
-`index.html` has four parts:
-
-1. **Hero:** your showreel (YouTube `a8pjf4iHd9c`) plays full-screen, muted and looping, behind the headline. To use a different video, replace that ID in all four places inside the `<section class="hero">` block. The headline and the small text above it are plain text in the same block. The thumbnail shows first. Visitors with reduced motion or data saver on only see the thumbnail. **Watch the showreel** opens the video with sound in a pop-up player.
-2. **Selected work:** big video tiles, built from `content.js`. It takes the Live In Session videos first, then the other work, up to 7. The first tile runs full width. Clicking a tile plays that video in the pop-up player.
-3. **Also by 2N2T:** tiles linking to Photography and Music, using the images in `assets/img/home/`.
-4. **Get in touch:** a short call to action linking to the Contact page.
-
-On the homepage, the menu links sit across the top right on screens 900px and wider. Smaller screens get the menu button instead. The header is see-through over the video and turns solid once you scroll.
-
-### About and Contact pages
-
-- **About** (`about/index.html`): the bio and the "What I do" list are plain HTML, marked with an `EDIT ME` comment. Replace the placeholder text. The portrait is `assets/img/about/alex-portrait.jpg`, a web-sized copy of your upload `alex2n2t-contact.jpg`.
-- **Contact** (`contact/index.html`): your email, location and links, plus a contact form.
-  The form needs no service. Pressing **Send message** opens the visitor's email app with a message to 2n2tproductions@gmail.com already filled in: their name, email, what it's about and the message. They just press send. To change the address, edit `data-email` and the `mailto:` on the `<form>` in `contact/index.html`.
-
-### Header, footer, email and socials
-
-These are plain HTML in each page: `index.html`, `film/`, `photography/`, `music/`, `about/`, `contact/` and `404.html`.
-To change the email or social links, find and replace them across those seven files.
-The Instagram link is different on each page on purpose.
-
-The menu is the three-line button at the top right. To add a page to it, add a `<li><a href="...">Name</a></li>` line inside `<nav class="site-nav">` on every page.
+To add a page to the menu, add a `<li><a href="...">Name</a></li>` line inside `<nav class="site-nav">` on every page.
 
 ### Look and feel
 
@@ -151,7 +88,7 @@ The fonts are system fonts, so nothing downloads. To use a web font, add its `<l
 
 ## Deploy
 
-### Netlify (easiest)
+### Netlify
 
 1. Go to https://app.netlify.com/drop and drag this whole folder onto the page. It's live within seconds.
    Alternatively, push the folder to GitHub, then in Netlify choose **Add new site → Import from Git**. Leave the build command empty and set the publish directory to `/`.

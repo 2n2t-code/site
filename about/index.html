@@ -54,14 +54,16 @@
   <main id="main" class="container">
     <section class="page-intro">
       <h1>About</h1>
-      <p>Video producer, videographer, editor and musician based in Manchester.</p>
+      <p id="about-intro">Video producer, videographer, editor and musician based in Manchester.</p>
     </section>
 
-    <!-- Bio: edit the paragraphs below. The first one (class="lede") is shown larger. -->
+    <!-- The intro, photo, bio and "What I do" list come from data/about.json (edit them in Pages CMS).
+         The text below is a fallback for when that file can't load. -->
     <section class="section about">
-      <img class="about-portrait" src="../assets/img/about/alex-portrait.jpg" alt="Alex, the person behind 2N2T, wearing a cap and glasses" width="900" height="1200" loading="lazy" decoding="async">
+      <img class="about-portrait" id="about-photo" src="../assets/img/about/alex-portrait.jpg" alt="Alex, the person behind 2N2T, wearing a cap and glasses" width="900" height="1200" loading="lazy" decoding="async">
 
       <div class="about-text">
+        <div id="about-bio">
         <p class="lede">I’m a Manchester-based creative: video producer, videographer, video editor, photographer and musician. I have over a decade of experience creating content for artists, businesses, and even brides and grooms.</p>
         <p>Live In Session music videos are my bread and butter though, having produced over 1,000 at The Silk Mill Recording Studios, capturing artists performing in the room with the energy of a gig and the polish of a studio recording.</p>
         <p>I’m no stranger to shoots outside the studio either. I thrive in live environments as comfortably as in controlled studio settings. I’ve created recap reels for huge live events at the NEC, Birmingham and Victoria Warehouse, Manchester, as well as filming full live concerts and feature music videos for bands and musicians.</p>
@@ -70,9 +72,10 @@
         <p>I also produce music and play synths in my band, Vordermann, so I know what it feels like to be on the other side of the camera and what artists need to feel comfortable and perform at their best.</p>
         <p>I’ve worked with organisations including Alive Network and The Silk Mill Recording Studios, and with hundreds (if not thousands) of musicians over the years.</p>
         <p>So, if you’ve got a project that needs filming, photographing, or writing music for, <a href="../contact/">drop me a line</a>.</p>
+        </div>
 
         <h2 class="about-heading">What I do</h2>
-        <ul class="services">
+        <ul class="services" id="about-services">
           <li><strong>Video production</strong><span>Planning, crewing and producing shoots from idea to delivery.</span></li>
           <li><strong>Videography</strong><span>Live sessions, music videos, events and brand films.</span></li>
           <li><strong>Editing &amp; colour</strong><span>Cutting, grading and finishing for web, social and screen.</span></li>
