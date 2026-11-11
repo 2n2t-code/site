@@ -84,7 +84,9 @@
       "category": "Live In Session at Silk Mill Studios",
       "title": "The Futuristic Gramophones",
       "link": "https://www.youtube.com/watch?v=M54RmO3AlNU",
-      "videoType": "Showreel"
+      "videoType": "Showreel",
+      "thumb": "assets/img/photos/Web/thefuturisticgramophonesshoweelthumb1.jpg",
+      "mobileThumb": "assets/img/photos/Web/thefuturisticgramophonesshoweelthumb1-sm.jpg"
     }
   ]
 }
