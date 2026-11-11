@@ -108,6 +108,14 @@ content:
             collapsed: true
             summary: "{category} — {title}"
         fields: *video_fields
+      - name: packagesIntro
+        label: "Packages: intro line (optional)"
+        type: text
+      - name: packageTags
+        label: "Packages: small notes (optional)"
+        type: string
+        list: true
+        description: Shown as small labels above the packages, e.g. "Based on a 3-track session".
       - name: packages
         label: Packages
         type: object
@@ -120,9 +128,24 @@ content:
             label: Package name
             type: string
           - name: price
-            label: Price
+            label: Price (optional)
             type: string
-            description: "As it should appear, e.g. £350 or From £350."
+            description: "One big price, e.g. £350 or From £350. Leave empty if you use Prices by artist below."
+          - name: rates
+            label: Prices by artist (optional)
+            type: object
+            list:
+              collapsible:
+                collapsed: true
+                summary: "{label}: {price}"
+            fields:
+              - name: label
+                label: Who
+                type: string
+                description: e.g. Solo artist, Duo, Full band.
+              - name: price
+                label: Price
+                type: string
           - name: note
             label: Short note (optional)
             type: string
@@ -136,7 +159,10 @@ content:
           - name: badge
             label: Highlight label (optional)
             type: string
-            description: Shown on a highlighted package. Leave empty for "Most popular".
+            description: 'A small label on a highlighted package, e.g. "Most popular". Leave empty for just the orange outline.'
+      - name: extrasTitle
+        label: "Extras: heading"
+        type: string
       - name: extras
         label: Extras
         type: object

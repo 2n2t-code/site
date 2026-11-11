@@ -37,58 +37,143 @@
       "mobileThumb": "assets/img/photos/Web/thefuturisticgramophonesshoweelthumb1-sm.jpg"
     }
   ],
+  "packagesIntro": "Recorded, filmed, mixed and mastered in-studio. Choose the package that fits your session.",
+  "packageTags": [
+    "Based on a 3-track session",
+    "Shot in 1080p as standard"
+  ],
   "packages": [
     {
-      "name": "One song",
-      "price": "£000",
-      "note": "Sample text: edit in the CMS.",
-      "features": [
-        "Multi-camera filming",
-        "Multitrack audio recorded by Jim",
-        "Mixed and mastered audio",
-        "Edited and colour-graded video"
+      "name": "Basic",
+      "price": "",
+      "rates": [
+        {
+          "label": "Solo artist",
+          "price": "£750"
+        },
+        {
+          "label": "Duo",
+          "price": "£750"
+        },
+        {
+          "label": "Full band",
+          "price": "£900"
+        }
       ],
-      "featured": false
+      "note": "",
+      "features": [
+        "One-shot, 1 or 2 static cameras",
+        "Full track recording",
+        "Audio sync",
+        "Colour grade",
+        "Audio engineer, mix and master",
+        "Lighting",
+        "1 consolidated round of minor changes",
+        "1–2 week turnaround"
+      ],
+      "featured": false,
+      "badge": ""
     },
     {
-      "name": "Three songs",
-      "price": "£000",
-      "note": "Sample text: edit in the CMS.",
+      "name": "Mid",
+      "price": "",
+      "rates": [
+        {
+          "label": "Solo artist",
+          "price": "£850"
+        },
+        {
+          "label": "Duo",
+          "price": "£1,000"
+        },
+        {
+          "label": "Full band",
+          "price": "£1,200"
+        }
+      ],
+      "note": "",
       "features": [
-        "Everything in One song",
-        "Three separate videos",
-        "Vertical cuts for Reels and TikTok"
+        "Multicam",
+        "Full track recording",
+        "Audio sync",
+        "Colour grade",
+        "Audio engineer, mix and master",
+        "Lighting",
+        "1 consolidated round of notes",
+        "3–5 working day turnaround"
       ],
       "featured": true,
-      "badge": "Most popular"
+      "badge": ""
     },
     {
-      "name": "Full session",
-      "price": "£000",
-      "note": "Sample text: edit in the CMS.",
-      "features": [
-        "Up to five songs",
-        "Everything in Three songs",
-        "Behind-the-scenes photos"
+      "name": "Full",
+      "price": "",
+      "rates": [
+        {
+          "label": "Solo artist",
+          "price": "£1,000"
+        },
+        {
+          "label": "Duo",
+          "price": "£1,200"
+        },
+        {
+          "label": "Full band",
+          "price": "£1,500"
+        }
       ],
-      "featured": false
+      "note": "",
+      "features": [
+        "Multicam",
+        "Full track recording",
+        "Audio sync",
+        "Colour grade",
+        "Audio engineer, mix and master",
+        "Lighting",
+        "2 consolidated rounds of revision notes",
+        "1–3 working day turnaround",
+        "Social edits included"
+      ],
+      "featured": false,
+      "badge": ""
     }
   ],
+  "extrasTitle": "Additional extras",
   "extras": [
     {
-      "item": "Extra song",
-      "price": "£000"
+      "item": "Additional songs",
+      "price": "£250–300 per track"
     },
     {
-      "item": "Vertical social cut",
-      "price": "£000"
+      "item": "Social edits, all formats (90s, 9:16, 4:5, 1:1)",
+      "price": "£100"
     },
     {
-      "item": "Multitrack stems",
-      "price": "£000"
+      "item": "Raw footage (+ hard drive)",
+      "price": "£120"
+    },
+    {
+      "item": "Second shooter",
+      "price": "£350 per day"
+    },
+    {
+      "item": "4K recording",
+      "price": "£100 per session"
+    },
+    {
+      "item": "Multi-track stems",
+      "price": "£100"
+    },
+    {
+      "item": "Titles and kinetic typography",
+      "price": "£50 per hour"
+    },
+    {
+      "item": "Gear hire",
+      "price": "Cost + 10%"
     }
   ],
-  "priceNote": "Sample note: prices, what's included and turnaround times are placeholders until updated in the CMS.",
+  "priceNote": "A deposit secures your booking.",
   "steps": [
     {
       "title": "Get in touch",

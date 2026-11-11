@@ -1437,19 +1437,32 @@
     }, "");
     hideIfEmpty("ses-videos-section", vids);
 
-    // Packages: a card each, with what's included.
+    // Packages: a line about them, small notes (e.g. "Based on a 3-track
+    // session"), then a card each with its price (or prices by artist) and
+    // what's included.
+    var pkIntro = byId("ses-pk-intro");
+    pkIntro.textContent = s.packagesIntro || "";
+    pkIntro.hidden = !s.packagesIntro;
+    var tags = (s.packageTags || []).filter(Boolean);
+    renderList(byId("ses-pk-tags"), tags, function (t) { return el("li", { text: t }); }, "");
+    byId("ses-pk-tags").hidden = !tags.length;
     renderList(byId("ses-packages"), (s.packages || []).filter(Boolean), function (pk) {
       var feats = (pk.features || []).map(function (f) { return typeof f === "string" ? f : (f && (f.item || f.text)) || ""; }).filter(Boolean);
+      var rates = (pk.rates || []).filter(function (r) { return r && (r.label || r.price); });
       return el("article", { class: "pkg reveal" + (pk.featured ? " is-featured" : "") }, [
-        pk.featured ? el("span", { class: "pkg-badge", text: pk.badge || "Most popular" }) : null,
+        pk.featured && pk.badge ? el("span", { class: "pkg-badge", text: pk.badge }) : null,
         el("h3", { class: "pkg-name", text: pk.name || "" }),
-        el("p", { class: "pkg-price", text: pk.price || "" }),
+        pk.price ? el("p", { class: "pkg-price", text: pk.price }) : null,
+        rates.length ? el("dl", { class: "pkg-rates" }, [].concat.apply([], rates.map(function (r) {
+          return [el("dt", { text: r.label || "" }), el("dd", { text: r.price || "" })];
+        }))) : null,
         pk.note ? el("p", { class: "pkg-note", text: pk.note }) : null,
         feats.length ? el("ul", { class: "pkg-features" }, feats.map(function (f) { return el("li", { text: f }); })) : null
       ]);
     }, "Prices coming soon.");
 
     // Extras: one line each, item on the left, price on the right.
+    if (s.extrasTitle) byId("ses-extras-title").textContent = s.extrasTitle;
     var extras = (s.extras || []).filter(function (x) { return x && x.item; });
     renderList(byId("ses-extras"), extras, function (x) {
       return el("li", null, [el("span", { text: x.item }), el("span", { class: "extras-price", text: x.price || "" })]);

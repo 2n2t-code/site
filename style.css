@@ -1013,3 +1013,24 @@ body[data-page="music"] main { text-transform: uppercase; }
   .ses-member:nth-child(even) .ses-team-text { order: 1; }
   .ses-member .ses-gallery { order: 3; }
 }
+
+/* Packages: intro line, small notes, prices by artist; extras in two columns on desktop. */
+.pkg-intro { margin: calc(-1 * var(--space-2)) 0 var(--space-4); color: var(--color-muted); max-width: 60ch; }
+.pkg-tags { list-style: none; margin: 0 0 var(--space-6); padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.pkg-tags li { font-size: var(--text-sm); font-weight: 600; padding: 8px 14px; border-radius: 999px; background: rgba(255, 255, 255, 0.06); border: 1px solid var(--color-border); }
+.pkg-rates { margin: var(--space-1) 0 0; display: grid; grid-template-columns: 1fr auto; }
+.pkg-rates dt, .pkg-rates dd { margin: 0; padding: 10px 0; border-bottom: 1px solid var(--color-border); }
+.pkg-rates dt { color: var(--color-muted); }
+.pkg-rates dd { font-family: var(--font-display); font-weight: 800; font-size: 1.45rem; line-height: 1.1; text-align: right; }
+.pkg-rates + .pkg-features { border-top: 0; padding-top: var(--space-2); }
+@media (min-width: 900px) {
+  .ses-extras { max-width: none; }
+  .extras { display: grid; grid-template-columns: 1fr 1fr; column-gap: var(--space-7); }
+}
+/* Package names are the card headings. */
+.pkg-name { font-size: 1.7rem; letter-spacing: 0.08em; color: var(--color-text); font-weight: 800; }
+@media (min-width: 900px) {
+  /* Extras read down each column, like the rate card. */
+  .extras { display: block; columns: 2; column-gap: var(--space-7); }
+  .extras li { break-inside: avoid; }
+}
