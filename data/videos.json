@@ -11,34 +11,54 @@
       "thumb": "assets/img/photos/Web/pierre-liverpool-hekimoglu-thumb-4.jpg"
     },
     {
-      "category": "Live In Session at Silk Mill Studios",
+      "category": "Live In Session",
       "title": "Chief Springs",
-      "link": "https://www.youtube.com/watch?v=AzLkLzCOuoA"
+      "link": "https://www.youtube.com/watch?v=AzLkLzCOuoA",
+      "venue": "Silk Mill Studios",
+      "song": "Long Game (Agave)",
+      "role": "Camera, Lighting, Editor, Grade"
     },
     {
       "category": "Music Video",
       "title": "Paul Walker & Karen Pfeiffer",
-      "link": "https://www.youtube.com/watch?v=IkFYZh9kbAk"
+      "link": "https://www.youtube.com/watch?v=IkFYZh9kbAk",
+      "venue": "Gladstone Pottery Museum",
+      "song": "Our Golden Age",
+      "year": "2024",
+      "role": "Director, Camera, Editor, Grade"
     },
     {
       "category": "Live Event",
-      "title": "Dirty Weekend at The Edge Festival, Solva",
-      "link": "https://www.youtube.com/watch?v=TS9bDqmXpWc"
+      "title": "Dirty Weekend at The Edge Festival",
+      "link": "https://www.youtube.com/watch?v=TS9bDqmXpWc",
+      "venue": "Solva, Wales",
+      "year": "2025"
     },
     {
       "category": "Live Event",
-      "title": "Discoteca at O2 Victoria Warehouse, Manchester",
-      "link": "https://www.youtube.com/watch?v=UYP-mWkQISc"
+      "title": "Discoteca",
+      "link": "https://www.youtube.com/watch?v=UYP-mWkQISc",
+      "venue": "O2 Victoria Warehouse, Manchester",
+      "year": "2025",
+      "role": "Videographer, Editor"
     },
     {
-      "category": "Wedding Entertainment Highlights",
-      "title": "Peckforton Castle",
-      "link": "https://www.youtube.com/watch?v=xAbLxqtVRqo"
+      "category": "Highlights",
+      "title": "Peckforton Castle Wedding Entertainment ",
+      "link": "https://www.youtube.com/watch?v=xAbLxqtVRqo",
+      "videoType": "Highlights",
+      "venue": "Peckforton Castle",
+      "year": "2024",
+      "role": "Camera, Editor, Grade"
     },
     {
       "category": "Live In Session",
       "title": "Algorhythm",
-      "link": "https://www.youtube.com/watch?v=6tPhsQtXXog"
+      "link": "https://www.youtube.com/watch?v=6tPhsQtXXog",
+      "venue": "Silk Mill Studios",
+      "song": "Love Story",
+      "year": "2025",
+      "role": "Camera, Lighting, Editor, Grade"
     },
     {
       "category": "Wedding Band Highlights",
