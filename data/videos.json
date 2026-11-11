@@ -2,8 +2,10 @@
   "videos": [
     {
       "category": "Live Concert",
-      "title": "Pierre Bensusan at The Philharmonic Music Room, Liverpool",
-      "link": "https://www.youtube.com/watch?v=FGRNWgGfReA"
+      "title": "Pierre Bensusan 'Hekimoglu' at The Philharmonic Music Room, Liverpool",
+      "link": "https://www.youtube.com/watch?v=FGRNWgGfReA",
+      "year": "2026",
+      "role": "Producer, Camera Op, Editor, Grade"
     },
     {
       "category": "Live In Session at Silk Mill Studios",
