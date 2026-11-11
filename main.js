@@ -802,6 +802,12 @@
       // The ball is stretched to suit the screen: wider than tall on computers,
       // taller than wide on phones.
       var sx = phone ? 1.0 : 1.45, sy = phone ? 1.55 : 0.95;
+      // Smaller galleries (a tag) gather into a smaller sphere, so they're as
+      // close-knit as the full gallery; "All" keeps the full size.
+      var n0 = visible.length;
+      var gather = Math.max(0.42, Math.min(1, Math.sqrt(n0 / pool.length)));
+      R *= gather;
+      base *= 1 + (1 - gather) * 0.7; // ...with slightly bigger photos, so they still fill the view
       var n = visible.length;
       var others = Math.max(1, n - 1);
       visible.forEach(function (p, i) {
