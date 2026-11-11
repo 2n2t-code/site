@@ -20,21 +20,20 @@
       "mobileThumb": "assets/img/photos/Web/algorhythmlove-storythumb1-sm.jpg"
     },
     {
-      "category": "Live In Session at Hope Mill Studios",
-      "title": "The Beautiful Failures",
-      "link": "https://www.youtube.com/watch?v=nIYWaXC5TNk",
-      "venue": "Hope Mill Studios",
-      "song": "'Cowboys In Tangier'",
-      "year": "2026",
-      "thumb": "assets/img/photos/Web/thebeautifulfailurescitthumb1.jpg"
-    },
-    {
       "category": "Live In Session at Silk Mill Studios",
       "title": "The Futuristic Gramophones",
       "link": "https://www.youtube.com/watch?v=M54RmO3AlNU",
       "videoType": "Showreel",
       "thumb": "assets/img/photos/Web/thefuturisticgramophonesshoweelthumb1.jpg",
       "mobileThumb": "assets/img/photos/Web/thefuturisticgramophonesshoweelthumb1-sm.jpg"
+    },
+    {
+      "category": "Live In Session",
+      "title": "Alice Roberts",
+      "link": "https://www.youtube.com/watch?v=s1KJSC4TnRE",
+      "videoType": "Showreel",
+      "venue": "Silk Mill Studios",
+      "year": "2026"
     }
   ],
   "packagesIntro": "Recorded, filmed, mixed and mastered in-studio. Choose the package that fits your session.",
@@ -45,7 +44,6 @@
   "packages": [
     {
       "name": "Basic",
-      "price": "",
       "rates": [
         {
           "label": "Solo artist",
@@ -60,7 +58,6 @@
           "price": "£900"
         }
       ],
-      "note": "",
       "features": [
         "One-shot, 1 or 2 static cameras",
         "Full track recording",
@@ -71,12 +68,10 @@
         "1 consolidated round of minor changes",
         "1–2 week turnaround"
       ],
-      "featured": false,
-      "badge": ""
+      "featured": false
     },
     {
       "name": "Mid",
-      "price": "",
       "rates": [
         {
           "label": "Solo artist",
@@ -91,7 +86,6 @@
           "price": "£1,200"
         }
       ],
-      "note": "",
       "features": [
         "Multicam",
         "Full track recording",
@@ -102,12 +96,10 @@
         "1 consolidated round of notes",
         "3–5 working day turnaround"
       ],
-      "featured": true,
-      "badge": ""
+      "featured": true
     },
     {
       "name": "Full",
-      "price": "",
       "rates": [
         {
           "label": "Solo artist",
@@ -122,7 +114,6 @@
           "price": "£1,500"
         }
       ],
-      "note": "",
       "features": [
         "Multicam",
         "Full track recording",
@@ -134,8 +125,7 @@
         "1–3 working day turnaround",
         "Social edits included"
       ],
-      "featured": false,
-      "badge": ""
+      "featured": false
     }
   ],
   "extrasTitle": "Additional extras",
@@ -192,38 +182,25 @@
       "text": "Mixed audio and finished videos, ready to post."
     }
   ],
-  "ctaText": "Tell us your band, the songs and roughly when, and we'll get back to you with dates.",
-  "bookSubject": "Live In Session booking",
   "teamTitle": "The Team",
   "team": [
     {
       "name": "Alex",
       "role": "Video producer & editor",
       "photo": "assets/img/photos/Web/alex-portrait.jpg",
-      "photoMobile": "",
       "photoAlt": "Alex, the person behind 2N2T, wearing a cap and glasses",
-      "bio": "Live In Session music videos are my bread and butter: I've produced over 1,000 at The Silk Mill Recording Studios, capturing artists performing in the room with the energy of a gig and the polish of a studio recording.\n\nSample text: edit in the CMS under Live In Session page → The Team.",
-      "gallery": [],
-      "link": "",
-      "linkLabel": ""
+      "bio": "Live In Session music videos are my bread and butter: I've produced over 1,000 at The Silk Mill Recording Studios, capturing artists performing in the room with the energy of a gig and the polish of a studio recording.\n\nSample text: edit in the CMS under Live In Session page → The Team."
     },
     {
       "name": "Jim",
       "role": "Audio engineer",
-      "photo": "",
-      "photoMobile": "",
-      "photoAlt": "",
-      "bio": "Jim's bio goes here: his background, the studios and artists he's worked with, and what he brings to a session. Edit it in the CMS under Live In Session page.",
-      "gallery": [],
-      "link": "",
-      "linkLabel": ""
+      "bio": "Jim's bio goes here: his background, the studios and artists he's worked with, and what he brings to a session. Edit it in the CMS under Live In Session page."
     }
   ],
   "studio": {
     "label": "The studio",
     "name": "Silk Mill Studios",
     "text": "Sample text: a few words about the studio space, the live room and why it's a great place to film a session. Edit it in the CMS under Live In Session page → Silk Mill Studios.",
-    "photos": [],
     "gear": [
       {
         "group": "Cameras",
@@ -243,8 +220,8 @@
           "Sample: add your lights"
         ]
       }
-    ],
-    "link": "",
-    "linkLabel": ""
-  }
+    ]
+  },
+  "ctaText": "Tell us your band, the songs and roughly when, and we'll get back to you with dates.",
+  "bookSubject": "Live In Session booking"
 }
