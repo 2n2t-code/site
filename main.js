@@ -240,7 +240,8 @@
         category: parts.length > 1 ? parts[0] : "Showreel",
         title: parts.length > 1 ? parts.slice(1).join(" — ") : parts[0],
         isShowreel: true,
-        credits: home.showreelCredits || []
+        credits: home.showreelCredits || [],
+        thumb: home.showreelThumb || "", mobileThumb: home.showreelMobileImage || ""
       }));
     }
     var videos = (content.film || {}).videos || [];
@@ -422,11 +423,16 @@
       poster.onerror = onFail || null;
       poster.src = src;
     };
-    var showYouTubeThumb = function () {
+    var youTubeThumb = function () {
       if (!ytId) return;
       showPoster("https://i.ytimg.com/vi/" + ytId + "/maxresdefault.jpg", false, function () {
         showPoster("https://i.ytimg.com/vi/" + ytId + "/hqdefault.jpg", false);
       });
+    };
+    // Your own showreel thumbnail (CMS) if set, otherwise YouTube's.
+    var showYouTubeThumb = function () {
+      if (home.showreelThumb) showPoster(url(home.showreelThumb), true, youTubeThumb);
+      else youTubeThumb();
     };
     document.querySelectorAll("[data-play-youtube]").forEach(function (b) {
       if (home.showreelTitle) b.setAttribute("data-play-title", home.showreelTitle);
@@ -447,7 +453,8 @@
       var rv = Object.assign({}, reel, {
         category: parts.length > 1 ? parts[0] : "Showreel",
         title: parts.length > 1 ? parts.slice(1).join(" — ") : parts[0],
-        isShowreel: true, credits: home.showreelCredits || []
+        isShowreel: true, credits: home.showreelCredits || [],
+        thumb: home.showreelThumb || "", mobileThumb: home.showreelMobileImage || ""
       });
       var reelTile = el("button", { class: "work-tile", type: "button", "aria-label": "Play the showreel" }, [
         thumbImg(rv),

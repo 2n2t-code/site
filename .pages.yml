@@ -133,10 +133,14 @@ content:
           - name: value
             label: Value
             type: string
-      - name: showreelMobileImage
-        label: Showreel background on phones (optional)
+      - name: showreelThumb
+        label: Showreel thumbnail (optional)
         type: image
-        description: Phones don't play the background video. They show this image behind the headline instead. A tall, portrait image works best. Leave empty to use the YouTube showreel's thumbnail.
+        description: The still image for the showreel on the homepage tile, the Video Production page and phones. A 16:9 landscape image (1920×1080) with no black bars works best. Leave empty to use the YouTube showreel's thumbnail.
+      - name: showreelMobileImage
+        label: Showreel thumbnail on phones (optional)
+        type: image
+        description: Only if you want a different crop on phones. Leave empty to use the Showreel thumbnail above.
       - name: photographyTile
         label: Photography tile image
         type: image
