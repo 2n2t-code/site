@@ -704,15 +704,25 @@ img.thumb-letterboxed { scale: 1.34; }
 .contact-social a { color: var(--color-muted); text-decoration: none; }
 .contact-social a:hover { color: var(--color-accent); }
 .contact-form { display: grid; gap: var(--space-4); align-content: start; }
-.field { display: grid; gap: var(--space-2); }
-.field label { font-size: var(--text-sm); font-weight: 600; }
-.field input, .field select, .field textarea {
+.form-field { display: grid; gap: var(--space-2); }
+/* Labels match the Email / Based in / Follow headings opposite. */
+.form-field label {
+  font-family: var(--font-display); font-weight: 700; font-size: var(--text-sm);
+  text-transform: uppercase; letter-spacing: 0.15em; color: var(--color-text);
+}
+.form-field input, .form-field select, .form-field textarea {
   width: 100%; font: inherit; color: var(--color-text);
   background: var(--color-surface); border: 1px solid var(--color-border);
   border-radius: var(--radius); padding: var(--space-3);
 }
-.field textarea { resize: vertical; min-height: 140px; }
-.field input:focus, .field select:focus, .field textarea:focus { outline: 2px solid var(--color-accent); outline-offset: 0; border-color: transparent; }
+.form-field textarea { resize: vertical; min-height: 140px; }
+/* The dropdown gets the same look as the text boxes, with a thin arrow. */
+.form-field select {
+  appearance: none; -webkit-appearance: none; padding-right: 40px; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f2efe9' stroke-width='1.6'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center; background-size: 18px;
+}
+.form-field input:focus, .form-field select:focus, .form-field textarea:focus { outline: 2px solid var(--color-accent); outline-offset: 0; border-color: transparent; }
 .contact-form .button { justify-self: start; }
 .form-note { margin: 0; font-size: var(--text-sm); color: var(--color-muted); }
 .form-success a { color: var(--color-accent); }
