@@ -769,6 +769,10 @@
 
     var visible = [];
     var W = 0, H = 0, base = 0, front = 0;
+    // The page opens partway down the field, with Featured #1 at the front:
+    // scrolling up from there flies forwards into the field (FWD is how far),
+    // and scrolling down pulls back out towards the gallery cards.
+    var FWD = 0;
     var cam = 0, camTarget = 0;
     // Dragging orbits the field around its centre (PIVOT is how deep that is).
     var yaw = 0, pitch = 0, yawT = 0, pitchT = 0;
@@ -810,13 +814,15 @@
         size(p);
       });
       // The page scrolls for as long as it takes to pull back through the field.
-      var travel = (front * GAP + (front ? NEAR : 0) + END_EXTRA) / Z_PER_PX;
+      FWD = Math.max(0, n - 1 - front) * GAP;
+      var travel = (FWD + front * GAP + (front ? NEAR : 0) + END_EXTRA) / Z_PER_PX;
       root.style.height = Math.round(H + travel) + "px";
     }
 
     function readScroll() {
-      camTarget = Math.max(0, window.scrollY - fieldTop()) * Z_PER_PX;
+      camTarget = Math.max(0, window.scrollY - fieldTop()) * Z_PER_PX - FWD;
     }
+    function startY() { return Math.round(fieldTop() + FWD / Z_PER_PX); }
 
     function draw(t) {
       var floatAmt = calmMotion ? 0 : 10;
@@ -952,10 +958,9 @@
       layout();
       if (animate) {
         // Back to the start of the field, with the photos flying in from behind.
-        var top = fieldTop();
-        if (window.scrollY > top) window.scrollTo(0, top);
-        camTarget = 0;
-        cam = calmMotion ? 0 : GAP * 6;
+        window.scrollTo(0, startY());
+        readScroll();
+        cam = camTarget + (calmMotion ? 0 : GAP * 6);
         yawT = pitchT = velX = velY = 0;
       }
       wake();
@@ -985,6 +990,12 @@
     }
 
     setTag("", false);
+    // Always arrive at the start of the field (not wherever the last visit left off).
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    window.scrollTo(0, startY());
+    // No pull-to-refresh here: swiping down at the top of the field shouldn't reload the page.
+    document.documentElement.style.overscrollBehaviorY = "none";
+    document.body.style.overscrollBehaviorY = "none";
     readScroll();
     cam = camTarget;
 
@@ -999,7 +1010,7 @@
       if (flash) flash.hidden = true;
       wake();
     };
-    if (calmMotion || !flash || window.scrollY > fieldTop() + 10 || visible.length < 3) { finish(); return; }
+    if (calmMotion || !flash || Math.abs(window.scrollY - startY()) > 10 || visible.length < 3) { finish(); return; }
 
     var first = visible[0];
     var shots = visible.slice(1, 8).concat([first]);
