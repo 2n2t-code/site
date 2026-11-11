@@ -1389,11 +1389,23 @@
   }
 
   /* ---------- Live In Session page (data/session.json) ---------- */
+  // Text from the CMS: a blank line starts a new paragraph. A short line with
+  // no full stop on its own (or on the line above a paragraph) becomes a
+  // subheading, e.g. "The live room".
   function paragraphs(target, text) {
     if (!target) return;
-    var paras = String(text || "").split(/\n\s*\n/).map(function (t) { return t.trim(); }).filter(Boolean);
-    target.replaceChildren.apply(target, paras.map(function (t) { return el("p", { text: t }); }));
-    target.hidden = !paras.length;
+    var isHeading = function (line) { return line.length <= 60 && !/[.!?,;:)\u2026"\u201d']$/.test(line); };
+    var nodes = [];
+    String(text || "").split(/\n\s*\n/).forEach(function (block) {
+      var lines = block.split("\n").map(function (l) { return l.trim(); }).filter(Boolean);
+      if (!lines.length) return;
+      if (isHeading(lines[0]) && (lines.length > 1 || nodes.length === 0 || lines[0].split(" ").length <= 8)) {
+        nodes.push(el("h3", { class: "ses-subhead", text: lines.shift() }));
+      }
+      if (lines.length) nodes.push(el("p", { text: lines.join(" ") }));
+    });
+    target.replaceChildren.apply(target, nodes);
+    target.hidden = !nodes.length;
   }
 
   function renderSession() {
@@ -1540,6 +1552,18 @@
     if (st.label) byId("studio-label").textContent = st.label;
     if (st.name) byId("studio-title").textContent = st.name;
     paragraphs(byId("studio-text"), st.text);
+    // The main photo, to the right of the text (under it on phones), uncropped.
+    var mainPhoto = byId("studio-photo");
+    if (st.photo) {
+      var mp = el("img", { src: url(pick(st.photo, st.photoMobile)), alt: st.photoAlt || st.name || "The studio", loading: "lazy", decoding: "async" });
+      var mpBtn = el("button", { class: "ses-photo ses-photo--main", type: "button", "aria-label": "Enlarge: " + (st.photoAlt || st.name || "the studio") }, [mp]);
+      var mainAt = viewerPhotos.length;
+      viewerPhotos.push({ src: st.photo, alt: st.photoAlt || st.name || "", caption: st.photoAlt || st.name || "" });
+      mpBtn.addEventListener("click", function () { if (openViewer) openViewer(mainAt, mpBtn); });
+      mainPhoto.replaceChildren(mpBtn);
+      mainPhoto.hidden = false;
+      byId("studio-top").classList.add("has-photo");
+    }
     gallery(byId("studio-photos"), st.photos, st.name || "The studio");
     var gear = (st.gear || []).filter(function (g) { return g && (g.group || (g.items || []).length); });
     renderList(byId("studio-gear"), gear, function (g) {
@@ -1555,7 +1579,7 @@
       sl.replaceChildren(el("a", { href: st.link, target: "_blank", rel: "noopener", text: (st.linkLabel || "Visit " + (st.name || "the studio")) + " →" }));
       sl.hidden = false;
     }
-    if (!st.name && !String(st.text || "").trim() && !gear.length && !(st.photos || []).length) byId("ses-studio").hidden = true;
+    if (!st.name && !String(st.text || "").trim() && !gear.length && !(st.photos || []).length && !st.photo) byId("ses-studio").hidden = true;
 
     if (viewerPhotos.length) openViewer = setupLightbox(viewerPhotos);
   }

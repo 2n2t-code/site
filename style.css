@@ -1043,3 +1043,16 @@ body[data-page="music"] main { text-transform: uppercase; }
   .ses-member.has-wide-photo { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); }
   .ses-member.has-wide-photo:nth-child(even) { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); }
 }
+
+/* Studio: text on the left, main photo on the right (it stays in view while
+   the text scrolls); on phones the photo sits under the text. */
+.ses-studio-top { display: grid; gap: var(--space-6); }
+.ses-studio-photo { margin: 0; }
+.ses-photo.ses-photo--main { aspect-ratio: auto; border-radius: 14px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45); }
+.ses-photo--main img { height: auto; }
+.ses-subhead { margin: var(--space-6) 0 var(--space-2); font-size: var(--text-lg); text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-text); }
+.ses-text > .ses-subhead:first-child { margin-top: 0; }
+@media (min-width: 900px) {
+  .ses-studio-top.has-photo { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-8); align-items: start; }
+  .ses-studio-top.has-photo .ses-studio-photo { position: sticky; top: calc(var(--header-height) + var(--space-5)); }
+}

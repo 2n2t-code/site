@@ -297,13 +297,23 @@ content:
           - name: text
             label: About the studio
             type: text
-            description: Leave a blank line between paragraphs.
+            description: Leave a blank line between paragraphs. A short line on its own (or on the line above a paragraph), with no full stop, becomes a subheading, e.g. "The live room".
+          - name: photo
+            label: Main photo
+            type: image
+            description: Shown to the right of the text on computers (under it on phones), at its own shape, uncropped. Pick name.jpg (not -sm) from photos/Web.
+          - name: photoMobile
+            label: Main photo on phones (optional)
+            type: image
+          - name: photoAlt
+            label: Main photo description (for screen readers and Google)
+            type: string
           - name: photos
             label: Photos
             type: image
             options:
               multiple: true
-            description: "Drag to reorder. Pick name.jpg (not -sm) from photos/Web."
+            description: "The gallery under the text. Drag to reorder. Pick name.jpg (not -sm) from photos/Web."
           - name: gear
             label: The gear
             type: object
