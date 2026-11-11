@@ -776,7 +776,8 @@
     var cam = 0, camTarget = 0;
     // Dragging orbits the field around its centre (PIVOT is how deep that is).
     var yaw = 0, pitch = 0, yawT = 0, pitchT = 0;
-    var YAW_MAX = 35, PITCH_MAX = 22, PIVOT = 1500, DEG_PER_PX = 0.1;
+    var YAW_MAX = 40, PITCH_MAX = 35, PIVOT = 1500, DEG_PER_PX = 0.12;
+    var FACE = 0.6; // how far each photo turns back towards you (1 = fully flat-on)
     var tiltX = 0, tiltY = 0, tiltTX = 0, tiltTY = 0;
     var running = false, onScreen = true, introDone = false;
 
@@ -814,7 +815,8 @@
         size(p);
       });
       // The page scrolls for as long as it takes to pull back through the field.
-      FWD = Math.max(0, n - 1 - front) * GAP;
+      // Far enough that the very last photo comes right up to you.
+      FWD = Math.max(0, n - 1 - front) * GAP + 450;
       var travel = (FWD + front * GAP + (front ? NEAR : 0) + END_EXTRA) / Z_PER_PX;
       root.style.height = Math.round(H + travel) + "px";
     }
@@ -827,7 +829,8 @@
     function draw(t) {
       var floatAmt = calmMotion ? 0 : 10;
       // Each photo turns back to face you while the field orbits.
-      var face = " rotateY(" + (-(yaw + tiltX)).toFixed(3) + "deg) rotateX(" + (-(pitch + tiltY)).toFixed(3) + "deg)";
+      // (Most of the way, so they never go edge-on but the tilt still shows.)
+      var face = " rotateY(" + (-(yaw + tiltX) * FACE).toFixed(3) + "deg) rotateX(" + (-(pitch + tiltY) * FACE).toFixed(3) + "deg)";
       world.style.transform = "translateZ(" + (-PIVOT) + "px) rotateX(" + (pitch + tiltY).toFixed(3) + "deg) rotateY(" + (yaw + tiltX).toFixed(3) + "deg) translateZ(" + PIVOT + "px)";
       for (var k = 0; k < visible.length; k++) {
         var p = visible[k];
@@ -886,7 +889,8 @@
     // ---- Moving around: drag to turn the field around its centre ----
     var dragging = false, velX = 0, velY = 0, lastX = 0, lastY = 0, downX = 0, downY = 0, pid = null;
     stage.addEventListener("pointerdown", function (e) {
-      if (e.button !== 0 || e.target.closest(".field-tags")) return;
+      // Touch screens use tap-and-hold instead (below).
+      if (e.pointerType === "touch" || e.button !== 0 || e.target.closest(".field-tags")) return;
       dragging = true; dragged = false; pid = e.pointerId;
       downX = lastX = e.clientX; downY = lastY = e.clientY;
       velX = velY = 0;
@@ -901,14 +905,14 @@
         try { stage.setPointerCapture(pid); } catch (err) {}
       }
       if (!dragged) return;
-      // On touch screens, up/down swipes scroll the page (moving through the
-      // depth), so only sideways movement turns the field there.
-      var touch = e.pointerType === "touch";
-      yawT = clamp(yawT + dx * DEG_PER_PX, -YAW_MAX, YAW_MAX);
-      if (!touch) pitchT = clamp(pitchT - dy * DEG_PER_PX, -PITCH_MAX, PITCH_MAX);
-      velX = dx; velY = touch ? 0 : dy;
-      wake();
+      turn(dx, dy);
     });
+    function turn(dx, dy) {
+      yawT = clamp(yawT + dx * DEG_PER_PX, -YAW_MAX, YAW_MAX);
+      pitchT = clamp(pitchT - dy * DEG_PER_PX, -PITCH_MAX, PITCH_MAX);
+      velX = dx; velY = dy;
+      wake();
+    }
     var endDrag = function (e) {
       if (!dragging || (e && e.pointerId !== pid)) return;
       dragging = false;
@@ -923,6 +927,47 @@
       dragging = false; dragged = false; velX = velY = 0;
       root.classList.remove("is-dragging");
     });
+    // Touch screens: a normal swipe up/down moves through the field (it's the
+    // page scrolling). Tap and hold, then drag, turns the field in any
+    // direction. A sideways swipe turns it left and right.
+    var holdTimer = null, holding = false, sideways = false, lastTouch = 0;
+    var tStartX = 0, tStartY = 0, tLastX = 0, tLastY = 0;
+    var endTouch = function () {
+      clearTimeout(holdTimer);
+      if (holding || sideways) setTimeout(function () { dragged = false; }, 400); // no photo opens on release
+      holding = sideways = dragging = false;
+      root.classList.remove("is-holding");
+      lastTouch = Date.now();
+      wake();
+    };
+    stage.addEventListener("touchstart", function (e) {
+      clearTimeout(holdTimer);
+      if (e.touches.length !== 1 || e.target.closest(".field-tags")) { holding = sideways = false; return; }
+      var t = e.touches[0];
+      tStartX = tLastX = t.clientX; tStartY = tLastY = t.clientY;
+      holding = sideways = false; dragged = false; velX = velY = 0;
+      holdTimer = setTimeout(function () {
+        holding = dragging = dragged = true;
+        root.classList.add("is-holding");
+        if (navigator.vibrate) navigator.vibrate(10);
+      }, 280);
+    }, { passive: true });
+    stage.addEventListener("touchmove", function (e) {
+      var t = e.touches[0];
+      if (!t) return;
+      var dx = t.clientX - tLastX, dy = t.clientY - tLastY;
+      tLastX = t.clientX; tLastY = t.clientY;
+      if (holding) { e.preventDefault(); turn(dx, dy); return; } // holding: the page doesn't scroll
+      var mx = t.clientX - tStartX, my = t.clientY - tStartY;
+      if (Math.abs(mx) > 8 || Math.abs(my) > 8) clearTimeout(holdTimer); // moved first: it's a swipe
+      if (!sideways && Math.abs(mx) > 10 && Math.abs(mx) > Math.abs(my) * 1.5) { sideways = dragging = dragged = true; }
+      if (sideways) turn(dx, 0);
+    }, { passive: false });
+    stage.addEventListener("touchend", endTouch);
+    stage.addEventListener("touchcancel", endTouch);
+    // No "save image" menu when holding on a photo.
+    stage.addEventListener("contextmenu", function (e) { if (holding || Date.now() - lastTouch < 800) e.preventDefault(); });
+
     // Trackpads and sideways mouse wheels: horizontal scrolling turns the field.
     stage.addEventListener("wheel", function (e) {
       if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return; // up/down scrolls the page as normal
@@ -993,6 +1038,12 @@
     // Always arrive at the start of the field (not wherever the last visit left off).
     if ("scrollRestoration" in history) history.scrollRestoration = "manual";
     window.scrollTo(0, startY());
+    // Some phones restore or shift the scroll position as the page finishes
+    // loading, so set it again then (unless the visitor has already moved).
+    var arrivedAt = window.scrollY;
+    window.addEventListener("load", function () {
+      if (Math.abs(window.scrollY - arrivedAt) < 2 && Math.abs(window.scrollY - startY()) > 2) { window.scrollTo(0, startY()); readScroll(); cam = camTarget; }
+    });
     // No pull-to-refresh here: swiping down at the top of the field shouldn't reload the page.
     document.documentElement.style.overscrollBehaviorY = "none";
     document.body.style.overscrollBehaviorY = "none";
