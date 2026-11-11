@@ -189,14 +189,13 @@
 
   // Credits block used on the cinematic panels and homepage tiles. Type and Venue
   // come from the CMS fields, or from the label ("Live In Session at Silk Mill
-  // Studios") when those are empty; then Song, Client, Year, Role and any extra
-  // rows. Empty ones are left out.
+  // Studios") when those are empty; then Client, Year, Role and any extra
+  // rows. Empty ones are left out. Song has its own line under the title (songLine).
   function videoCredits(v, max) {
     var cat = String(v.isShowreel ? "" : (v.category || "")).split(/\s+at\s+/i);
     var rows = [
       ["Type", v.videoType || cat[0]],
       ["Venue", v.venue || cat[1]],
-      ["Song", v.song],
       ["Client", v.client],
       ["Year", v.year],
       ["Role", v.role]
@@ -208,6 +207,12 @@
     var dl = el("dl", { class: "cine-credits" });
     rows.forEach(function (r) { dl.appendChild(el("dt", { text: r[0] })); dl.appendChild(el("dd", { text: r[1] })); });
     return dl;
+  }
+
+  // Smaller heading under the artist: 'Song name', with any quotes typed in the CMS tidied.
+  function songLine(v) {
+    var song = String(v.song || "").trim().replace(/^['"‘’“”]+|['"‘’“”]+$/g, "").trim();
+    return song ? el("span", { class: "cine-song", text: "‘" + song + "’" }) : null;
   }
 
   function watchButton() {
@@ -252,6 +257,7 @@
         el("span", { class: "cine-body" }, [
           v.category ? el("span", { class: "cine-kicker", text: v.category }) : null,
           el("span", { class: "cine-title" + (title.length > 22 ? " long" : ""), text: title }),
+          songLine(v),
           videoCredits(v)
         ]),
         watchButton()
@@ -489,6 +495,7 @@
         el("span", { class: "work-info" }, [
           v.category ? el("span", { class: "cine-kicker", text: v.category }) : null,
           el("span", { class: "cine-title" + (title.length > 26 ? " long" : ""), text: title }),
+          songLine(v),
           videoCredits(v, i === 0 ? 4 : 3)
         ]),
         watchButton()

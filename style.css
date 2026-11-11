@@ -367,6 +367,7 @@ main { display: block; }
   .work-tile .cine-kicker { font-size: 0.7rem; letter-spacing: 0.2em; margin-bottom: 4px; }
   .work-tile .cine-title, .work-tile .cine-title.long,
   .work-grid > li:first-child .work-tile .cine-title { font-size: clamp(1.4rem, 7.5cqi, 2rem); }
+  .work-tile .cine-song { font-size: clamp(0.85rem, 4.2cqi, 1.1rem); margin-top: 0.25em; }
 }
 @media (max-width: 639px) {
   .work-tile { border-radius: 14px; }
@@ -471,6 +472,9 @@ img.thumb-letterboxed { scale: 1.34; }
 .cine-kicker { display: block; font-family: var(--font-label); font-weight: 700; font-size: 1rem; letter-spacing: 0.3em; text-transform: uppercase; margin: 0 0 var(--space-3); opacity: 0.92; }
 .cine-title { display: block; font-family: var(--font-cine); font-weight: 900; text-transform: uppercase; line-height: 0.86; letter-spacing: 0.005em; margin: 0; font-size: clamp(3rem, 1.5rem + 5vw, 7.5rem); text-wrap: balance; }
 .cine-title.long { font-size: clamp(2.2rem, 1.2rem + 3.2vw, 4.8rem); }
+/* Song name: a smaller heading under the artist. */
+.cine-song { display: block; font-family: var(--font-display); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; font-size: clamp(1.3rem, 0.9rem + 1.2vw, 2.1rem); line-height: 1.05; margin-top: 0.35em; color: rgba(242, 239, 233, 0.82); }
+.work-tile .cine-song { font-size: clamp(1rem, 0.7rem + 0.8vw, 1.45rem); }
 .cine-credits { display: grid; grid-template-columns: auto 1fr; margin: var(--space-5) 0 0; border-top: 1px solid rgba(242, 239, 233, 0.55); font-family: var(--font-cine); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; font-size: 1rem; }
 .cine-credits dt, .cine-credits dd { margin: 0; padding: 7px 0; border-bottom: 1px solid rgba(242, 239, 233, 0.55); }
 .cine-credits dt { opacity: 0.7; padding-right: var(--space-6); }
