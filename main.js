@@ -433,6 +433,29 @@
     tile("tile-photography", home.photographyTile, home.photographyTileMobile);
     tile("tile-music", home.musicTile, home.musicTileMobile);
 
+    // Showreel tile beside the intro (tablets and desktops), in the same
+    // cinematic style as the Selected work tiles.
+    var reelBox = document.getElementById("home-reel");
+    if (reelBox && reel) {
+      var parts = String(home.showreelTitle || "Showreel").split(/\s+[—–-]\s+/);
+      var rv = Object.assign({}, reel, {
+        category: parts.length > 1 ? parts[0] : "Showreel",
+        title: parts.length > 1 ? parts.slice(1).join(" — ") : parts[0],
+        isShowreel: true, credits: home.showreelCredits || []
+      });
+      var reelTile = el("button", { class: "work-tile", type: "button", "aria-label": "Play the showreel" }, [
+        thumbImg(rv),
+        el("span", { class: "work-info" }, [
+          el("span", { class: "cine-kicker", text: rv.category }),
+          el("span", { class: "cine-title", text: rv.title }),
+          videoCredits(rv, 3)
+        ]),
+        watchButton()
+      ]);
+      reelTile.addEventListener("click", function () { openVideo(Object.assign({}, rv, { title: home.showreelTitle || "Showreel" }), reelTile); });
+      reelBox.replaceChildren(reelTile);
+    }
+
     // Phones: no background video at all (saves data and battery). They keep
     // the still image: the "Showreel background on phones" image if set in the
     // CMS, otherwise the YouTube showreel's thumbnail.
