@@ -198,6 +198,8 @@
       "name": "Jim",
       "role": "Recording, mix & mastering engineer",
       "photo": "assets/img/photos/Web/alexjimsilkmillbts-17.jpg",
+      "photoShape": "portrait",
+      "photoFocus": "30% center",
       "bio": "Jim's bio goes here: his background, the studios and artists he's worked with, and what he brings to a session. Edit it in the CMS under Live In Session page."
     }
   ],
