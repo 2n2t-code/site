@@ -1508,16 +1508,19 @@
     var team = (s.team || []).filter(function (m) { return m && (m.name || m.bio); });
     if (s.teamTitle) byId("team-title").textContent = s.teamTitle;
     renderList(byId("ses-team-list"), team, function (m) {
-      var photoBox = el("div", { class: "ses-team-photo" + (m.photo ? " has-photo" : "") }, [
-        m.photo
-          ? el("img", { src: url(pick(m.photo, m.photoMobile)), alt: m.photoAlt || m.name || "", loading: "lazy", decoding: "async" })
-          : el("span", { "aria-hidden": "true", text: m.name || "" })
+      // Photo shape: portrait (4:5, cropped to fit) or as uploaded (the whole
+      // photo, uncropped). Photo focus: which part a crop keeps.
+      var asIs = m.photo && m.photoShape === "original";
+      var img = m.photo ? el("img", { src: url(pick(m.photo, m.photoMobile)), alt: m.photoAlt || m.name || "", loading: "lazy", decoding: "async" }) : null;
+      if (img && m.photoFocus) img.style.objectPosition = m.photoFocus;
+      var photoBox = el("div", { class: "ses-team-photo" + (m.photo ? " has-photo" : "") + (asIs ? " is-original" : "") }, [
+        img || el("span", { "aria-hidden": "true", text: m.name || "" })
       ]);
       var bio = el("div", { class: "ses-text" });
       paragraphs(bio, m.bio);
       var list = el("ul", { class: "ses-gallery" });
       gallery(list, m.gallery, m.name ? m.name + " in the studio" : "In the studio");
-      return el("article", { class: "ses-member" }, [
+      return el("article", { class: "ses-member" + (asIs ? " has-wide-photo" : "") }, [
         photoBox,
         el("div", { class: "ses-team-text" }, [
           m.role ? el("p", { class: "vp-label", text: m.role }) : null,

@@ -1034,3 +1034,12 @@ body[data-page="music"] main { text-transform: uppercase; }
   .extras { display: block; columns: 2; column-gap: var(--space-7); }
   .extras li { break-inside: avoid; }
 }
+
+/* The Team: a portrait set to "As uploaded" shows the whole photo at its own
+   shape, and gets a wider column so landscape photos aren't tiny. */
+.ses-team-photo.is-original { aspect-ratio: auto; max-width: none; background: none; }
+.ses-team-photo.is-original img { height: auto; }
+@media (min-width: 900px) {
+  .ses-member.has-wide-photo { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); }
+  .ses-member.has-wide-photo:nth-child(even) { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); }
+}
