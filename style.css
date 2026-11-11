@@ -785,3 +785,86 @@ img.thumb-letterboxed { scale: 1.34; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
+
+/* ---------- 3D photo field (Photography) ---------- */
+/* The stage stays pinned under the header while the page scrolls past it;
+   main.js sets the section's height (how far you scroll to fly through). */
+.field { position: relative; min-height: calc(100svh - var(--header-height)); }
+.field-stage {
+  position: sticky; top: var(--header-height);
+  height: calc(100svh - var(--header-height));
+  overflow: hidden;
+  perspective: 900px; perspective-origin: 50% 50%;
+  background: var(--color-bg);
+}
+.field-world {
+  position: absolute; left: 50%; top: 50%; width: 0; height: 0;
+  transform-style: preserve-3d;
+}
+.field-item {
+  position: absolute; left: 0; top: 0;
+  padding: 0; border: 0; background: #1a1a1d; cursor: zoom-in;
+  visibility: hidden; will-change: transform, opacity;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
+}
+.field-item img { display: block; width: 100%; height: 100%; object-fit: cover; user-select: none; -webkit-user-drag: none; }
+.field-item::after { content: ""; position: absolute; inset: 0; background: rgba(0, 0, 0, 0.12); transition: background var(--transition); }
+.field-item:hover::after, .field-item:focus-visible::after { background: transparent; }
+.field-item:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+
+/* Arrival: the gallery name, then a quick-fire slideshow under it. */
+.field-intro {
+  position: absolute; inset: 0; z-index: 3;
+  display: grid; place-items: center; pointer-events: none;
+}
+.field-title {
+  margin: 0 0 18vh; text-align: center;
+  font-family: var(--font-display); font-weight: 900; text-transform: uppercase;
+  font-size: clamp(3rem, 1rem + 8vw, 9rem); line-height: 0.9; letter-spacing: 0.01em;
+  color: #fff; text-shadow: 0 2px 30px rgba(0, 0, 0, 0.5);
+  opacity: 0; transform: translateY(14px);
+  transition: opacity 0.6s ease, transform 0.8s cubic-bezier(.2, .7, .2, 1);
+}
+.field.is-intro .field-title, .field.is-ready .field-title { opacity: 1; transform: none; }
+.field-intro.is-leaving .field-title { opacity: 0; transform: translateY(-10px); transition-duration: 0.5s; }
+.field-intro.is-done { display: none; }
+.field-flash { position: absolute; z-index: 2; overflow: hidden; background: #000; }
+.field-flash img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+.field-hint {
+  position: absolute; left: var(--gutter); bottom: 22px; z-index: 4; margin: 0;
+  font-size: var(--text-xs, 0.75rem); letter-spacing: 0.14em; text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5); opacity: 0; transition: opacity 0.6s ease 0.4s;
+}
+.field.is-ready .field-hint { opacity: 1; }
+
+/* Tags: one per gallery. Choosing one changes the photos in the field. */
+.field-tags {
+  position: absolute; right: var(--gutter); bottom: 16px; z-index: 4;
+  display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end;
+  max-width: calc(100% - 2 * var(--gutter) - 200px);
+  opacity: 0; transition: opacity 0.6s ease 0.2s;
+}
+.field.is-ready .field-tags { opacity: 1; }
+.field-tag {
+  font: 500 0.85rem/1 var(--font-body); letter-spacing: 0.02em;
+  padding: 9px 16px; border-radius: 999px; cursor: pointer;
+  color: rgba(255, 255, 255, 0.6); background: rgba(14, 14, 16, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  transition: color var(--transition), border-color var(--transition), background var(--transition);
+}
+.field-tag:hover, .field-tag:focus-visible { color: #fff; border-color: rgba(255, 255, 255, 0.6); }
+.field-tag[aria-pressed="true"] { color: #0e0e10; background: #fff; border-color: #fff; }
+
+@media (max-width: 639px) {
+  .field-hint { display: none; }
+  /* Phones: one swipeable row of tags along the bottom. */
+  .field-tags {
+    left: 0; right: 0; bottom: 12px; max-width: none;
+    flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto;
+    padding: 0 var(--gutter); scrollbar-width: none;
+  }
+  .field-tags::-webkit-scrollbar { display: none; }
+  .field-tag { flex: none; padding: 8px 14px; }
+}

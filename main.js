@@ -695,6 +695,294 @@
     return open;
   }
 
+  /* ---------- 3D photo field (Photography) ---------- */
+  // Every photo floats at its own depth in a 3D space. Scrolling the page moves
+  // the camera forward, so the photos at the front drift past and the ones
+  // behind come up. The tags along the bottom (one per gallery) change which
+  // photos are in the field. On arrival, a quick-fire slideshow plays under the
+  // title and its last photo shrinks into its place in the field.
+  function renderField(root) {
+    if (!root) return;
+    var stage = root.querySelector(".field-stage");
+    var world = root.querySelector(".field-world");
+    var tagBar = root.querySelector(".field-tags");
+    var calmMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // All photos: Featured first (in CMS order), then the rest of each gallery.
+    // Each one is tagged with the galleries it's in.
+    var cats = (content.photoCategories || []).filter(function (c) { return (c.photos || []).length; });
+    var bySrc = {}, pool = [];
+    var add = function (p, slug) {
+      if (!p || !p.src) return;
+      var item = bySrc[p.src];
+      if (!item) {
+        var autoThumb = /\/photos\/Web\/[^/]+\.jpe?g$/i.test(p.src) && !/-sm\.jpe?g$/i.test(p.src)
+          ? p.src.replace(/(\.jpe?g)$/i, "-sm$1") : "";
+        item = bySrc[p.src] = { src: p.src, thumb: p.thumb || autoThumb, mobile: p.mobile || "", alt: p.alt || "", caption: p.caption || "", tags: [] };
+        pool.push(item);
+      }
+      if (slug && item.tags.indexOf(slug) < 0) item.tags.push(slug);
+    };
+    (content.photos || []).forEach(function (p) { add(p); });
+    cats.forEach(function (c) { (c.photos || []).forEach(function (p) { add(p, c.slug); }); });
+    if (!pool.length) { stage.appendChild(el("p", { class: "empty", text: "Photos coming soon." })); return; }
+
+    // Seeded random numbers, so each photo keeps its place between visits.
+    var rand = function (n) { var x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+
+    var lbList = pool.slice();
+    var openLightbox = setupLightbox(lbList, {
+      onOpen: function () { running = false; },
+      onClose: function () { wake(); }
+    });
+
+    pool.forEach(function (p, i) {
+      p.ratio = 1.5;
+      p.seed = i;
+      var img = el("img", { src: url(p.thumb || p.src), alt: p.alt, decoding: "async", draggable: "false" });
+      img.addEventListener("error", function once() { img.removeEventListener("error", once); img.src = url(p.src); });
+      img.addEventListener("load", function () {
+        if (img.naturalWidth && img.naturalHeight) { p.ratio = img.naturalWidth / img.naturalHeight; size(p); }
+      });
+      p.node = el("button", { class: "field-item", type: "button", "aria-label": "Enlarge: " + (p.alt || "photo " + (i + 1)) }, [img]);
+      p.node.addEventListener("click", function () {
+        var at = lbList.indexOf(p);
+        if (at > -1) openLightbox(at, p.node);
+      });
+      // Keyboard: tabbing to a photo brings it to the front.
+      p.node.addEventListener("focus", function () {
+        if (p.k == null) return;
+        window.scrollTo({ top: fieldTop() + p.k * GAP / Z_PER_PX, behavior: calmMotion ? "auto" : "smooth" });
+      });
+      world.appendChild(p.node);
+    });
+
+    // Depth settings (CSS pixels along the camera's line of sight).
+    var GAP = 190;       // distance between one photo and the next
+    var FAR = 3400;      // photos further back than this aren't shown
+    var FADE_IN = 1300;  // ...and fade in over this distance
+    var NEAR = 760;      // photos fade out as they pass the camera
+    var NEAR_FADE = 420;
+    var Z_PER_PX = 1.0;  // camera movement per pixel scrolled
+
+    var visible = [];
+    var W = 0, H = 0, base = 0;
+    var cam = 0, camTarget = 0;
+    var tiltX = 0, tiltY = 0, tiltTX = 0, tiltTY = 0;
+    var running = false, onScreen = true, introDone = false;
+
+    function fieldTop() { return root.getBoundingClientRect().top + window.scrollY; }
+
+    function size(p) {
+      var w = p.w;
+      var h = w / p.ratio;
+      // Keep tall photos from towering over everything else.
+      var maxH = base * 1.25;
+      if (h > maxH) { h = maxH; w = h * p.ratio; }
+      p.node.style.width = Math.round(w) + "px";
+      p.node.style.height = Math.round(h) + "px";
+      p.node.style.marginLeft = Math.round(-w / 2) + "px";
+      p.node.style.marginTop = Math.round(-h / 2) + "px";
+    }
+
+    function layout() {
+      W = stage.clientWidth; H = stage.clientHeight;
+      base = W < 640 ? W * 0.46 : Math.min(400, Math.max(200, W * 0.2));
+      visible.forEach(function (p, k) {
+        p.k = k;
+        // A golden-angle spiral spreads neighbouring photos around the screen.
+        var a = k * 2.39996 + rand(p.seed) * 0.6;
+        var r = k === 0 ? 0.03 : 0.22 + rand(p.seed + 7) * 0.6;
+        p.x = Math.cos(a) * r * W * (W < 640 ? 0.55 : 0.8);
+        p.y = Math.sin(a) * r * H * 0.7;
+        p.w = base * (0.75 + rand(p.seed + 3) * 0.5);
+        size(p);
+      });
+      // The page scrolls for as long as it takes to fly past every photo.
+      var travel = ((visible.length - 1) * GAP + NEAR) / Z_PER_PX;
+      root.style.height = Math.round(H + travel) + "px";
+    }
+
+    function readScroll() {
+      var y = window.scrollY - fieldTop();
+      camTarget = Math.max(0, y) * Z_PER_PX;
+    }
+
+    function draw(t) {
+      var floatAmt = calmMotion ? 0 : 10;
+      world.style.transform = "rotateX(" + tiltY.toFixed(3) + "deg) rotateY(" + tiltX.toFixed(3) + "deg)";
+      for (var k = 0; k < visible.length; k++) {
+        var p = visible[k];
+        var z = -k * GAP + cam;
+        var o = 1;
+        if (z < -FAR) o = 0;
+        else if (z < -FAR + FADE_IN) o = (z + FAR) / FADE_IN;
+        if (z > NEAR) o = 0;
+        else if (z > NEAR - NEAR_FADE) o = Math.min(o, (NEAR - z) / NEAR_FADE);
+        if (!introDone) o *= p.reveal || 0;
+        var near = z > -FAR && z < NEAR;
+        if (near) {
+          var fx = Math.sin(t / 2600 + p.seed * 1.7) * floatAmt;
+          var fy = Math.cos(t / 3100 + p.seed * 2.3) * floatAmt;
+          p.node.style.transform = "translate3d(" + (p.x + fx).toFixed(1) + "px," + (p.y + fy).toFixed(1) + "px," + z.toFixed(1) + "px)";
+        }
+        if (o <= 0.001) {
+          if (p.shown) { p.node.style.visibility = "hidden"; p.shown = false; }
+          continue;
+        }
+        if (!p.shown) { p.node.style.visibility = "visible"; p.shown = true; }
+        p.node.style.opacity = o.toFixed(3);
+        p.node.style.pointerEvents = o > 0.35 ? "" : "none";
+      }
+    }
+
+    function frame(t) {
+      if (!running) return;
+      cam += (camTarget - cam) * (calmMotion ? 1 : 0.09);
+      tiltX += (tiltTX - tiltX) * 0.06;
+      tiltY += (tiltTY - tiltY) * 0.06;
+      draw(t);
+      var still = Math.abs(camTarget - cam) < 0.3 && Math.abs(tiltTX - tiltX) < 0.01 && Math.abs(tiltTY - tiltY) < 0.01;
+      if (calmMotion && still) { running = false; return; }
+      if (!onScreen) { running = false; return; }
+      requestAnimationFrame(frame);
+    }
+    function wake() {
+      if (running || !onScreen || !document.getElementById("lightbox").hidden) return;
+      running = true;
+      requestAnimationFrame(frame);
+    }
+
+    // Which photos are in the field.
+    var activeTag = "";
+    function setTag(slug, animate) {
+      activeTag = slug;
+      pool.forEach(function (p) {
+        var on = !slug || p.tags.indexOf(slug) > -1;
+        p.node.hidden = !on;
+        p.shown = !on ? false : p.shown;
+        if (!on) p.k = null;
+      });
+      visible = pool.filter(function (p) { return !p.node.hidden; });
+      lbList.length = 0;
+      Array.prototype.push.apply(lbList, visible);
+      tagBar.querySelectorAll("button").forEach(function (b) {
+        b.setAttribute("aria-pressed", String(b.getAttribute("data-tag") === slug));
+      });
+      layout();
+      if (animate) {
+        // Back to the start of the field, with the photos flying in from behind.
+        var top = fieldTop();
+        if (window.scrollY > top) window.scrollTo(0, top);
+        camTarget = 0;
+        cam = calmMotion ? 0 : -GAP * 6;
+      }
+      wake();
+    }
+
+    var tags = [["", "All"]].concat(cats.map(function (c) { return [c.slug, c.label || c.title]; }));
+    tags.forEach(function (t) {
+      var b = el("button", { class: "field-tag", type: "button", "data-tag": t[0], "aria-pressed": "false", text: t[1] });
+      b.addEventListener("click", function () { if (t[0] !== activeTag) setTag(t[0], true); });
+      tagBar.appendChild(b);
+    });
+
+    window.addEventListener("scroll", function () { readScroll(); wake(); }, { passive: true });
+    window.addEventListener("resize", function () { layout(); readScroll(); wake(); });
+    if (!calmMotion && window.matchMedia("(hover: hover)").matches) {
+      stage.addEventListener("pointermove", function (e) {
+        tiltTX = ((e.clientX / window.innerWidth) - 0.5) * 6;
+        tiltTY = -((e.clientY / window.innerHeight) - 0.5) * 4;
+        wake();
+      });
+    }
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (entries) {
+        onScreen = entries[0].isIntersecting;
+        if (onScreen) wake();
+      }).observe(root);
+    }
+
+    setTag("", false);
+    readScroll();
+    cam = camTarget;
+
+    // ---- Arrival: title, quick-fire slideshow, then into the field ----
+    var intro = root.querySelector(".field-intro");
+    var flash = root.querySelector(".field-flash");
+    var finish = function () {
+      if (introDone) return;
+      introDone = true;
+      root.classList.add("is-ready");
+      if (intro) intro.classList.add("is-done");
+      if (flash) flash.hidden = true;
+      wake();
+    };
+    if (calmMotion || !flash || window.scrollY > fieldTop() + 10 || visible.length < 3) { finish(); return; }
+
+    var first = visible[0];
+    var shots = visible.slice(1, 8).concat([first]);
+    var flashImg = flash.querySelector("img");
+    var load = function (src) {
+      return new Promise(function (res) { var i = new Image(); i.onload = i.onerror = function () { res(); }; i.src = src; });
+    };
+    var stopIntro = function () {
+      // Any scroll, key or tap skips straight to the field.
+      ["wheel", "touchstart", "keydown", "pointerdown"].forEach(function (ev) { window.removeEventListener(ev, stopIntro); });
+      if (!introDone) { flash.getAnimations().forEach(function (a) { a.cancel(); }); finish(); }
+    };
+    ["wheel", "touchstart", "keydown", "pointerdown"].forEach(function (ev) { window.addEventListener(ev, stopIntro, { passive: true }); });
+
+    root.classList.add("is-intro");
+    pool.forEach(function (p) { p.reveal = 0; });
+    running = true; requestAnimationFrame(frame);
+
+    var preload = Promise.all(shots.map(function (p) { return load(url(p.thumb || p.src)); }));
+    var timeout = new Promise(function (res) { setTimeout(res, 2500); });
+    Promise.race([preload, timeout]).then(function () {
+      if (introDone) return;
+      var stageBox = stage.getBoundingClientRect();
+      var full = { left: 0, top: 0, width: stageBox.width, height: stageBox.height };
+      var small = { width: Math.min(280, stageBox.width * 0.42) };
+      small.height = small.width * 0.62;
+      small.left = (stageBox.width - small.width) / 2;
+      small.top = stageBox.height * 0.56;
+      var box = function (r) { return { left: r.left + "px", top: r.top + "px", width: r.width + "px", height: r.height + "px" }; };
+      flashImg.src = url(shots[0].thumb || shots[0].src);
+      Object.assign(flash.style, box(small));
+      flash.hidden = false;
+      var STEP = 115;
+      shots.forEach(function (p, i) {
+        if (i) setTimeout(function () { if (!introDone) flashImg.src = url(p.thumb || p.src); }, 250 + i * STEP);
+      });
+      var grow = flash.animate([box(small), box(full)], { duration: 350 + shots.length * STEP, delay: 250, easing: "cubic-bezier(.65,0,.35,1)", fill: "forwards" });
+      grow.finished.then(function () {
+        if (introDone) return;
+        intro.classList.add("is-leaving");
+        // Shrink the last photo into its place in the field.
+        var r = first.node.getBoundingClientRect();
+        var target = { left: r.left - stageBox.left, top: r.top - stageBox.top, width: r.width, height: r.height };
+        var shrink = flash.animate([box(full), box(target)], { duration: 900, delay: 180, easing: "cubic-bezier(.7,0,.15,1)", fill: "forwards" });
+        shrink.finished.then(function () {
+          if (introDone) return;
+          root.classList.add("is-ready");
+          first.reveal = 1;
+          draw(performance.now());
+          flash.hidden = true;
+          // The rest of the field fades up, front to back.
+          var start = performance.now();
+          var reveal = function (now) {
+            var t = (now - start) / 900;
+            visible.forEach(function (p, k) { if (k) p.reveal = Math.max(0, Math.min(1, t * 2 - k * 0.12)); });
+            if (t < 1.6) requestAnimationFrame(reveal); else stopIntro();
+            wake();
+          };
+          requestAnimationFrame(reveal);
+        }).catch(function () {});
+      }).catch(function () {});
+    });
+  }
+
   // Grid gallery (used on the category pages).
   function renderPhotos(photos) {
     photos = photos || [];
@@ -1027,7 +1315,8 @@
     if (page === "home") renderHome();
     if (page === "film") renderFilm();
     if (page === "photography") {
-      renderFeatured(document.getElementById("featured"), content.photos || []);
+      if (document.getElementById("photo-field")) renderField(document.getElementById("photo-field"));
+      else renderFeatured(document.getElementById("featured"), content.photos || []);
       renderPhotoCategories(document.getElementById("photo-categories"));
     }
     if (page === "photo-category") renderPhotoCategoryPage();
