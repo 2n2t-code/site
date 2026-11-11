@@ -187,17 +187,23 @@
     items.forEach(function (item, i) { target.appendChild(render(item, i)); });
   }
 
-  // Credits block used on the cinematic panels and homepage tiles: type and venue
-  // from the label ("Live In Session at Silk Mill Studios"), plus client / year /
-  // role when set in the CMS.
-  function videoCredits(v) {
+  // Credits block used on the cinematic panels and homepage tiles. Type and Venue
+  // come from the CMS fields, or from the label ("Live In Session at Silk Mill
+  // Studios") when those are empty; then Song, Client, Year, Role and any extra
+  // rows. Empty ones are left out.
+  function videoCredits(v, max) {
     var cat = String(v.isShowreel ? "" : (v.category || "")).split(/\s+at\s+/i);
-    var rows = [];
-    if (cat[0]) rows.push(["Type", cat[0]]);
-    if (cat[1]) rows.push(["Venue", cat[1]]);
-    if (v.client) rows.push(["Client", v.client]);
-    if (v.year) rows.push(["Year", v.year]);
-    if (v.role) rows.push(["Role", v.role]);
+    var rows = [
+      ["Type", v.videoType || cat[0]],
+      ["Venue", v.venue || cat[1]],
+      ["Song", v.song],
+      ["Client", v.client],
+      ["Year", v.year],
+      ["Role", v.role]
+    ];
+    (v.credits || []).forEach(function (c) { if (c) rows.push([c.label, c.value]); });
+    rows = rows.filter(function (r) { return r[0] && r[1] && String(r[1]).trim(); });
+    if (max) rows = rows.slice(0, max); // homepage tiles are smaller, so they show the first few
     if (!rows.length) return null;
     var dl = el("dl", { class: "cine-credits" });
     rows.forEach(function (r) { dl.appendChild(el("dt", { text: r[0] })); dl.appendChild(el("dd", { text: r[1] })); });
@@ -228,7 +234,8 @@
       items.push(Object.assign({}, reel, {
         category: parts.length > 1 ? parts[0] : "Showreel",
         title: parts.length > 1 ? parts.slice(1).join(" — ") : parts[0],
-        isShowreel: true
+        isShowreel: true,
+        credits: home.showreelCredits || []
       }));
     }
     var videos = (content.film || {}).videos || [];
@@ -455,7 +462,7 @@
         el("span", { class: "work-info" }, [
           v.category ? el("span", { class: "cine-kicker", text: v.category }) : null,
           el("span", { class: "cine-title" + (title.length > 26 ? " long" : ""), text: title }),
-          videoCredits(v)
+          videoCredits(v, i === 0 ? 4 : 3)
         ]),
         watchButton()
       ]);

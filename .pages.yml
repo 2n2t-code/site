@@ -17,7 +17,7 @@ media:
 content:
   - name: videos
     label: Video work
-    description: Your videos, in the order they appear in "Selected work" on the homepage. Drag to reorder. On the Video Production page, videos whose label includes "Live In Session" are featured at the top.
+    description: 'Your videos, in the order they appear in "Selected work" on the homepage. Drag to reorder. On the Video Production page, videos whose label includes "Live In Session" are featured at the top. The Credits fields fill the ruled credits block on each video (empty ones are hidden); use "Credits: Extra rows" for anything else, e.g. Director, Sound, Camera — each row is a label and a value.' 
     type: file
     path: data/videos.json
     format: json
@@ -44,6 +44,41 @@ content:
             type: string
             required: true
             description: Paste the YouTube or Vimeo link (e.g. https://www.youtube.com/watch?v=...). Playlist bits on the end are fine.
+          - name: videoType
+            label: "Credits: Type"
+            type: string
+            description: Leave empty to use the part of the Label before "at" (e.g. "Live In Session").
+          - name: venue
+            label: "Credits: Venue"
+            type: string
+            description: Leave empty to use the part of the Label after "at" (e.g. "Silk Mill Studios").
+          - name: song
+            label: "Credits: Song"
+            type: string
+          - name: client
+            label: "Credits: Client"
+            type: string
+          - name: year
+            label: "Credits: Year"
+            type: string
+          - name: role
+            label: "Credits: Your role"
+            type: string
+            description: e.g. "Shot & edited".
+          - name: credits
+            label: "Credits: Extra rows"
+            type: object
+            list:
+              collapsible:
+                collapsed: true
+                summary: "{label}: {value}"
+            fields:
+              - name: label
+                label: Label
+                type: string
+              - name: value
+                label: Value
+                type: string
           - name: thumb
             label: Custom thumbnail (optional)
             type: image
@@ -52,17 +87,6 @@ content:
             label: Phone thumbnail (optional)
             type: image
             description: A thumbnail used instead on phones (screens under 640px wide), e.g. a tighter crop. 16:9 works best.
-          - name: year
-            label: Year (optional)
-            type: string
-            description: Shown in the credits on the video's Video Production panel, like Client and Role below.
-          - name: client
-            label: Client (optional)
-            type: string
-          - name: role
-            label: Your role (optional)
-            type: string
-            description: e.g. "Shot & edited". Shown in the credits on the Video Production page.
 
   - name: home
     label: Homepage
@@ -95,6 +119,20 @@ content:
       - name: showreelTitle
         label: Showreel title
         type: string
+      - name: showreelCredits
+        label: "Showreel credits (Video Production page)"
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{label}: {value}"
+        fields:
+          - name: label
+            label: Label
+            type: string
+          - name: value
+            label: Value
+            type: string
       - name: showreelMobileImage
         label: Showreel background on phones (optional)
         type: image
