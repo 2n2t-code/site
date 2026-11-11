@@ -78,7 +78,7 @@ You can also edit the `data/*.json` files directly on GitHub, or ask Claude. Eve
 3. **Also by 2N2T:** Photography and Music tiles (images set under **Homepage** in the CMS).
 4. **Got a project in mind?** with a link to the Contact page.
 
-On the homepage the menu links sit across the top right on screens 900px and wider. Smaller screens and the other pages use the menu button.
+On every page the menu links sit across the top right on screens 900px and wider, with a thin orange line under the page you're on. Smaller screens use the menu button.
 
 ### Menu
 
