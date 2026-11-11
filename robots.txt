@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://2n2t-code.github.io/site/sitemap.xml
+Sitemap: https://2n2t.com/sitemap.xml

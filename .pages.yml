@@ -701,7 +701,7 @@ content:
       - name: siteUrl
         label: Site address
         type: string
-        description: The site's public address, with no slash at the end. Used for Google and link previews. Now https://2n2t-code.github.io/site — when you get your own domain, change it to e.g. https://2n2t.com and the next publish updates every page.
+        description: The site's public address, with no slash at the end. Used for Google and link previews. Currently https://2n2t.com. If the domain ever changes, update it here and the next publish updates every page.
       - name: email
         label: Email address
         type: string

@@ -99,7 +99,7 @@ The fonts are system fonts, so nothing downloads. To use a web font, add its `<l
 ## SEO checklist when you go live
 
 - Every page has a title, description, canonical URL, Open Graph and Twitter tags. Update the wording in each page's `<head>` if you like.
-- Page addresses, preview images, `sitemap.xml` and `robots.txt` use the **Site address** under **Contact & social links** in the CMS (currently `https://2n2t-code.github.io/site`). When you get a domain, change it there. The next publish updates every page (`scripts/apply_seo.py`).
+- Page addresses, preview images, `sitemap.xml` and `robots.txt` use the **Site address** under **Contact & social links** in the CMS (currently `https://2n2t.com`). If the domain ever changes, change it there. The next publish updates every page (`scripts/apply_seo.py`).
 - The homepage includes schema.org `ProfessionalService` data. Update the email and `sameAs` social links there too.
 
 ## Deploy
@@ -133,8 +133,8 @@ The fonts are system fonts, so nothing downloads. To use a web font, add its `<l
 
 2. On a free GitHub account, Pages only works for **public** repositories. To make yours public, open **Settings → General → Danger Zone → Change visibility**.
 3. In the repo, open **Settings → Pages → Build and deployment** and set **Source** to **GitHub Actions**. The workflow in `.github/workflows/pages.yml` then publishes the site on every change, after writing the CMS's SEO text into the pages.
-4. The site is then live at `https://2n2t-code.github.io/site/`.
-5. **Adding a custom domain later (for example 2n2t.com):** in **Settings → Pages → Custom domain**, enter the domain and save. GitHub adds a `CNAME` file to the repository. At your domain provider, add GitHub's four `A` records for the domain (`185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`) and a `CNAME` record for `www` pointing to `2n2t-code.github.io`. Then tick **Enforce HTTPS**.
+4. The site is live at **https://2n2t.com** (the old address, `https://2n2t-code.github.io/site/`, forwards there automatically).
+5. **Custom domain (2n2t.com, registered with Spaceship):** set in **Settings → Pages → Custom domain**, with **Enforce HTTPS** ticked. At Spaceship (Domain manager → 2n2t.com → Advanced DNS) there are GitHub's four `A` records for the domain (`185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`) and a `CNAME` record for `www` pointing to `2n2t-code.github.io`. Don't remove those, or the site goes offline.
 
 All links between pages are relative, so the site works both at `2n2t-code.github.io/site/` and on a custom domain. `404.html` works out where the site's root is when it loads.
 
