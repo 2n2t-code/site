@@ -235,8 +235,39 @@
         el("span", { class: "cine-watch", "aria-hidden": "true" }, [el("span", { text: "Watch" }), arrow])
       ]);
       btn.addEventListener("click", function () { openVideo(Object.assign({}, v, { title: fullTitle }), btn); });
-      list.appendChild(el("li", null, [btn]));
+      var li = el("li", null, [btn]);
+      li.style.setProperty("--i", i);
+      list.appendChild(li);
     });
+    stackOnScroll(list);
+  }
+
+  // Stacked panels: as each panel is covered by the next, it shrinks back and
+  // dims a little (CSS uses --covered, 0 → 1). Off for reduced motion.
+  function stackOnScroll(list) {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    var items = [].slice.call(list.children);
+    var ticking = false;
+    var update = function () {
+      ticking = false;
+      var vh = window.innerHeight;
+      items.forEach(function (li, i) {
+        var next = items[i + 1];
+        var covered = 0;
+        if (next) {
+          var top = li.getBoundingClientRect().top;
+          var nextTop = next.getBoundingClientRect().top;
+          var h = li.offsetHeight || vh;
+          // 0 when the next panel is a full panel-height below, 1 when it lands on top.
+          covered = Math.min(1, Math.max(0, 1 - (nextTop - top) / h));
+        }
+        li.style.setProperty("--covered", covered.toFixed(3));
+      });
+    };
+    var onScroll = function () { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    update();
   }
 
   /* ---------- Homepage ---------- */
