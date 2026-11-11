@@ -209,10 +209,10 @@
     return dl;
   }
 
-  // Smaller heading under the artist: 'Song name', with any quotes typed in the CMS tidied.
+  // Smaller heading under the artist, shown exactly as typed in the CMS.
   function songLine(v) {
-    var song = String(v.song || "").trim().replace(/^['"‘’“”]+|['"‘’“”]+$/g, "").trim();
-    return song ? el("span", { class: "cine-song", text: "‘" + song + "’" }) : null;
+    var song = String(v.song || "").trim();
+    return song ? el("span", { class: "cine-song", text: song }) : null;
   }
 
   function watchButton() {

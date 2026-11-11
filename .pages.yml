@@ -53,7 +53,7 @@ content:
             type: string
             description: Leave empty to use the part of the Label after "at" (e.g. "Silk Mill Studios").
           - name: song
-            label: "Credits: Song"
+            label: "Song (shown under the title, exactly as typed)"
             type: string
           - name: client
             label: "Credits: Client"
