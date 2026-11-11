@@ -976,7 +976,8 @@ body[data-page="music"] main { text-transform: uppercase; }
 .ses-text { margin-top: var(--space-5); max-width: 70ch; }
 .ses-text p { color: var(--color-muted); }
 
-.ses-team { display: grid; gap: var(--space-6); align-items: center; }
+.ses-members { display: grid; gap: var(--space-8); }
+.ses-member { display: grid; gap: var(--space-5) var(--space-6); align-items: center; }
 .ses-team-photo {
   aspect-ratio: 4 / 5; border-radius: 14px; overflow: hidden; max-width: 420px; width: 100%;
   background: linear-gradient(160deg, #222226, #141416); display: grid; place-items: center;
@@ -987,6 +988,28 @@ body[data-page="music"] main { text-transform: uppercase; }
 .ses-team-text .ses-text { margin-top: var(--space-4); }
 .ses-team-link a { color: var(--color-accent); text-decoration: none; font-weight: 600; }
 .ses-team-link a:hover { text-decoration: underline; }
+/* Photos under a bio, and the studio's photos: a tidy grid; click for full size. */
+.ses-gallery { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+@media (min-width: 640px) { .ses-gallery { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); } }
+.ses-member .ses-gallery { grid-column: 1 / -1; }
+.ses-photo { display: block; width: 100%; aspect-ratio: 3 / 2; padding: 0; border: 0; border-radius: 10px; overflow: hidden; cursor: zoom-in; background: var(--color-surface); }
+.ses-photo img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.6s cubic-bezier(.2, .7, .2, 1); }
+.ses-photo:hover img, .ses-photo:focus-visible img { transform: scale(1.04); }
+/* The studio */
+.ses-studio .ses-team-name { margin-bottom: 0; }
+.ses-studio .ses-gallery { margin-top: var(--space-6); }
+.gear { margin-top: var(--space-7); }
+.gear .about-heading { margin-top: 0; }
+.gear-grid { display: grid; gap: var(--space-5) var(--space-6); grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); }
+.gear-group h4 { margin: 0 0 var(--space-2); font-family: var(--font-display); font-weight: 700; font-size: var(--text-lg); text-transform: uppercase; letter-spacing: 0.04em; }
+.gear-group ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.gear-group li { color: var(--color-muted); padding-bottom: 6px; border-bottom: 1px solid var(--color-border); }
+.ses-studio .ses-team-link { margin-top: var(--space-5); }
 @media (min-width: 900px) {
-  .ses-team { grid-template-columns: minmax(260px, 420px) 1fr; gap: var(--space-8); }
+  .ses-member { grid-template-columns: minmax(260px, 420px) 1fr; column-gap: var(--space-8); }
+  /* Every other person: portrait on the right. */
+  .ses-member:nth-child(even) { grid-template-columns: 1fr minmax(260px, 420px); }
+  .ses-member:nth-child(even) .ses-team-photo { order: 2; }
+  .ses-member:nth-child(even) .ses-team-text { order: 1; }
+  .ses-member .ses-gallery { order: 3; }
 }

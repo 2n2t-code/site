@@ -93,14 +93,21 @@
         <div class="ses-text" id="ses-booking-text"></div>
       </section>
 
-      <section class="section ses-team" id="ses-team" aria-labelledby="jim-name">
-        <div class="ses-team-photo" id="jim-photo-box"><span aria-hidden="true">Jim</span></div>
-        <div class="ses-team-text">
-          <p class="vp-label" id="jim-role">Audio engineer</p>
-          <h2 class="ses-team-name" id="jim-name">Jim</h2>
-          <div class="ses-text" id="jim-bio"></div>
-          <p class="ses-team-link" id="jim-link" hidden></p>
+      <section class="section" id="ses-team" aria-labelledby="team-title">
+        <h2 class="section-title" id="team-title">The Team</h2>
+        <div class="ses-members" id="ses-team-list"></div>
+      </section>
+
+      <section class="section ses-studio" id="ses-studio" aria-labelledby="studio-title">
+        <p class="vp-label" id="studio-label">The studio</p>
+        <h2 class="ses-team-name" id="studio-title">Silk Mill Studios</h2>
+        <div class="ses-text" id="studio-text"></div>
+        <ul class="ses-gallery" id="studio-photos" hidden></ul>
+        <div class="gear" id="studio-gear-wrap" hidden>
+          <h3 class="about-heading">The gear</h3>
+          <div class="gear-grid" id="studio-gear"></div>
         </div>
+        <p class="ses-team-link" id="studio-link" hidden></p>
       </section>
 
       <section class="home-cta" aria-labelledby="ses-cta-title">
@@ -110,6 +117,16 @@
       </section>
     </div>
   </main>
+
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer" hidden>
+    <figure>
+      <img alt="">
+      <figcaption></figcaption>
+    </figure>
+    <button class="lb-btn lb-close" type="button" aria-label="Close (Esc)">&times;</button>
+    <button class="lb-btn lb-prev" type="button" aria-label="Previous photo">&#8249;</button>
+    <button class="lb-btn lb-next" type="button" aria-label="Next photo">&#8250;</button>
+  </div>
 
   <!-- Pop-up video player -->
   <div class="video-modal" id="video-modal" role="dialog" aria-modal="true" aria-label="Video player" hidden>

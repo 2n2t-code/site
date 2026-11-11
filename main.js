@@ -1410,8 +1410,13 @@
       a.href = "mailto:" + email + "?subject=" + encodeURIComponent(subject);
     });
 
-    // Recent sessions: every video labelled "Live In Session" in Video work.
-    var vids = ((content.film || {}).videos || []).filter(function (v) { return /live in session/i.test(v.category || ""); });
+    // Recent sessions: the Session videos list in the CMS (or, if that's
+    // empty, every video labelled "Live In Session" in Video work).
+    var vids = (s.videos || []).map(function (v) {
+      var parsed = v && parseVideoLink(v.link || v.id);
+      return parsed ? Object.assign({}, v, parsed) : null;
+    }).filter(Boolean);
+    if (!vids.length) vids = ((content.film || {}).videos || []).filter(function (v) { return /live in session/i.test(v.category || ""); });
     var total = String(vids.length).padStart(2, "0");
     renderList(byId("ses-videos"), vids, function (v, i) {
       var title = v.title || "Untitled";
@@ -1465,24 +1470,78 @@
     paragraphs(byId("ses-booking-text"), s.bookingText);
     hideIfEmpty("booking", steps.length || String(s.bookingText || "").trim() ? [1] : []);
 
-    // The audio engineer.
-    var eng = s.engineer || {};
-    if (eng.name) byId("jim-name").textContent = eng.name;
-    if (eng.role) byId("jim-role").textContent = eng.role;
-    var box = byId("jim-photo-box");
-    if (eng.photo) {
-      box.replaceChildren(el("img", { src: url(pick(eng.photo, eng.photoMobile)), alt: eng.photoAlt || eng.name || "", loading: "lazy", decoding: "async" }));
-      box.classList.add("has-photo");
-    } else if (eng.name) {
-      box.firstChild.textContent = eng.name;
+    // Photos (team galleries and the studio) share one full-size viewer.
+    var viewerPhotos = [];
+    var openViewer = null;
+    var smaller = function (src) {
+      return /\/photos\/Web\/[^/]+\.jpe?g$/i.test(src) && !/-sm\.jpe?g$/i.test(src) ? src.replace(/(\.jpe?g)$/i, "-sm$1") : src;
+    };
+    function gallery(list, photos, label) {
+      photos = (photos || []).filter(Boolean);
+      if (!list) return;
+      list.hidden = !photos.length;
+      photos.forEach(function (src) {
+        var at = viewerPhotos.length;
+        viewerPhotos.push({ src: src, alt: label, caption: label });
+        var img = el("img", { src: url(smaller(src)), alt: label, loading: "lazy", decoding: "async" });
+        img.addEventListener("error", function once() { img.removeEventListener("error", once); img.src = url(src); });
+        var btn = el("button", { class: "ses-photo", type: "button", "aria-label": "Enlarge: " + label }, [img]);
+        btn.addEventListener("click", function () { if (openViewer) openViewer(at, btn); });
+        list.appendChild(el("li", { class: "reveal" }, [btn]));
+      });
     }
-    paragraphs(byId("jim-bio"), eng.bio);
-    var link = byId("jim-link");
-    if (eng.link) {
-      link.replaceChildren(el("a", { href: eng.link, target: "_blank", rel: "noopener", text: (eng.linkLabel || "More about " + (eng.name || "Jim")) + " →" }));
-      link.hidden = false;
+
+    // The Team: a portrait, role, name, bio, link and optional photos for each person.
+    var team = (s.team || []).filter(function (m) { return m && (m.name || m.bio); });
+    if (s.teamTitle) byId("team-title").textContent = s.teamTitle;
+    renderList(byId("ses-team-list"), team, function (m) {
+      var photoBox = el("div", { class: "ses-team-photo" + (m.photo ? " has-photo" : "") }, [
+        m.photo
+          ? el("img", { src: url(pick(m.photo, m.photoMobile)), alt: m.photoAlt || m.name || "", loading: "lazy", decoding: "async" })
+          : el("span", { "aria-hidden": "true", text: m.name || "" })
+      ]);
+      var bio = el("div", { class: "ses-text" });
+      paragraphs(bio, m.bio);
+      var list = el("ul", { class: "ses-gallery" });
+      gallery(list, m.gallery, m.name ? m.name + " in the studio" : "In the studio");
+      return el("article", { class: "ses-member" }, [
+        photoBox,
+        el("div", { class: "ses-team-text" }, [
+          m.role ? el("p", { class: "vp-label", text: m.role }) : null,
+          el("h3", { class: "ses-team-name", text: m.name || "" }),
+          bio,
+          m.link ? el("p", { class: "ses-team-link" }, [
+            el("a", { href: m.link, target: "_blank", rel: "noopener", text: (m.linkLabel || "More about " + (m.name || "us")) + " →" })
+          ]) : null
+        ]),
+        list
+      ]);
+    }, "");
+    if (!team.length) byId("ses-team").hidden = true;
+
+    // The studio: about text, photos, the gear (in groups) and a link.
+    var st = s.studio || {};
+    if (st.label) byId("studio-label").textContent = st.label;
+    if (st.name) byId("studio-title").textContent = st.name;
+    paragraphs(byId("studio-text"), st.text);
+    gallery(byId("studio-photos"), st.photos, st.name || "The studio");
+    var gear = (st.gear || []).filter(function (g) { return g && (g.group || (g.items || []).length); });
+    renderList(byId("studio-gear"), gear, function (g) {
+      var items = (g.items || []).map(function (x) { return typeof x === "string" ? x : (x && x.item) || ""; }).filter(Boolean);
+      return el("div", { class: "gear-group" }, [
+        g.group ? el("h4", { text: g.group }) : null,
+        el("ul", null, items.map(function (x) { return el("li", { text: x }); }))
+      ]);
+    }, "");
+    byId("studio-gear-wrap").hidden = !gear.length;
+    if (st.link) {
+      var sl = byId("studio-link");
+      sl.replaceChildren(el("a", { href: st.link, target: "_blank", rel: "noopener", text: (st.linkLabel || "Visit " + (st.name || "the studio")) + " →" }));
+      sl.hidden = false;
     }
-    if (!eng.name && !eng.bio) byId("ses-team").hidden = true;
+    if (!st.name && !String(st.text || "").trim() && !gear.length && !(st.photos || []).length) byId("ses-studio").hidden = true;
+
+    if (viewerPhotos.length) openViewer = setupLightbox(viewerPhotos);
   }
 
   /* ---------- Shared ---------- */

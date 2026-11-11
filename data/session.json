@@ -1,5 +1,42 @@
 {
   "intro": "Your band, filmed live in the room: multi-camera video with studio-quality sound, recorded, mixed and mastered by audio engineer Jim Hodgkinson.",
+  "videos": [
+    {
+      "category": "Live In Session",
+      "title": "Chief Springs",
+      "link": "https://www.youtube.com/watch?v=AzLkLzCOuoA",
+      "venue": "Silk Mill Studios",
+      "song": "'Long Game (Agave)'"
+    },
+    {
+      "category": "Live In Session",
+      "title": "Algorhythm",
+      "link": "https://www.youtube.com/watch?v=6tPhsQtXXog",
+      "venue": "Silk Mill Studios",
+      "song": "'Love Story' by Taylor Swift",
+      "year": "2025",
+      "role": "Camera, Lighting, Editor, Grade",
+      "thumb": "assets/img/photos/Web/algorhythmlove-storythumb1.jpg",
+      "mobileThumb": "assets/img/photos/Web/algorhythmlove-storythumb1-sm.jpg"
+    },
+    {
+      "category": "Live In Session at Hope Mill Studios",
+      "title": "The Beautiful Failures",
+      "link": "https://www.youtube.com/watch?v=nIYWaXC5TNk",
+      "venue": "Hope Mill Studios",
+      "song": "'Cowboys In Tangier'",
+      "year": "2026",
+      "thumb": "assets/img/photos/Web/thebeautifulfailurescitthumb1.jpg"
+    },
+    {
+      "category": "Live In Session at Silk Mill Studios",
+      "title": "The Futuristic Gramophones",
+      "link": "https://www.youtube.com/watch?v=M54RmO3AlNU",
+      "videoType": "Showreel",
+      "thumb": "assets/img/photos/Web/thefuturisticgramophonesshoweelthumb1.jpg",
+      "mobileThumb": "assets/img/photos/Web/thefuturisticgramophonesshoweelthumb1-sm.jpg"
+    }
+  ],
   "packages": [
     {
       "name": "One song",
@@ -70,11 +107,59 @@
       "text": "Mixed audio and finished videos, ready to post."
     }
   ],
-  "engineer": {
-    "name": "Jim",
-    "role": "Audio engineer",
-    "bio": "Jim's bio goes here: his background, the studios and artists he's worked with, and what he brings to a session. Edit it in the CMS under Live In Session page."
-  },
   "ctaText": "Tell us your band, the songs and roughly when, and we'll get back to you with dates.",
-  "bookSubject": "Live In Session booking"
+  "bookSubject": "Live In Session booking",
+  "teamTitle": "The Team",
+  "team": [
+    {
+      "name": "Alex",
+      "role": "Video producer & editor",
+      "photo": "assets/img/photos/Web/alex-portrait.jpg",
+      "photoMobile": "",
+      "photoAlt": "Alex, the person behind 2N2T, wearing a cap and glasses",
+      "bio": "Live In Session music videos are my bread and butter: I've produced over 1,000 at The Silk Mill Recording Studios, capturing artists performing in the room with the energy of a gig and the polish of a studio recording.\n\nSample text: edit in the CMS under Live In Session page → The Team.",
+      "gallery": [],
+      "link": "",
+      "linkLabel": ""
+    },
+    {
+      "name": "Jim",
+      "role": "Audio engineer",
+      "photo": "",
+      "photoMobile": "",
+      "photoAlt": "",
+      "bio": "Jim's bio goes here: his background, the studios and artists he's worked with, and what he brings to a session. Edit it in the CMS under Live In Session page.",
+      "gallery": [],
+      "link": "",
+      "linkLabel": ""
+    }
+  ],
+  "studio": {
+    "label": "The studio",
+    "name": "Silk Mill Studios",
+    "text": "Sample text: a few words about the studio space, the live room and why it's a great place to film a session. Edit it in the CMS under Live In Session page → Silk Mill Studios.",
+    "photos": [],
+    "gear": [
+      {
+        "group": "Cameras",
+        "items": [
+          "Sample: add your cameras in the CMS"
+        ]
+      },
+      {
+        "group": "Audio",
+        "items": [
+          "Sample: add the desk, mics and outboard"
+        ]
+      },
+      {
+        "group": "Lighting",
+        "items": [
+          "Sample: add your lights"
+        ]
+      }
+    ],
+    "link": "",
+    "linkLabel": ""
+  }
 }

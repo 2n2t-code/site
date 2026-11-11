@@ -47,7 +47,7 @@ The sections in the CMS:
 | CMS section | File | What it controls |
 |---|---|---|
 | **Video work** | `data/videos.json` | Homepage "Selected work" (in list order) and the Video Production page |
-| **Live In Session page** | `data/session.json` | The Live In Session page (menu: Video Production → Live In Session): introduction, packages (name, price, what's included, one can be highlighted), extras, a note under the prices, how booking works, more booking information, your audio engineer (name, role, photo, bio, link), the bottom text and the booking email's subject. Its Recent sessions are every video in Video work labelled "Live In Session". Empty parts are hidden |
+| **Live In Session page** | `data/session.json` | The Live In Session page (menu: Video Production → Live In Session): introduction; **Session videos** (the Recent sessions, with the same fields as Video work, kept separate from it); packages (name, price, what's included, one can be highlighted); extras; a note under the prices; how booking works; **The Team** (one entry per person: name, role, portrait, bio, a gallery of photos and a link); **Silk Mill Studios** (label, name, about text, photos, the gear in groups, and a website link); the bottom text and the booking email's subject. Empty parts are hidden. Gallery photos open full size when clicked |
 | **Homepage** | `data/home.json` | Headline, small text, showreel video, Photography/Music tile images, bottom "Got a project" section |
 | **SEO** | `data/seo.json` | Meta Title and Meta Description for Home, Video Production, Photography, Music, About and Contact |
 | **Photography** | `data/photos.json` | Featured photos (main Photography page) and the six gallery pages |

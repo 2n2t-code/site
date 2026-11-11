@@ -29,7 +29,7 @@ content:
           collapsible:
             collapsed: true
             summary: "{category} — {title}"
-        fields:
+        fields: &video_fields
           - name: category
             label: Label
             type: string
@@ -90,7 +90,7 @@ content:
 
   - name: session
     label: Live In Session page
-    description: "The Live In Session page (in the menu under Video Production): intro, packages and prices, extras, how booking works, and your audio engineer. Its Recent sessions are every video in Video work labelled \"Live In Session\". Empty parts are hidden. Meta Title and Description are under SEO."
+    description: "The Live In Session page (in the menu under Video Production): intro, the session videos, packages and prices, extras, how booking works, The Team and the studio. Empty parts are hidden. Meta Title and Description are under SEO. For big photos, upload to photos/Original on GitHub (github.com/2n2t-code/site/upload/main/assets/img/photos/Original), then pick name.jpg from photos/Web."
     type: file
     path: data/session.json
     format: json
@@ -99,6 +99,15 @@ content:
         label: Introduction
         type: text
         description: The line under the big Live In Session heading.
+      - name: videos
+        label: Session videos
+        type: object
+        description: "The Recent sessions on this page, in this order. Drag to reorder. These are separate from Video work, so a video can be on either page or both."
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{category} — {title}"
+        fields: *video_fields
       - name: packages
         label: Packages
         type: object
@@ -164,9 +173,17 @@ content:
         label: More booking information (optional)
         type: text
         description: Shown under the steps, for example cancellation terms or what to bring. Leave a blank line between paragraphs.
-      - name: engineer
-        label: Audio engineer
+      - name: teamTitle
+        label: "The Team: heading"
+        type: string
+      - name: team
+        label: The Team
         type: object
+        description: "One entry per person, in this order. Each can have a portrait, a bio and a gallery of photos (e.g. you working in the studio)."
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{name}: {role}"
         fields:
           - name: name
             label: Name
@@ -175,27 +192,77 @@ content:
             label: Role
             type: string
           - name: photo
-            label: Photo
+            label: Portrait
             type: image
-            description: A portrait works best (it's shown 4:5). Leave empty for a plain panel with the name.
+            description: Shown 4:5, so a portrait works best. Leave empty for a plain panel with the name.
           - name: photoMobile
-            label: Photo on phones (optional)
+            label: Portrait on phones (optional)
             type: image
           - name: photoAlt
-            label: Photo description (for screen readers and Google)
+            label: Portrait description (for screen readers and Google)
             type: string
           - name: bio
             label: Bio
             type: text
             description: Leave a blank line between paragraphs.
+          - name: gallery
+            label: Photos (optional)
+            type: image
+            options:
+              multiple: true
+            description: "Shown under the bio; click one to see it full size. Drag to reorder. Pick name.jpg (not -sm) from photos/Web."
           - name: link
             label: Link (optional)
             type: string
-            description: For example Jim's website or Instagram.
+            description: For example a website or Instagram.
           - name: linkLabel
             label: Link text (optional)
             type: string
-            description: Leave empty for "More about Jim".
+            description: Leave empty for "More about" and the name.
+      - name: studio
+        label: Silk Mill Studios
+        type: object
+        fields:
+          - name: label
+            label: Small label
+            type: string
+            description: The small orange text above the name, e.g. "The studio".
+          - name: name
+            label: Studio name
+            type: string
+          - name: text
+            label: About the studio
+            type: text
+            description: Leave a blank line between paragraphs.
+          - name: photos
+            label: Photos
+            type: image
+            options:
+              multiple: true
+            description: "Drag to reorder. Pick name.jpg (not -sm) from photos/Web."
+          - name: gear
+            label: The gear
+            type: object
+            list:
+              collapsible:
+                collapsed: true
+                summary: "{group}"
+            fields:
+              - name: group
+                label: Group
+                type: string
+                description: e.g. Cameras, Microphones, Desk & outboard, Lighting.
+              - name: items
+                label: Items
+                type: string
+                list: true
+          - name: link
+            label: Studio website (optional)
+            type: string
+          - name: linkLabel
+            label: Link text (optional)
+            type: string
+            description: Leave empty for "Visit" and the studio name.
       - name: ctaText
         label: "Bottom section: text"
         type: text
