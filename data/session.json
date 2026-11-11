@@ -1,43 +1,40 @@
 {
-  "intro": "Your band, filmed live in the room: multi-camera video with studio-quality sound, recorded and mixed by audio engineer Jim.",
-  "bookSubject": "Live In Session booking",
+  "intro": "Your band, filmed live in the room: multi-camera video with studio-quality sound, recorded, mixed and mastered by audio engineer Jim Hodgkinson.",
   "packages": [
     {
       "name": "One song",
       "price": "£000",
       "note": "Sample text: edit in the CMS.",
-      "featured": false,
-      "badge": "",
       "features": [
         "Multi-camera filming",
         "Multitrack audio recorded by Jim",
         "Mixed and mastered audio",
         "Edited and colour-graded video"
-      ]
+      ],
+      "featured": false
     },
     {
       "name": "Three songs",
       "price": "£000",
       "note": "Sample text: edit in the CMS.",
-      "featured": true,
-      "badge": "Most popular",
       "features": [
         "Everything in One song",
         "Three separate videos",
         "Vertical cuts for Reels and TikTok"
-      ]
+      ],
+      "featured": true,
+      "badge": "Most popular"
     },
     {
       "name": "Full session",
       "price": "£000",
       "note": "Sample text: edit in the CMS.",
-      "featured": false,
-      "badge": "",
       "features": [
         "Up to five songs",
         "Everything in Three songs",
         "Behind-the-scenes photos"
-      ]
+      ],
+      "featured": false
     }
   ],
   "extras": [
@@ -73,14 +70,11 @@
       "text": "Mixed audio and finished videos, ready to post."
     }
   ],
-  "bookingText": "",
-  "ctaText": "Tell us your band, the songs and roughly when, and we'll get back to you with dates.",
   "engineer": {
     "name": "Jim",
     "role": "Audio engineer",
-    "photo": "",
-    "bio": "Jim's bio goes here: his background, the studios and artists he's worked with, and what he brings to a session. Edit it in the CMS under Live In Session page.",
-    "linkLabel": "",
-    "link": ""
-  }
+    "bio": "Jim's bio goes here: his background, the studios and artists he's worked with, and what he brings to a session. Edit it in the CMS under Live In Session page."
+  },
+  "ctaText": "Tell us your band, the songs and roughly when, and we'll get back to you with dates.",
+  "bookSubject": "Live In Session booking"
 }
