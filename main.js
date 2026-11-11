@@ -696,11 +696,14 @@
   }
 
   /* ---------- 3D photo field (Photography) ---------- */
-  // Every photo floats at its own depth in a 3D space. Scrolling the page moves
-  // the camera forward, so the photos at the front drift past and the ones
-  // behind come up. The tags along the bottom (one per gallery) change which
-  // photos are in the field. On arrival, a quick-fire slideshow plays under the
-  // title and its last photo shrinks into its place in the field.
+  // Every photo floats at its own depth in a 3D space. Scrolling down pulls
+  // the camera back through the field: the photos recede into the distance
+  // and more emerge from behind you. Dragging (or a sideways swipe / trackpad
+  // scroll) moves around the field in any direction. Once you reach the back
+  // of the field, the page carries on to the gallery cards. The tags along the
+  // bottom (one per gallery) change which photos are in the field. On arrival,
+  // a quick-fire full-screen slideshow plays under the title and its last
+  // photo shrinks into its place in the field.
   function renderField(root) {
     if (!root) return;
     var stage = root.querySelector(".field-stage");
@@ -736,6 +739,7 @@
       onClose: function () { wake(); }
     });
 
+    var dragged = false; // a drag shouldn't count as a click on a photo
     pool.forEach(function (p, i) {
       p.ratio = 1.5;
       p.seed = i;
@@ -745,29 +749,28 @@
         if (img.naturalWidth && img.naturalHeight) { p.ratio = img.naturalWidth / img.naturalHeight; size(p); }
       });
       p.node = el("button", { class: "field-item", type: "button", "aria-label": "Enlarge: " + (p.alt || "photo " + (i + 1)) }, [img]);
-      p.node.addEventListener("click", function () {
+      p.node.addEventListener("click", function (e) {
+        if (dragged) { e.preventDefault(); return; }
         var at = lbList.indexOf(p);
         if (at > -1) openLightbox(at, p.node);
-      });
-      // Keyboard: tabbing to a photo brings it to the front.
-      p.node.addEventListener("focus", function () {
-        if (p.k == null) return;
-        window.scrollTo({ top: fieldTop() + p.k * GAP / Z_PER_PX, behavior: calmMotion ? "auto" : "smooth" });
       });
       world.appendChild(p.node);
     });
 
     // Depth settings (CSS pixels along the camera's line of sight).
-    var GAP = 190;       // distance between one photo and the next
-    var FAR = 3400;      // photos further back than this aren't shown
-    var FADE_IN = 1300;  // ...and fade in over this distance
-    var NEAR = 760;      // photos fade out as they pass the camera
-    var NEAR_FADE = 420;
-    var Z_PER_PX = 1.0;  // camera movement per pixel scrolled
+    var GAP = 190;        // distance between one photo and the next
+    var FAR = 3400;       // photos further back than this aren't shown
+    var FADE_OUT = 1300;  // ...and fade away over this distance
+    var NEAR = 760;       // photos behind you (past this) aren't shown
+    var NEAR_FADE = 420;  // ...and fade in over this distance as they emerge
+    var DEPTH = 18;       // how many photos deep the field is on arrival
+    var Z_PER_PX = 1.0;   // camera movement per pixel scrolled
+    var END_EXTRA = 1100; // how far the last photos recede before the page moves on
 
     var visible = [];
-    var W = 0, H = 0, base = 0;
+    var W = 0, H = 0, base = 0, front = 0;
     var cam = 0, camTarget = 0;
+    var panX = 0, panY = 0, panTX = 0, panTY = 0, panLimX = 0, panLimY = 0;
     var tiltX = 0, tiltY = 0, tiltTX = 0, tiltTY = 0;
     var running = false, onScreen = true, introDone = false;
 
@@ -785,43 +788,50 @@
       p.node.style.marginTop = Math.round(-h / 2) + "px";
     }
 
+    // Each photo gets a slot along the line of sight. The first photo
+    // (Featured #1) starts at the front with the next ones behind it; any
+    // photos beyond the field's depth wait behind the camera and emerge as you
+    // scroll back.
     function layout() {
       W = stage.clientWidth; H = stage.clientHeight;
       base = W < 640 ? W * 0.46 : Math.min(400, Math.max(200, W * 0.2));
-      visible.forEach(function (p, k) {
-        p.k = k;
-        // A golden-angle spiral spreads neighbouring photos around the screen.
-        var a = k * 2.39996 + rand(p.seed) * 0.6;
-        var r = k === 0 ? 0.03 : 0.22 + rand(p.seed + 7) * 0.6;
-        p.x = Math.cos(a) * r * W * (W < 640 ? 0.55 : 0.8);
-        p.y = Math.sin(a) * r * H * 0.7;
+      var n = visible.length;
+      front = Math.max(0, n - DEPTH);
+      visible.forEach(function (p, i) {
+        var slot = (i + front) % n; // Featured #1 → slot "front"; the rest wrap round
+        p.slot = slot;
+        var a = slot * 2.39996 + rand(p.seed) * 0.6; // golden-angle spiral
+        var r = i === 0 ? 0.03 : 0.22 + rand(p.seed + 7) * 0.75;
+        p.x = Math.cos(a) * r * W * (W < 640 ? 0.75 : 0.95);
+        p.y = Math.sin(a) * r * H * 0.85;
         p.w = base * (0.75 + rand(p.seed + 3) * 0.5);
         size(p);
       });
-      // The page scrolls for as long as it takes to fly past every photo.
-      var travel = ((visible.length - 1) * GAP + NEAR) / Z_PER_PX;
+      panLimX = W * (W < 640 ? 0.5 : 0.45);
+      panLimY = H * 0.4;
+      // The page scrolls for as long as it takes to pull back through the field.
+      var travel = (front * GAP + (front ? NEAR : 0) + END_EXTRA) / Z_PER_PX;
       root.style.height = Math.round(H + travel) + "px";
     }
 
     function readScroll() {
-      var y = window.scrollY - fieldTop();
-      camTarget = Math.max(0, y) * Z_PER_PX;
+      camTarget = Math.max(0, window.scrollY - fieldTop()) * Z_PER_PX;
     }
 
     function draw(t) {
       var floatAmt = calmMotion ? 0 : 10;
-      world.style.transform = "rotateX(" + tiltY.toFixed(3) + "deg) rotateY(" + tiltX.toFixed(3) + "deg)";
+      world.style.transform = "rotateX(" + tiltY.toFixed(3) + "deg) rotateY(" + tiltX.toFixed(3) + "deg) translate3d(" + panX.toFixed(1) + "px," + panY.toFixed(1) + "px,0)";
       for (var k = 0; k < visible.length; k++) {
         var p = visible[k];
-        var z = -k * GAP + cam;
+        // Scrolling down (cam grows) moves every photo further away.
+        var z = (front - p.slot) * GAP - cam + (p.slot < front ? NEAR : 0);
         var o = 1;
         if (z < -FAR) o = 0;
-        else if (z < -FAR + FADE_IN) o = (z + FAR) / FADE_IN;
+        else if (z < -FAR + FADE_OUT) o = (z + FAR) / FADE_OUT;
         if (z > NEAR) o = 0;
         else if (z > NEAR - NEAR_FADE) o = Math.min(o, (NEAR - z) / NEAR_FADE);
         if (!introDone) o *= p.reveal || 0;
-        var near = z > -FAR && z < NEAR;
-        if (near) {
+        if (z > -FAR && z < NEAR) {
           var fx = Math.sin(t / 2600 + p.seed * 1.7) * floatAmt;
           var fy = Math.cos(t / 3100 + p.seed * 2.3) * floatAmt;
           p.node.style.transform = "translate3d(" + (p.x + fx).toFixed(1) + "px," + (p.y + fy).toFixed(1) + "px," + z.toFixed(1) + "px)";
@@ -838,13 +848,24 @@
 
     function frame(t) {
       if (!running) return;
-      cam += (camTarget - cam) * (calmMotion ? 1 : 0.09);
+      var ease = calmMotion ? 1 : 0.09;
+      cam += (camTarget - cam) * ease;
+      if (!dragging) {
+        // Glide on a little after a drag or swipe.
+        panTX = clamp(panTX + velX, -panLimX, panLimX);
+        panTY = clamp(panTY + velY, -panLimY, panLimY);
+        velX *= 0.92; velY *= 0.92;
+        if (Math.abs(velX) < 0.05) velX = 0;
+        if (Math.abs(velY) < 0.05) velY = 0;
+      }
+      panX += (panTX - panX) * (calmMotion ? 1 : 0.14);
+      panY += (panTY - panY) * (calmMotion ? 1 : 0.14);
       tiltX += (tiltTX - tiltX) * 0.06;
       tiltY += (tiltTY - tiltY) * 0.06;
       draw(t);
-      var still = Math.abs(camTarget - cam) < 0.3 && Math.abs(tiltTX - tiltX) < 0.01 && Math.abs(tiltTY - tiltY) < 0.01;
-      if (calmMotion && still) { running = false; return; }
-      if (!onScreen) { running = false; return; }
+      var still = Math.abs(camTarget - cam) < 0.3 && !velX && !velY && Math.abs(panTX - panX) < 0.2 && Math.abs(panTY - panY) < 0.2 &&
+        Math.abs(tiltTX - tiltX) < 0.01 && Math.abs(tiltTY - tiltY) < 0.01;
+      if ((calmMotion && still) || !onScreen) { running = false; return; }
       requestAnimationFrame(frame);
     }
     function wake() {
@@ -852,6 +873,64 @@
       running = true;
       requestAnimationFrame(frame);
     }
+    function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+    // ---- Moving around: drag in any direction, or swipe / scroll sideways ----
+    var dragging = false, velX = 0, velY = 0, lastX = 0, lastY = 0, downX = 0, downY = 0, pid = null;
+    stage.addEventListener("pointerdown", function (e) {
+      if (e.button !== 0 || e.target.closest(".field-tags")) return;
+      dragging = true; dragged = false; pid = e.pointerId;
+      downX = lastX = e.clientX; downY = lastY = e.clientY;
+      velX = velY = 0;
+    });
+    window.addEventListener("pointermove", function (e) {
+      if (!dragging || e.pointerId !== pid) return;
+      var dx = e.clientX - lastX, dy = e.clientY - lastY;
+      lastX = e.clientX; lastY = e.clientY;
+      if (!dragged && Math.hypot(e.clientX - downX, e.clientY - downY) > 6) {
+        dragged = true;
+        root.classList.add("is-dragging");
+        try { stage.setPointerCapture(pid); } catch (err) {}
+      }
+      if (!dragged) return;
+      // On touch screens, up/down swipes scroll the page (moving through the
+      // depth), so only sideways movement pans there.
+      var touch = e.pointerType === "touch";
+      panTX = clamp(panTX + dx, -panLimX, panLimX);
+      if (!touch) panTY = clamp(panTY + dy, -panLimY, panLimY);
+      velX = dx; velY = touch ? 0 : dy;
+      wake();
+    });
+    var endDrag = function (e) {
+      if (!dragging || (e && e.pointerId !== pid)) return;
+      dragging = false;
+      root.classList.remove("is-dragging");
+      // Let the click that ends a drag pass without opening a photo.
+      setTimeout(function () { dragged = false; }, 0);
+      wake();
+    };
+    window.addEventListener("pointerup", endDrag);
+    window.addEventListener("pointercancel", function (e) {
+      if (!dragging || e.pointerId !== pid) return;
+      dragging = false; dragged = false; velX = velY = 0;
+      root.classList.remove("is-dragging");
+    });
+    // Trackpads and sideways mouse wheels: horizontal scrolling pans the field.
+    stage.addEventListener("wheel", function (e) {
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return; // up/down scrolls the page as normal
+      e.preventDefault();
+      panTX = clamp(panTX - e.deltaX, -panLimX, panLimX);
+      wake();
+    }, { passive: false });
+    // Keyboard: arrow keys pan when nothing else has focus.
+    window.addEventListener("keydown", function (e) {
+      if (!onScreen || !document.getElementById("lightbox").hidden) return;
+      var step = 80;
+      if (e.key === "ArrowLeft") panTX = clamp(panTX + step, -panLimX, panLimX);
+      else if (e.key === "ArrowRight") panTX = clamp(panTX - step, -panLimX, panLimX);
+      else return;
+      wake();
+    });
 
     // Which photos are in the field.
     var activeTag = "";
@@ -860,8 +939,7 @@
       pool.forEach(function (p) {
         var on = !slug || p.tags.indexOf(slug) > -1;
         p.node.hidden = !on;
-        p.shown = !on ? false : p.shown;
-        if (!on) p.k = null;
+        if (!on) p.shown = false;
       });
       visible = pool.filter(function (p) { return !p.node.hidden; });
       lbList.length = 0;
@@ -875,7 +953,8 @@
         var top = fieldTop();
         if (window.scrollY > top) window.scrollTo(0, top);
         camTarget = 0;
-        cam = calmMotion ? 0 : -GAP * 6;
+        cam = calmMotion ? 0 : GAP * 6;
+        panTX = panTY = velX = velY = 0;
       }
       wake();
     }
@@ -907,7 +986,7 @@
     readScroll();
     cam = camTarget;
 
-    // ---- Arrival: title, quick-fire slideshow, then into the field ----
+    // ---- Arrival: title over a quick-fire full-screen slideshow, then into the field ----
     var intro = root.querySelector(".field-intro");
     var flash = root.querySelector(".field-flash");
     var finish = function () {
@@ -943,26 +1022,22 @@
       if (introDone) return;
       var stageBox = stage.getBoundingClientRect();
       var full = { left: 0, top: 0, width: stageBox.width, height: stageBox.height };
-      var small = { width: Math.min(280, stageBox.width * 0.42) };
-      small.height = small.width * 0.62;
-      small.left = (stageBox.width - small.width) / 2;
-      small.top = stageBox.height * 0.56;
       var box = function (r) { return { left: r.left + "px", top: r.top + "px", width: r.width + "px", height: r.height + "px" }; };
+      var STEP = 130;
       flashImg.src = url(shots[0].thumb || shots[0].src);
-      Object.assign(flash.style, box(small));
+      Object.assign(flash.style, box(full));
       flash.hidden = false;
-      var STEP = 115;
+      flash.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, easing: "ease-out" });
       shots.forEach(function (p, i) {
-        if (i) setTimeout(function () { if (!introDone) flashImg.src = url(p.thumb || p.src); }, 250 + i * STEP);
+        if (i) setTimeout(function () { if (!introDone) flashImg.src = url(p.thumb || p.src); }, i * STEP);
       });
-      var grow = flash.animate([box(small), box(full)], { duration: 350 + shots.length * STEP, delay: 250, easing: "cubic-bezier(.65,0,.35,1)", fill: "forwards" });
-      grow.finished.then(function () {
+      setTimeout(function () {
         if (introDone) return;
         intro.classList.add("is-leaving");
         // Shrink the last photo into its place in the field.
         var r = first.node.getBoundingClientRect();
         var target = { left: r.left - stageBox.left, top: r.top - stageBox.top, width: r.width, height: r.height };
-        var shrink = flash.animate([box(full), box(target)], { duration: 900, delay: 180, easing: "cubic-bezier(.7,0,.15,1)", fill: "forwards" });
+        var shrink = flash.animate([box(full), box(target)], { duration: 900, easing: "cubic-bezier(.7,0,.15,1)", fill: "forwards" });
         shrink.finished.then(function () {
           if (introDone) return;
           root.classList.add("is-ready");
@@ -973,13 +1048,13 @@
           var start = performance.now();
           var reveal = function (now) {
             var t = (now - start) / 900;
-            visible.forEach(function (p, k) { if (k) p.reveal = Math.max(0, Math.min(1, t * 2 - k * 0.12)); });
+            visible.forEach(function (p, k) { if (k) p.reveal = Math.max(0, Math.min(1, t * 2 - (p.slot - front) * 0.12)); });
             if (t < 1.6) requestAnimationFrame(reveal); else stopIntro();
             wake();
           };
           requestAnimationFrame(reveal);
         }).catch(function () {});
-      }).catch(function () {});
+      }, shots.length * STEP + 250);
     });
   }
 
