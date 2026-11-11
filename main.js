@@ -802,7 +802,9 @@
       visible.forEach(function (p, i) {
         p.slot = i;
         var a = i * 2.39996 + rand(p.seed) * 0.6; // golden-angle spiral
-        var r = i === 0 ? 0.03 : 0.16 + rand(p.seed + 7) * 0.5;
+        // The first and last photos sit near the centre (the intro lands on the
+        // first; the fly-through ends on the last).
+        var r = i === 0 || i === n - 1 ? 0.03 : 0.16 + rand(p.seed + 7) * 0.5;
         p.x = Math.cos(a) * r * W * (W < 640 ? 0.65 : 0.8);
         p.y = Math.sin(a) * r * H * 0.75;
         p.w = base * (0.75 + rand(p.seed + 3) * 0.5);
@@ -872,6 +874,33 @@
       if ((calmMotion && still) || !onScreen) { running = false; return; }
       requestAnimationFrame(frame);
     }
+    // After the intro (and when a tag is chosen), the camera flies on its own
+    // through the whole gallery and stops with the last photo at the front, so
+    // visitors see everything that's there. Scrolling back up retraces it.
+    // Any scroll, tap, drag or key press stops the flight where it is.
+    var flyRaf = null;
+    var FLY_STOP = ["wheel", "touchstart", "keydown", "pointerdown"];
+    function stopFly() {
+      if (flyRaf) { cancelAnimationFrame(flyRaf); flyRaf = null; }
+      FLY_STOP.forEach(function (ev) { window.removeEventListener(ev, stopFly); });
+    }
+    function flyThrough() {
+      stopFly();
+      if (calmMotion || visible.length < 2) return;
+      var from = window.scrollY;
+      var to = Math.round(fieldTop() + ((visible.length - 1) * GAP + NEAR) / Z_PER_PX);
+      var dur = Math.min(7000, 2000 + visible.length * 160);
+      var start = performance.now();
+      var ease = function (t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
+      FLY_STOP.forEach(function (ev) { window.addEventListener(ev, stopFly, { passive: true }); });
+      var step = function (now) {
+        var t = Math.min(1, (now - start) / dur);
+        window.scrollTo(0, Math.round(from + (to - from) * ease(t)));
+        if (t < 1) flyRaf = requestAnimationFrame(step); else stopFly();
+      };
+      flyRaf = requestAnimationFrame(step);
+    }
+
     function wake() {
       if (running || !onScreen || !document.getElementById("lightbox").hidden) return;
       running = true;
@@ -995,10 +1024,11 @@
       });
       layout();
       if (animate) {
-        // Back to the start of the field, flying in to the first photo.
+        // Back to the first photo, then fly through this gallery's photos.
         window.scrollTo(0, startY());
         readScroll();
-        cam = camTarget + (calmMotion ? 0 : GAP * 6);
+        cam = camTarget;
+        setTimeout(flyThrough, 300);
         yawT = pitchT = velX = velY = 0;
       }
       wake();
@@ -1106,7 +1136,8 @@
           var reveal = function (now) {
             var t = (now - start) / 900;
             visible.forEach(function (p, k) { if (k) p.reveal = Math.max(0, Math.min(1, t * 2)); });
-            if (t < 1.6) requestAnimationFrame(reveal); else stopIntro();
+            if (t < 1.6) requestAnimationFrame(reveal);
+            else { stopIntro(); setTimeout(flyThrough, 350); }
             wake();
           };
           requestAnimationFrame(reveal);
