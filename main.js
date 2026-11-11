@@ -839,11 +839,9 @@
     function draw(t) {
       var floatAmt = calmMotion ? 0 : 6;
       var ry = yaw + spin + tiltX, rx = pitch + tiltY;
-      // Keep the photos facing you as the sphere turns, with a little of the
-      // turn left in so the 3D shows.
-      var wrap = ((ry % 360) + 540) % 360 - 180;
-      var lean = Math.max(-14, Math.min(14, wrap * 0.3));
-      var face = " rotateY(" + (-ry + lean).toFixed(3) + "deg) rotateX(" + (-rx * 0.7).toFixed(3) + "deg)";
+      // The photos move round with the sphere but never turn themselves:
+      // each one stays flat-on, facing the front.
+      var face = " rotateY(" + (-ry).toFixed(3) + "deg) rotateX(" + (-rx).toFixed(3) + "deg)";
       world.style.transform = "translateZ(" + (cam - R).toFixed(1) + "px) rotateX(" + rx.toFixed(3) + "deg) rotateY(" + ry.toFixed(3) + "deg)";
       var cy = Math.cos(ry * Math.PI / 180), sy = Math.sin(ry * Math.PI / 180);
       var cx = Math.cos(rx * Math.PI / 180), sx = Math.sin(rx * Math.PI / 180);
