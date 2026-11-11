@@ -56,9 +56,11 @@
       "title": "Algorhythm",
       "link": "https://www.youtube.com/watch?v=6tPhsQtXXog",
       "venue": "Silk Mill Studios",
-      "song": "Love Story",
+      "song": "'Love Story' by Taylor Swift",
       "year": "2025",
-      "role": "Camera, Lighting, Editor, Grade"
+      "role": "Camera, Lighting, Editor, Grade",
+      "thumb": "assets/img/photos/Web/algorhythmlove-storythumb1.jpg",
+      "mobileThumb": "assets/img/photos/Web/algorhythmlove-storythumb1-sm.jpg"
     },
     {
       "category": "Wedding Band Highlights",
