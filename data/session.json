@@ -1,0 +1,86 @@
+{
+  "intro": "Your band, filmed live in the room: multi-camera video with studio-quality sound, recorded and mixed by audio engineer Jim.",
+  "bookSubject": "Live In Session booking",
+  "packages": [
+    {
+      "name": "One song",
+      "price": "£000",
+      "note": "Sample text: edit in the CMS.",
+      "featured": false,
+      "badge": "",
+      "features": [
+        "Multi-camera filming",
+        "Multitrack audio recorded by Jim",
+        "Mixed and mastered audio",
+        "Edited and colour-graded video"
+      ]
+    },
+    {
+      "name": "Three songs",
+      "price": "£000",
+      "note": "Sample text: edit in the CMS.",
+      "featured": true,
+      "badge": "Most popular",
+      "features": [
+        "Everything in One song",
+        "Three separate videos",
+        "Vertical cuts for Reels and TikTok"
+      ]
+    },
+    {
+      "name": "Full session",
+      "price": "£000",
+      "note": "Sample text: edit in the CMS.",
+      "featured": false,
+      "badge": "",
+      "features": [
+        "Up to five songs",
+        "Everything in Three songs",
+        "Behind-the-scenes photos"
+      ]
+    }
+  ],
+  "extras": [
+    {
+      "item": "Extra song",
+      "price": "£000"
+    },
+    {
+      "item": "Vertical social cut",
+      "price": "£000"
+    },
+    {
+      "item": "Multitrack stems",
+      "price": "£000"
+    }
+  ],
+  "priceNote": "Sample note: prices, what's included and turnaround times are placeholders until updated in the CMS.",
+  "steps": [
+    {
+      "title": "Get in touch",
+      "text": "Send your band name, the songs you'd like to film and a few dates that suit you."
+    },
+    {
+      "title": "Lock in a date",
+      "text": "We'll confirm the studio, timings and package, and take a deposit to hold the date."
+    },
+    {
+      "title": "Session day",
+      "text": "Load in, set up, a quick soundcheck, then you play. Jim records every part."
+    },
+    {
+      "title": "Delivery",
+      "text": "Mixed audio and finished videos, ready to post."
+    }
+  ],
+  "bookingText": "",
+  "ctaText": "Tell us your band, the songs and roughly when, and we'll get back to you with dates.",
+  "engineer": {
+    "name": "Jim",
+    "role": "Audio engineer",
+    "photo": "",
+    "bio": "Jim's bio goes here: his background, the studios and artists he's worked with, and what he brings to a session. Edit it in the CMS under Live In Session page.",
+    "linkLabel": "",
+    "link": ""
+  }
+}

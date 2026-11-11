@@ -23,6 +23,7 @@ ROOT = Path(__file__).resolve().parent.parent
 PAGES = {
     "home": "index.html",
     "film": "film/index.html",
+    "session": "live-in-session/index.html",
     "photography": "photography/index.html",
     "music": "music/index.html",
     "about": "about/index.html",

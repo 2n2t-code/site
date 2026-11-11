@@ -38,6 +38,7 @@
   var PAGE_DATA = {
     home: ["videos", "home"],
     film: ["videos", "home"],
+    session: ["videos", "session"],
     photography: ["photos"],
     "photo-category": ["photos"],
     music: ["music"],
@@ -47,7 +48,7 @@
   };
 
   // Which entry in data/seo.json belongs to each page.
-  var SEO_KEY = { home: "home", film: "film", photography: "photography", music: "music", about: "about", contact: "contact" };
+  var SEO_KEY = { home: "home", film: "film", session: "session", photography: "photography", music: "music", about: "about", contact: "contact" };
 
   function loadJSON(name) {
     return fetch(ROOT + "data/" + name + ".json", { cache: "no-cache" })
@@ -114,7 +115,8 @@
         photoCategories: (d.photos || {}).categories || [],
         tracks: (d.music || {}).releases || [],
         bands: (d.music || {}).bands || [],
-        musicIntro: (d.music || {}).intro || ""
+        musicIntro: (d.music || {}).intro || "",
+        session: d.session || {}
       };
     });
   }
@@ -577,7 +579,7 @@
       if (form) { form.setAttribute("data-email", email); form.setAttribute("action", "mailto:" + email); }
     }
     // Page background images (set under Contact & social links in the CMS).
-    var bg = { film: site.backgroundVideo, photography: site.backgroundPhotography,
+    var bg = { film: site.backgroundVideo, session: site.backgroundVideo, photography: site.backgroundPhotography,
       "photo-category": site.backgroundPhotography, music: site.backgroundMusic }[page];
     if (bg) {
       var dark = Number(site.backgroundDarkness);
@@ -1386,6 +1388,103 @@
     }, true);
   }
 
+  /* ---------- Live In Session page (data/session.json) ---------- */
+  function paragraphs(target, text) {
+    if (!target) return;
+    var paras = String(text || "").split(/\n\s*\n/).map(function (t) { return t.trim(); }).filter(Boolean);
+    target.replaceChildren.apply(target, paras.map(function (t) { return el("p", { text: t }); }));
+    target.hidden = !paras.length;
+  }
+
+  function renderSession() {
+    var s = content.session || {};
+    var site = content.site || {};
+    var byId = function (id) { return document.getElementById(id); };
+    if (s.intro) byId("ses-intro").textContent = s.intro;
+    if (s.ctaText) byId("ses-cta-text").textContent = s.ctaText;
+
+    // "Book a session" buttons: an email to you with the subject filled in.
+    var email = site.email || "2n2tproductions@gmail.com";
+    var subject = s.bookSubject || "Live In Session booking";
+    document.querySelectorAll("[data-book]").forEach(function (a) {
+      a.href = "mailto:" + email + "?subject=" + encodeURIComponent(subject);
+    });
+
+    // Recent sessions: every video labelled "Live In Session" in Video work.
+    var vids = ((content.film || {}).videos || []).filter(function (v) { return /live in session/i.test(v.category || ""); });
+    var total = String(vids.length).padStart(2, "0");
+    renderList(byId("ses-videos"), vids, function (v, i) {
+      var title = v.title || "Untitled";
+      var fullTitle = (v.category ? v.category + " — " : "") + title;
+      var btn = el("button", { class: "work-tile", type: "button", "aria-label": "Play video: " + fullTitle }, [
+        thumbImg(v),
+        cineIndex(i, total),
+        el("span", { class: "work-info" }, [
+          v.category ? el("span", { class: "cine-kicker", text: v.category }) : null,
+          el("span", { class: "cine-title" + (title.length > 26 ? " long" : ""), text: title }),
+          songLine(v),
+          videoCredits(v, 3)
+        ]),
+        watchButton()
+      ]);
+      btn.addEventListener("click", function () { openVideo(Object.assign({}, v, { title: fullTitle }), btn); });
+      return el("li", { class: "reveal" }, [btn]);
+    }, "");
+    hideIfEmpty("ses-videos-section", vids);
+
+    // Packages: a card each, with what's included.
+    renderList(byId("ses-packages"), (s.packages || []).filter(Boolean), function (pk) {
+      var feats = (pk.features || []).map(function (f) { return typeof f === "string" ? f : (f && (f.item || f.text)) || ""; }).filter(Boolean);
+      return el("article", { class: "pkg reveal" + (pk.featured ? " is-featured" : "") }, [
+        pk.featured ? el("span", { class: "pkg-badge", text: pk.badge || "Most popular" }) : null,
+        el("h3", { class: "pkg-name", text: pk.name || "" }),
+        el("p", { class: "pkg-price", text: pk.price || "" }),
+        pk.note ? el("p", { class: "pkg-note", text: pk.note }) : null,
+        feats.length ? el("ul", { class: "pkg-features" }, feats.map(function (f) { return el("li", { text: f }); })) : null
+      ]);
+    }, "Prices coming soon.");
+
+    // Extras: one line each, item on the left, price on the right.
+    var extras = (s.extras || []).filter(function (x) { return x && x.item; });
+    renderList(byId("ses-extras"), extras, function (x) {
+      return el("li", null, [el("span", { text: x.item }), el("span", { class: "extras-price", text: x.price || "" })]);
+    }, "");
+    byId("ses-extras-wrap").hidden = !extras.length;
+    var note = byId("ses-price-note");
+    note.textContent = s.priceNote || "";
+    note.hidden = !s.priceNote;
+
+    // How booking works: numbered steps, then any extra text.
+    var steps = (s.steps || []).filter(function (x) { return x && (x.title || x.text); });
+    renderList(byId("ses-steps"), steps, function (x) {
+      return el("li", { class: "reveal" }, [
+        x.title ? el("h3", { text: x.title }) : null,
+        x.text ? el("p", { text: x.text }) : null
+      ]);
+    }, "");
+    paragraphs(byId("ses-booking-text"), s.bookingText);
+    hideIfEmpty("booking", steps.length || String(s.bookingText || "").trim() ? [1] : []);
+
+    // The audio engineer.
+    var eng = s.engineer || {};
+    if (eng.name) byId("jim-name").textContent = eng.name;
+    if (eng.role) byId("jim-role").textContent = eng.role;
+    var box = byId("jim-photo-box");
+    if (eng.photo) {
+      box.replaceChildren(el("img", { src: url(pick(eng.photo, eng.photoMobile)), alt: eng.photoAlt || eng.name || "", loading: "lazy", decoding: "async" }));
+      box.classList.add("has-photo");
+    } else if (eng.name) {
+      box.firstChild.textContent = eng.name;
+    }
+    paragraphs(byId("jim-bio"), eng.bio);
+    var link = byId("jim-link");
+    if (eng.link) {
+      link.replaceChildren(el("a", { href: eng.link, target: "_blank", rel: "noopener", text: (eng.linkLabel || "More about " + (eng.name || "Jim")) + " →" }));
+      link.hidden = false;
+    }
+    if (!eng.name && !eng.bio) byId("ses-team").hidden = true;
+  }
+
   /* ---------- Shared ---------- */
   // Dropdown menu: opens from the three-line button, closes on Esc,
   // on a click outside the menu, or when a link is chosen.
@@ -1475,6 +1574,7 @@
     if (seo) applySeo(seo.title, seo.description);
     if (page === "home") renderHome();
     if (page === "film") renderFilm();
+    if (page === "session") renderSession();
     if (page === "photography") {
       if (document.getElementById("photo-field")) renderField(document.getElementById("photo-field"));
       else renderFeatured(document.getElementById("featured"), content.photos || []);

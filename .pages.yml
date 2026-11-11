@@ -88,6 +88,122 @@ content:
             type: image
             description: A thumbnail used instead on phones (screens under 640px wide), e.g. a tighter crop. 16:9 works best.
 
+  - name: session
+    label: Live In Session page
+    description: "The Live In Session page (in the menu under Video Production): intro, packages and prices, extras, how booking works, and your audio engineer. Its Recent sessions are every video in Video work labelled \"Live In Session\". Empty parts are hidden. Meta Title and Description are under SEO."
+    type: file
+    path: data/session.json
+    format: json
+    fields:
+      - name: intro
+        label: Introduction
+        type: text
+        description: The line under the big Live In Session heading.
+      - name: packages
+        label: Packages
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{name}: {price}"
+        fields:
+          - name: name
+            label: Package name
+            type: string
+          - name: price
+            label: Price
+            type: string
+            description: "As it should appear, e.g. £350 or From £350."
+          - name: note
+            label: Short note (optional)
+            type: string
+          - name: features
+            label: What's included
+            type: string
+            list: true
+          - name: featured
+            label: Highlight this package
+            type: boolean
+          - name: badge
+            label: Highlight label (optional)
+            type: string
+            description: Shown on a highlighted package. Leave empty for "Most popular".
+      - name: extras
+        label: Extras
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{item}: {price}"
+        fields:
+          - name: item
+            label: Extra
+            type: string
+          - name: price
+            label: Price
+            type: string
+      - name: priceNote
+        label: Note under the prices (optional)
+        type: text
+        description: For example deposits, travel or what the prices include.
+      - name: steps
+        label: How booking works
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{title}"
+        fields:
+          - name: title
+            label: Step
+            type: string
+          - name: text
+            label: Details
+            type: text
+      - name: bookingText
+        label: More booking information (optional)
+        type: text
+        description: Shown under the steps, for example cancellation terms or what to bring. Leave a blank line between paragraphs.
+      - name: engineer
+        label: Audio engineer
+        type: object
+        fields:
+          - name: name
+            label: Name
+            type: string
+          - name: role
+            label: Role
+            type: string
+          - name: photo
+            label: Photo
+            type: image
+            description: A portrait works best (it's shown 4:5). Leave empty for a plain panel with the name.
+          - name: photoMobile
+            label: Photo on phones (optional)
+            type: image
+          - name: photoAlt
+            label: Photo description (for screen readers and Google)
+            type: string
+          - name: bio
+            label: Bio
+            type: text
+            description: Leave a blank line between paragraphs.
+          - name: link
+            label: Link (optional)
+            type: string
+            description: For example Jim's website or Instagram.
+          - name: linkLabel
+            label: Link text (optional)
+            type: string
+            description: Leave empty for "More about Jim".
+      - name: ctaText
+        label: "Bottom section: text"
+        type: text
+      - name: bookSubject
+        label: Booking email subject
+        type: string
+        description: The subject line when someone presses Book a session.
+
   - name: home
     label: Homepage
     description: The showreel, headline and introduction at the top of the homepage.
@@ -183,6 +299,18 @@ content:
             description: Shown under the title in Google results and in link previews (WhatsApp, Facebook, LinkedIn). Aim for 120–155 characters.
       - name: film
         label: Video Production page
+        type: object
+        fields:
+          - name: title
+            label: Meta Title
+            type: string
+            description: Shown as the page title in Google results and browser tabs. Aim for 50–60 characters.
+          - name: description
+            label: Meta Description
+            type: text
+            description: Shown under the title in Google results and in link previews (WhatsApp, Facebook, LinkedIn). Aim for 120–155 characters.
+      - name: session
+        label: Live In Session page
         type: object
         fields:
           - name: title

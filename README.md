@@ -5,6 +5,7 @@ Plain HTML, CSS and vanilla JS. No framework and no build step. Content is edite
 ```
 index.html              Homepage (showreel hero, selected work, Photography/Music tiles)
 film/index.html         Video Production (Live In Session first, then other work)
+live-in-session/index.html  Live In Session: packages, prices, booking, audio engineer, recent sessions
 photography/index.html  3D photo field (with gallery tags) + gallery cards
 photography/*/          Gallery pages (weddings, landscape, portraits, music, street, film)
 music/index.html        Bandcamp releases (albums, singles) + bands on Spotify
@@ -46,6 +47,7 @@ The sections in the CMS:
 | CMS section | File | What it controls |
 |---|---|---|
 | **Video work** | `data/videos.json` | Homepage "Selected work" (in list order) and the Video Production page |
+| **Live In Session page** | `data/session.json` | The Live In Session page (menu: Video Production → Live In Session): introduction, packages (name, price, what's included, one can be highlighted), extras, a note under the prices, how booking works, more booking information, your audio engineer (name, role, photo, bio, link), the bottom text and the booking email's subject. Its Recent sessions are every video in Video work labelled "Live In Session". Empty parts are hidden |
 | **Homepage** | `data/home.json` | Headline, small text, showreel video, Photography/Music tile images, bottom "Got a project" section |
 | **SEO** | `data/seo.json` | Meta Title and Meta Description for Home, Video Production, Photography, Music, About and Contact |
 | **Photography** | `data/photos.json` | Featured photos (main Photography page) and the six gallery pages |
@@ -82,7 +84,7 @@ On every page the menu links sit across the top right on screens 900px and wider
 
 ### Menu
 
-To add a page to the menu, add a `<li><a href="...">Name</a></li>` line inside `<nav class="site-nav">` on every page.
+To add a page to the menu, add a `<li><a href="...">Name</a></li>` line inside `<nav class="site-nav">` on every page. Video Production has a dropdown (`<ul class="sub-nav">` inside its `<li class="has-sub">`) holding Live In Session; add more links there the same way. On desktop it opens when you hover or tab to Video Production; in the phone menu its links sit indented underneath.
 
 ### Look and feel
 
