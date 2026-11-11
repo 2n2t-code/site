@@ -763,20 +763,15 @@
     var FADE_OUT = 1300;  // ...and fade away over this distance
     var NEAR = 760;       // photos behind you (past this) aren't shown
     var NEAR_FADE = 420;  // ...and fade in over this distance as they emerge
-    var DEPTH = 18;       // how many photos deep the field is on arrival
     var Z_PER_PX = 1.0;   // camera movement per pixel scrolled
     var END_EXTRA = 1100; // how far the last photos recede before the page moves on
 
     var visible = [];
-    var W = 0, H = 0, base = 0, front = 0;
-    // The page opens partway down the field, with Featured #1 at the front:
-    // scrolling up from there flies forwards into the field (FWD is how far),
-    // and scrolling down pulls back out towards the gallery cards.
-    var FWD = 0;
+    var W = 0, H = 0, base = 0;
     var cam = 0, camTarget = 0;
     // Dragging orbits the field around its centre (PIVOT is how deep that is).
     var yaw = 0, pitch = 0, yawT = 0, pitchT = 0;
-    var YAW_MAX = 40, PITCH_MAX = 35, PIVOT = 1500, DEG_PER_PX = 0.12;
+    var YAW_MAX = 40, PITCH_MAX = 35, PIVOT = 1500, DEG_PER_PX = 0.045;
     var FACE = 0.6; // how far each photo turns back towards you (1 = fully flat-on)
     var tiltX = 0, tiltY = 0, tiltTX = 0, tiltTY = 0;
     var running = false, onScreen = true, introDone = false;
@@ -795,19 +790,18 @@
       p.node.style.marginTop = Math.round(-h / 2) + "px";
     }
 
-    // Each photo gets a slot along the line of sight. The first photo
-    // (Featured #1) starts at the front with the next ones behind it; any
-    // photos beyond the field's depth wait behind the camera and emerge as you
-    // scroll back.
+    // Each photo gets a slot along the line of sight. The page opens at the very
+    // back of the pack, with Featured #1 in front of you and every other photo
+    // waiting behind the camera. Scrolling down pulls back through the whole
+    // gallery: one by one the photos emerge from behind you and recede into
+    // the distance, filling the field, until the page moves on to the gallery cards.
     function layout() {
       W = stage.clientWidth; H = stage.clientHeight;
       base = W < 640 ? W * 0.46 : Math.min(400, Math.max(200, W * 0.2));
       var n = visible.length;
-      front = Math.max(0, n - DEPTH);
       visible.forEach(function (p, i) {
-        var slot = (i + front) % n; // Featured #1 → slot "front"; the rest wrap round
-        p.slot = slot;
-        var a = slot * 2.39996 + rand(p.seed) * 0.6; // golden-angle spiral
+        p.slot = i;
+        var a = i * 2.39996 + rand(p.seed) * 0.6; // golden-angle spiral
         var r = i === 0 ? 0.03 : 0.16 + rand(p.seed + 7) * 0.5;
         p.x = Math.cos(a) * r * W * (W < 640 ? 0.65 : 0.8);
         p.y = Math.sin(a) * r * H * 0.75;
@@ -815,16 +809,14 @@
         size(p);
       });
       // The page scrolls for as long as it takes to pull back through the field.
-      // Far enough that the very last photo comes right up to you.
-      FWD = Math.max(0, n - 1 - front) * GAP + 450;
-      var travel = (FWD + front * GAP + (front ? NEAR : 0) + END_EXTRA) / Z_PER_PX;
+      var travel = ((n - 1) * GAP + (n > 1 ? NEAR : 0) + END_EXTRA) / Z_PER_PX;
       root.style.height = Math.round(H + travel) + "px";
     }
 
     function readScroll() {
-      camTarget = Math.max(0, window.scrollY - fieldTop()) * Z_PER_PX - FWD;
+      camTarget = Math.max(0, window.scrollY - fieldTop()) * Z_PER_PX;
     }
-    function startY() { return Math.round(fieldTop() + FWD / Z_PER_PX); }
+    function startY() { return 0; }
 
     function draw(t) {
       var floatAmt = calmMotion ? 0 : 10;
@@ -835,7 +827,8 @@
       for (var k = 0; k < visible.length; k++) {
         var p = visible[k];
         // Scrolling down (cam grows) moves every photo further away.
-        var z = (front - p.slot) * GAP - cam + (p.slot < front ? NEAR : 0);
+        // Featured #1 starts right in view (z = 0); the rest start behind you.
+        var z = p.slot ? p.slot * GAP + NEAR - cam : -cam;
         var o = 1;
         if (z < -FAR) o = 0;
         else if (z < -FAR + FADE_OUT) o = (z + FAR) / FADE_OUT;
@@ -1002,7 +995,7 @@
       });
       layout();
       if (animate) {
-        // Back to the start of the field, with the photos flying in from behind.
+        // Back to the start of the field, flying in to the first photo.
         window.scrollTo(0, startY());
         readScroll();
         cam = camTarget + (calmMotion ? 0 : GAP * 6);
@@ -1112,7 +1105,7 @@
           var start = performance.now();
           var reveal = function (now) {
             var t = (now - start) / 900;
-            visible.forEach(function (p, k) { if (k) p.reveal = Math.max(0, Math.min(1, t * 2 - (p.slot - front) * 0.12)); });
+            visible.forEach(function (p, k) { if (k) p.reveal = Math.max(0, Math.min(1, t * 2)); });
             if (t < 1.6) requestAnimationFrame(reveal); else stopIntro();
             wake();
           };
