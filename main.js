@@ -354,14 +354,18 @@
       ytBox.setAttribute("data-youtube-bg", ytId);
       if (startYouTubeBackgrounds && document.readyState === "complete") startYouTubeBackgrounds();
     };
-    // The still is the video's own first moments, so the switch to video is seamless.
-    // If it's missing, the web versions haven't been made yet: use YouTube for now.
     var posterSrc = url(base + "-poster.jpg");
-    showPoster(posterSrc, true, useYouTube);
-    if (calm) return; // reduced motion / data saver: the still image only
+    if (calm) {
+      // Reduced motion / data saver: a still from the video instead of playing it.
+      // If it's missing, the web versions haven't been made yet: use YouTube for now.
+      showPoster(posterSrc, true, useYouTube);
+      return;
+    }
+    // Playing: stay black until the video itself is playing, then fade it in.
+    // (No still in front of it, so nothing flashes up before the first frame.)
     var slow = navigator.connection && /(^|-)2g|3g/.test(navigator.connection.effectiveType || "");
     var video = el("video", { class: "hero-video", muted: true, loop: true, playsinline: true, autoplay: true,
-      preload: "auto", poster: posterSrc, "aria-hidden": "true", tabindex: "-1" });
+      preload: "auto", "aria-hidden": "true", tabindex: "-1" });
     video.muted = true; video.defaultMuted = true;
     video.src = url(base + (slow ? "-720.mp4" : "-1080.mp4"));
     video.addEventListener("playing", function () { video.classList.add("is-playing"); });
