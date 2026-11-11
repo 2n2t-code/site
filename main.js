@@ -699,7 +699,7 @@
   // Every photo floats at its own depth in a 3D space. Scrolling down pulls
   // the camera back through the field: the photos recede into the distance
   // and more emerge from behind you. Dragging (or a sideways swipe / trackpad
-  // scroll) moves around the field in any direction. Once you reach the back
+  // scroll) turns the whole field around its centre. Once you reach the back
   // of the field, the page carries on to the gallery cards. The tags along the
   // bottom (one per gallery) change which photos are in the field. On arrival,
   // a quick-fire full-screen slideshow plays under the title and its last
@@ -770,7 +770,9 @@
     var visible = [];
     var W = 0, H = 0, base = 0, front = 0;
     var cam = 0, camTarget = 0;
-    var panX = 0, panY = 0, panTX = 0, panTY = 0, panLimX = 0, panLimY = 0;
+    // Dragging orbits the field around its centre (PIVOT is how deep that is).
+    var yaw = 0, pitch = 0, yawT = 0, pitchT = 0;
+    var YAW_MAX = 35, PITCH_MAX = 22, PIVOT = 1500, DEG_PER_PX = 0.1;
     var tiltX = 0, tiltY = 0, tiltTX = 0, tiltTY = 0;
     var running = false, onScreen = true, introDone = false;
 
@@ -801,14 +803,12 @@
         var slot = (i + front) % n; // Featured #1 → slot "front"; the rest wrap round
         p.slot = slot;
         var a = slot * 2.39996 + rand(p.seed) * 0.6; // golden-angle spiral
-        var r = i === 0 ? 0.03 : 0.22 + rand(p.seed + 7) * 0.75;
-        p.x = Math.cos(a) * r * W * (W < 640 ? 0.75 : 0.95);
-        p.y = Math.sin(a) * r * H * 0.85;
+        var r = i === 0 ? 0.03 : 0.16 + rand(p.seed + 7) * 0.5;
+        p.x = Math.cos(a) * r * W * (W < 640 ? 0.65 : 0.8);
+        p.y = Math.sin(a) * r * H * 0.75;
         p.w = base * (0.75 + rand(p.seed + 3) * 0.5);
         size(p);
       });
-      panLimX = W * (W < 640 ? 0.5 : 0.45);
-      panLimY = H * 0.4;
       // The page scrolls for as long as it takes to pull back through the field.
       var travel = (front * GAP + (front ? NEAR : 0) + END_EXTRA) / Z_PER_PX;
       root.style.height = Math.round(H + travel) + "px";
@@ -820,7 +820,9 @@
 
     function draw(t) {
       var floatAmt = calmMotion ? 0 : 10;
-      world.style.transform = "rotateX(" + tiltY.toFixed(3) + "deg) rotateY(" + tiltX.toFixed(3) + "deg) translate3d(" + panX.toFixed(1) + "px," + panY.toFixed(1) + "px,0)";
+      // Each photo turns back to face you while the field orbits.
+      var face = " rotateY(" + (-(yaw + tiltX)).toFixed(3) + "deg) rotateX(" + (-(pitch + tiltY)).toFixed(3) + "deg)";
+      world.style.transform = "translateZ(" + (-PIVOT) + "px) rotateX(" + (pitch + tiltY).toFixed(3) + "deg) rotateY(" + (yaw + tiltX).toFixed(3) + "deg) translateZ(" + PIVOT + "px)";
       for (var k = 0; k < visible.length; k++) {
         var p = visible[k];
         // Scrolling down (cam grows) moves every photo further away.
@@ -834,7 +836,7 @@
         if (z > -FAR && z < NEAR) {
           var fx = Math.sin(t / 2600 + p.seed * 1.7) * floatAmt;
           var fy = Math.cos(t / 3100 + p.seed * 2.3) * floatAmt;
-          p.node.style.transform = "translate3d(" + (p.x + fx).toFixed(1) + "px," + (p.y + fy).toFixed(1) + "px," + z.toFixed(1) + "px)";
+          p.node.style.transform = "translate3d(" + (p.x + fx).toFixed(1) + "px," + (p.y + fy).toFixed(1) + "px," + z.toFixed(1) + "px)" + face;
         }
         if (o <= 0.001) {
           if (p.shown) { p.node.style.visibility = "hidden"; p.shown = false; }
@@ -852,18 +854,18 @@
       cam += (camTarget - cam) * ease;
       if (!dragging) {
         // Glide on a little after a drag or swipe.
-        panTX = clamp(panTX + velX, -panLimX, panLimX);
-        panTY = clamp(panTY + velY, -panLimY, panLimY);
+        yawT = clamp(yawT + velX * DEG_PER_PX, -YAW_MAX, YAW_MAX);
+        pitchT = clamp(pitchT - velY * DEG_PER_PX, -PITCH_MAX, PITCH_MAX);
         velX *= 0.92; velY *= 0.92;
         if (Math.abs(velX) < 0.05) velX = 0;
         if (Math.abs(velY) < 0.05) velY = 0;
       }
-      panX += (panTX - panX) * (calmMotion ? 1 : 0.14);
-      panY += (panTY - panY) * (calmMotion ? 1 : 0.14);
+      yaw += (yawT - yaw) * (calmMotion ? 1 : 0.12);
+      pitch += (pitchT - pitch) * (calmMotion ? 1 : 0.12);
       tiltX += (tiltTX - tiltX) * 0.06;
       tiltY += (tiltTY - tiltY) * 0.06;
       draw(t);
-      var still = Math.abs(camTarget - cam) < 0.3 && !velX && !velY && Math.abs(panTX - panX) < 0.2 && Math.abs(panTY - panY) < 0.2 &&
+      var still = Math.abs(camTarget - cam) < 0.3 && !velX && !velY && Math.abs(yawT - yaw) < 0.01 && Math.abs(pitchT - pitch) < 0.01 &&
         Math.abs(tiltTX - tiltX) < 0.01 && Math.abs(tiltTY - tiltY) < 0.01;
       if ((calmMotion && still) || !onScreen) { running = false; return; }
       requestAnimationFrame(frame);
@@ -875,7 +877,7 @@
     }
     function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
 
-    // ---- Moving around: drag in any direction, or swipe / scroll sideways ----
+    // ---- Moving around: drag to turn the field around its centre ----
     var dragging = false, velX = 0, velY = 0, lastX = 0, lastY = 0, downX = 0, downY = 0, pid = null;
     stage.addEventListener("pointerdown", function (e) {
       if (e.button !== 0 || e.target.closest(".field-tags")) return;
@@ -894,10 +896,10 @@
       }
       if (!dragged) return;
       // On touch screens, up/down swipes scroll the page (moving through the
-      // depth), so only sideways movement pans there.
+      // depth), so only sideways movement turns the field there.
       var touch = e.pointerType === "touch";
-      panTX = clamp(panTX + dx, -panLimX, panLimX);
-      if (!touch) panTY = clamp(panTY + dy, -panLimY, panLimY);
+      yawT = clamp(yawT + dx * DEG_PER_PX, -YAW_MAX, YAW_MAX);
+      if (!touch) pitchT = clamp(pitchT - dy * DEG_PER_PX, -PITCH_MAX, PITCH_MAX);
       velX = dx; velY = touch ? 0 : dy;
       wake();
     });
@@ -915,19 +917,19 @@
       dragging = false; dragged = false; velX = velY = 0;
       root.classList.remove("is-dragging");
     });
-    // Trackpads and sideways mouse wheels: horizontal scrolling pans the field.
+    // Trackpads and sideways mouse wheels: horizontal scrolling turns the field.
     stage.addEventListener("wheel", function (e) {
       if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return; // up/down scrolls the page as normal
       e.preventDefault();
-      panTX = clamp(panTX - e.deltaX, -panLimX, panLimX);
+      yawT = clamp(yawT - e.deltaX * DEG_PER_PX, -YAW_MAX, YAW_MAX);
       wake();
     }, { passive: false });
-    // Keyboard: arrow keys pan when nothing else has focus.
+    // Keyboard: left and right arrows turn the field.
     window.addEventListener("keydown", function (e) {
       if (!onScreen || !document.getElementById("lightbox").hidden) return;
-      var step = 80;
-      if (e.key === "ArrowLeft") panTX = clamp(panTX + step, -panLimX, panLimX);
-      else if (e.key === "ArrowRight") panTX = clamp(panTX - step, -panLimX, panLimX);
+      var step = 8;
+      if (e.key === "ArrowLeft") yawT = clamp(yawT + step, -YAW_MAX, YAW_MAX);
+      else if (e.key === "ArrowRight") yawT = clamp(yawT - step, -YAW_MAX, YAW_MAX);
       else return;
       wake();
     });
@@ -954,7 +956,7 @@
         if (window.scrollY > top) window.scrollTo(0, top);
         camTarget = 0;
         cam = calmMotion ? 0 : GAP * 6;
-        panTX = panTY = velX = velY = 0;
+        yawT = pitchT = velX = velY = 0;
       }
       wake();
     }
