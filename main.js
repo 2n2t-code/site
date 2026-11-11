@@ -757,22 +757,22 @@
       world.appendChild(p.node);
     });
 
-    // Depth settings (CSS pixels along the camera's line of sight).
-    var GAP = 190;        // distance between one photo and the next
-    var FAR = 3400;       // photos further back than this aren't shown
-    var FADE_OUT = 1300;  // ...and fade away over this distance
-    var NEAR = 760;       // photos behind you (past this) aren't shown
-    var NEAR_FADE = 420;  // ...and fade in over this distance as they emerge
-    var Z_PER_PX = 1.0;   // camera movement per pixel scrolled
-    var END_EXTRA = 1100; // how far the last photos recede before the page moves on
+    // The whole gallery is one 3D cluster, all of it visible at once. Picture
+    // every photo on the end of a stick, all anchored at the centre of an
+    // invisible sphere: the sphere turns slowly on its own, and dragging spins
+    // it around that centre. Scrolling down zooms in: the camera flies into
+    // and through the sphere, then the page moves on to the gallery cards.
+    var NEAR = 760;       // photos fade out as they pass the camera...
+    var NEAR_FADE = 420;  // ...over this distance
+    var Z_PER_PX = 0.6;   // camera movement per pixel scrolled (lower = slower zoom)
+    var SPIN = 1.6;       // degrees per second the sphere turns on its own
+    var R = 600;          // sphere radius (set from the screen size in layout)
 
     var visible = [];
     var W = 0, H = 0, base = 0;
     var cam = 0, camTarget = 0;
-    // Dragging orbits the field around its centre (PIVOT is how deep that is).
-    var yaw = 0, pitch = 0, yawT = 0, pitchT = 0;
-    var YAW_MAX = 40, PITCH_MAX = 35, PIVOT = 1500, DEG_PER_PX = 0.045;
-    var FACE = 0.6; // how far each photo turns back towards you (1 = fully flat-on)
+    var yaw = 0, pitch = 0, yawT = 0, pitchT = 0, spin = 0, lastT = 0;
+    var YAW_MAX = Infinity, PITCH_MAX = 55, DEG_PER_PX = 0.06;
     var tiltX = 0, tiltY = 0, tiltTX = 0, tiltTY = 0;
     var running = false, onScreen = true, introDone = false;
 
@@ -782,7 +782,7 @@
       var w = p.w;
       var h = w / p.ratio;
       // Keep tall photos from towering over everything else.
-      var maxH = base * 1.25;
+      var maxH = base * 1.3;
       if (h > maxH) { h = maxH; w = h * p.ratio; }
       p.node.style.width = Math.round(w) + "px";
       p.node.style.height = Math.round(h) + "px";
@@ -790,28 +790,38 @@
       p.node.style.marginTop = Math.round(-h / 2) + "px";
     }
 
-    // Each photo gets a slot along the line of sight. The page opens at the very
-    // back of the pack, with Featured #1 in front of you and every other photo
-    // waiting behind the camera. Scrolling down pulls back through the whole
-    // gallery: one by one the photos emerge from behind you and recede into
-    // the distance, filling the field, until the page moves on to the gallery cards.
+    // Stick directions are spread evenly over the sphere (a Fibonacci sphere);
+    // stick lengths vary, so the photos fill the ball rather than just its
+    // surface. Featured #1's stick points straight at you: it's at the front,
+    // where the intro slideshow lands.
     function layout() {
       W = stage.clientWidth; H = stage.clientHeight;
-      base = W < 640 ? W * 0.46 : Math.min(400, Math.max(200, W * 0.2));
+      var phone = W < 640;
+      R = phone ? W * 0.62 : Math.min(720, Math.max(420, Math.min(W, H * 1.7) * 0.48));
+      base = phone ? W * 0.21 : Math.min(210, Math.max(120, W * 0.1));
+      // The ball is stretched to suit the screen: wider than tall on computers,
+      // taller than wide on phones.
+      var sx = phone ? 1.0 : 1.45, sy = phone ? 1.55 : 0.95;
       var n = visible.length;
+      var others = Math.max(1, n - 1);
       visible.forEach(function (p, i) {
-        p.slot = i;
-        var a = i * 2.39996 + rand(p.seed) * 0.6; // golden-angle spiral
-        // The first and last photos sit near the centre (the intro lands on the
-        // first; the fly-through ends on the last).
-        var r = i === 0 || i === n - 1 ? 0.03 : 0.16 + rand(p.seed + 7) * 0.5;
-        p.x = Math.cos(a) * r * W * (W < 640 ? 0.65 : 0.8);
-        p.y = Math.sin(a) * r * H * 0.75;
-        p.w = base * (0.75 + rand(p.seed + 3) * 0.5);
+        if (i === 0) {
+          p.x = 0; p.y = 0; p.z = R;
+        } else {
+          var k = i - 1;
+          var y = 1 - (k + 0.5) / others * 2;        // -1..1, top to bottom
+          var ring = Math.sqrt(Math.max(0, 1 - y * y));
+          var a = k * 2.39996 + rand(p.seed) * 0.3;
+          var len = R * (0.5 + rand(p.seed + 7) * 0.5); // stick length
+          p.x = Math.cos(a) * ring * len * sx;
+          p.y = y * len * sy;
+          p.z = Math.sin(a) * ring * len;
+        }
+        p.w = base * (0.75 + rand(p.seed + 3) * 0.55);
         size(p);
       });
-      // The page scrolls for as long as it takes to pull back through the field.
-      var travel = ((n - 1) * GAP + (n > 1 ? NEAR : 0) + END_EXTRA) / Z_PER_PX;
+      // Scroll far enough to fly right through the sphere.
+      var travel = (2 * R + NEAR) / Z_PER_PX;
       root.style.height = Math.round(H + travel) + "px";
     }
 
@@ -821,27 +831,28 @@
     function startY() { return 0; }
 
     function draw(t) {
-      var floatAmt = calmMotion ? 0 : 10;
-      // Each photo turns back to face you while the field orbits.
-      // (Most of the way, so they never go edge-on but the tilt still shows.)
-      var face = " rotateY(" + (-(yaw + tiltX) * FACE).toFixed(3) + "deg) rotateX(" + (-(pitch + tiltY) * FACE).toFixed(3) + "deg)";
-      world.style.transform = "translateZ(" + (-PIVOT) + "px) rotateX(" + (pitch + tiltY).toFixed(3) + "deg) rotateY(" + (yaw + tiltX).toFixed(3) + "deg) translateZ(" + PIVOT + "px)";
+      var floatAmt = calmMotion ? 0 : 6;
+      var ry = yaw + spin + tiltX, rx = pitch + tiltY;
+      // Keep the photos facing you as the sphere turns, with a little of the
+      // turn left in so the 3D shows.
+      var wrap = ((ry % 360) + 540) % 360 - 180;
+      var lean = Math.max(-14, Math.min(14, wrap * 0.3));
+      var face = " rotateY(" + (-ry + lean).toFixed(3) + "deg) rotateX(" + (-rx * 0.7).toFixed(3) + "deg)";
+      world.style.transform = "translateZ(" + (cam - R).toFixed(1) + "px) rotateX(" + rx.toFixed(3) + "deg) rotateY(" + ry.toFixed(3) + "deg)";
+      var cy = Math.cos(ry * Math.PI / 180), sy = Math.sin(ry * Math.PI / 180);
+      var cx = Math.cos(rx * Math.PI / 180), sx = Math.sin(rx * Math.PI / 180);
       for (var k = 0; k < visible.length; k++) {
         var p = visible[k];
-        // Scrolling down (cam grows) moves every photo further away.
-        // Featured #1 starts right in view (z = 0); the rest start behind you.
-        var z = p.slot ? p.slot * GAP + NEAR - cam : -cam;
+        // Where the photo is now, along the line of sight (after the turn).
+        var z1 = -p.x * sy + p.z * cy;
+        var z = cam - R + (p.y * sx + z1 * cx);
         var o = 1;
-        if (z < -FAR) o = 0;
-        else if (z < -FAR + FADE_OUT) o = (z + FAR) / FADE_OUT;
         if (z > NEAR) o = 0;
-        else if (z > NEAR - NEAR_FADE) o = Math.min(o, (NEAR - z) / NEAR_FADE);
+        else if (z > NEAR - NEAR_FADE) o = (NEAR - z) / NEAR_FADE;
         if (!introDone) o *= p.reveal || 0;
-        if (z > -FAR && z < NEAR) {
-          var fx = Math.sin(t / 2600 + p.seed * 1.7) * floatAmt;
-          var fy = Math.cos(t / 3100 + p.seed * 2.3) * floatAmt;
-          p.node.style.transform = "translate3d(" + (p.x + fx).toFixed(1) + "px," + (p.y + fy).toFixed(1) + "px," + z.toFixed(1) + "px)" + face;
-        }
+        var fx = Math.sin(t / 2600 + p.seed * 1.7) * floatAmt;
+        var fy = Math.cos(t / 3100 + p.seed * 2.3) * floatAmt;
+        p.node.style.transform = "translate3d(" + (p.x + fx).toFixed(1) + "px," + (p.y + fy).toFixed(1) + "px," + p.z.toFixed(1) + "px)" + face;
         if (o <= 0.001) {
           if (p.shown) { p.node.style.visibility = "hidden"; p.shown = false; }
           continue;
@@ -856,6 +867,9 @@
       if (!running) return;
       var ease = calmMotion ? 1 : 0.09;
       cam += (camTarget - cam) * ease;
+      var dt = lastT ? Math.min(100, t - lastT) : 0;
+      lastT = t;
+      if (introDone && !calmMotion && !dragging) spin += SPIN * dt / 1000;
       if (!dragging) {
         // Glide on a little after a drag or swipe.
         yawT = clamp(yawT + velX * DEG_PER_PX, -YAW_MAX, YAW_MAX);
@@ -871,34 +885,9 @@
       draw(t);
       var still = Math.abs(camTarget - cam) < 0.3 && !velX && !velY && Math.abs(yawT - yaw) < 0.01 && Math.abs(pitchT - pitch) < 0.01 &&
         Math.abs(tiltTX - tiltX) < 0.01 && Math.abs(tiltTY - tiltY) < 0.01;
-      if ((calmMotion && still) || !onScreen) { running = false; return; }
+      // The slow spin keeps it moving; it only rests when off screen (or for reduced motion).
+      if ((calmMotion && still) || !onScreen) { running = false; lastT = 0; return; }
       requestAnimationFrame(frame);
-    }
-    // After the intro (and when a tag is chosen), the camera flies on its own
-    // through the whole gallery and stops with the last photo at the front, so
-    // visitors see everything that's there. Scrolling back up retraces it.
-    // Any scroll, tap, drag or key press stops the flight where it is.
-    var flyRaf = null;
-    var FLY_STOP = ["wheel", "touchstart", "keydown", "pointerdown"];
-    function stopFly() {
-      if (flyRaf) { cancelAnimationFrame(flyRaf); flyRaf = null; }
-      FLY_STOP.forEach(function (ev) { window.removeEventListener(ev, stopFly); });
-    }
-    function flyThrough() {
-      stopFly();
-      if (calmMotion || visible.length < 2) return;
-      var from = window.scrollY;
-      var to = Math.round(fieldTop() + ((visible.length - 1) * GAP + NEAR) / Z_PER_PX);
-      var dur = Math.min(7000, 2000 + visible.length * 160);
-      var start = performance.now();
-      var ease = function (t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
-      FLY_STOP.forEach(function (ev) { window.addEventListener(ev, stopFly, { passive: true }); });
-      var step = function (now) {
-        var t = Math.min(1, (now - start) / dur);
-        window.scrollTo(0, Math.round(from + (to - from) * ease(t)));
-        if (t < 1) flyRaf = requestAnimationFrame(step); else stopFly();
-      };
-      flyRaf = requestAnimationFrame(step);
     }
 
     function wake() {
@@ -1024,11 +1013,11 @@
       });
       layout();
       if (animate) {
-        // Back to the first photo, then fly through this gallery's photos.
+        // Back to the start.
         window.scrollTo(0, startY());
         readScroll();
-        cam = camTarget;
-        setTimeout(flyThrough, 300);
+        cam = calmMotion ? camTarget : camTarget - 900; // the new sphere zooms in from further away
+        spin = 0;
         yawT = pitchT = velX = velY = 0;
       }
       wake();
@@ -1135,9 +1124,8 @@
           var start = performance.now();
           var reveal = function (now) {
             var t = (now - start) / 900;
-            visible.forEach(function (p, k) { if (k) p.reveal = Math.max(0, Math.min(1, t * 2)); });
-            if (t < 1.6) requestAnimationFrame(reveal);
-            else { stopIntro(); setTimeout(flyThrough, 350); }
+            visible.forEach(function (p, k) { if (k) p.reveal = Math.max(0, Math.min(1, t * 2.2 - (R - p.z) / (2 * R) * 1.2)); });
+            if (t < 1.6) requestAnimationFrame(reveal); else stopIntro();
             wake();
           };
           requestAnimationFrame(reveal);
