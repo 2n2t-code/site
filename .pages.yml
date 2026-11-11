@@ -339,6 +339,10 @@ content:
     path: data/music.json
     format: json
     fields:
+      - name: intro
+        label: Introduction (optional)
+        type: text
+        description: A short line under the Music heading. While it's empty, nothing shows.
       - name: releases
         label: Bandcamp releases
         type: object

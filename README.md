@@ -49,7 +49,7 @@ The sections in the CMS:
 | **Homepage** | `data/home.json` | Headline, small text, showreel video, Photography/Music tile images, bottom "Got a project" section |
 | **SEO** | `data/seo.json` | Meta Title and Meta Description for Home, Video Production, Photography, Music, About and Contact |
 | **Photography** | `data/photos.json` | Featured photos (main Photography page) and the six gallery pages |
-| **Music** | `data/music.json` | Bandcamp releases and band Spotify players |
+| **Music** | `data/music.json` | Optional introduction line, Bandcamp releases and band Spotify players. The Music page is set in capitals and centred on desktop |
 | **About page** | `data/about.json` | Intro line, portrait, bio, "What I do" |
 | **Contact & social links** | `data/site.json` | Email (footer and contact form), location, social links, Site address, and the **page backgrounds** for Video Production, Photography and Music with a darkness setting |
 

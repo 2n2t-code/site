@@ -113,7 +113,8 @@
         photos: featuredPhotos(d.photos || {}),
         photoCategories: (d.photos || {}).categories || [],
         tracks: (d.music || {}).releases || [],
-        bands: (d.music || {}).bands || []
+        bands: (d.music || {}).bands || [],
+        musicIntro: (d.music || {}).intro || ""
       };
     });
   }
@@ -1351,6 +1352,11 @@
     // Releases are sorted automatically: Bandcamp albums/EPs on one row,
     // singles (Bandcamp tracks or your own audio files) on another.
     // Set type: "album" or type: "single" on a release to override.
+    var intro = document.getElementById("music-intro");
+    if (intro) {
+      intro.textContent = String(content.musicIntro || "").trim();
+      intro.hidden = !intro.textContent;
+    }
     var tracks = content.tracks || [];
     function isAlbum(t) {
       if (t.type) return t.type === "album";
