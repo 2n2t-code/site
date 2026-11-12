@@ -7,6 +7,10 @@
     "title": "2N2T Productions | Video Production | Manchester",
     "description": "Video production by 2N2T in Manchester: Live In Session, showreels, music videos, brand films and edits."
   },
+  "session": {
+    "title": "Live In Session: Studio Video Production for Bands and Musicians | 2N2T Productions",
+    "description": "Live In Session music videos by 2N2T in Manchester: multi-camera filming with audio by engineer Jim. Packages, prices and how to book."
+  },
   "photography": {
     "title": "2N2T Photography | Manchester",
     "description": "Photography by 2N2T in Manchester: wedding, landscape, portrait, music, street and film photography."
@@ -22,9 +26,5 @@
   "contact": {
     "title": "Contact 2N2T ",
     "description": "Contact 2N2T for video production, Live In Session, photography and music in Manchester and the North West."
-  },
-  "session": {
-    "title": "Live In Session Filming in Manchester | 2N2T",
-    "description": "Live In Session music videos by 2N2T in Manchester: multi-camera filming with audio by engineer Jim. Packages, prices and how to book."
   }
 }
