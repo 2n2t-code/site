@@ -4,7 +4,8 @@ Plain HTML, CSS and vanilla JS. No framework and no build step. Content is edite
 
 ```
 index.html              Homepage (showreel hero, selected work, Photography/Music tiles)
-film/index.html         Video Production (Live In Session first, then other work)
+video-production/index.html  Video Production (Live In Session first, then other work)
+film/index.html         Forwards old /film/ links to /video-production/
 live-in-session/index.html  Live In Session: packages, prices, booking, audio engineer, recent sessions
 photography/index.html  3D photo field (with gallery tags) + gallery cards
 photography/*/          Gallery pages (weddings, landscape, portraits, music, street, film)
