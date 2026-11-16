@@ -41,7 +41,7 @@ Then visit http://localhost:8000.
 
 1. Go to https://app.pagescms.org and sign in with GitHub.
 2. Open the **2n2t-code/site** repository. On the first visit, Pages CMS asks you to install its GitHub app on this repository.
-3. Edit, then **Save**. Each save is a change on GitHub, and GitHub Pages publishes it within a minute or two.
+3. Edit, then **Save**. Each save is a change on GitHub, and it's published to 2n2t.com within a minute or two.
 
 The sections in the CMS:
 
@@ -103,40 +103,17 @@ The fonts are system fonts, so nothing downloads. To use a web font, add its `<l
 - Page addresses, preview images, `sitemap.xml` and `robots.txt` use the **Site address** under **Contact & social links** in the CMS (currently `https://2n2t.com`). If the domain ever changes, change it there. The next publish updates every page (`scripts/apply_seo.py`).
 - The homepage includes schema.org `ProfessionalService` data. Update the email and `sameAs` social links there too.
 
-## Deploy
+## Hosting and publishing
 
-### Netlify
+**https://2n2t.com** is hosted on a friend's cPanel server (`gordons.hostns.io`, Thunderhat), in the `public_html` folder.
 
-1. Go to https://app.netlify.com/drop and drag this whole folder onto the page. It's live within seconds.
-   Alternatively, push the folder to GitHub, then in Netlify choose **Add new site → Import from Git**. Leave the build command empty and set the publish directory to `/`.
-2. Go to **Domain settings → Add custom domain → `2n2t.com`**, then follow the DNS instructions. HTTPS is set up automatically.
-3. Netlify uses `404.html` automatically.
+- **Domain:** registered with Spaceship. Its nameservers are `ns1.thunderhat.com` and `ns2.thunderhat.com`, so the DNS records (including Google's `google-site-verification` TXT record) are managed on the Thunderhat side.
+- **Publishing:** every change on GitHub, including CMS saves, runs `.github/workflows/pages.yml` ("Publish site"). It writes the SEO text into the pages (`scripts/apply_seo.py`), then uploads the site over SSH (SFTP):
+  - only changed photos and videos are sent; the pages, styles, scripts and content files are re-sent every time
+  - nothing on the server is ever deleted (remove old files by hand in cPanel's File Manager if needed)
+  - never uploaded: the repository's history, `.github/`, `scripts/`, notes, and the full-size originals
+  - afterwards it checks the files arrived, where 2n2t.com points, and that the main pages load
+- **Login:** the SSH key is stored in GitHub's secrets as `SSH_PRIVATE_KEY`, and its passphrase as `FTP_PASSWORD` (Settings → Secrets and variables → Actions). The server's identity is pinned in `.github/known_hosts` (fingerprints confirmed with the server's owner), so the upload refuses to connect to any other server. If the server's SSH keys are ever changed, those lines need updating.
+- **`.htaccess`:** shows `404.html` for missing pages, forces https:// and 2n2t.com (without www), permanently redirects `/film/` to `/video-production/`, and blocks the full-size originals folders.
 
-### GitHub Pages
-
-1. Create a repo, then commit and push this folder to the `main` branch:
-
-   ```bash
-   git init
-   ```
-
-   ```bash
-   git add . && git commit -m "2N2T site"
-   ```
-
-   ```bash
-   git remote add origin https://github.com/YOUR-USER/2n2t.git
-   ```
-
-   ```bash
-   git push -u origin main
-   ```
-
-2. On a free GitHub account, Pages only works for **public** repositories. To make yours public, open **Settings → General → Danger Zone → Change visibility**.
-3. In the repo, open **Settings → Pages → Build and deployment** and set **Source** to **GitHub Actions**. The workflow in `.github/workflows/pages.yml` then publishes the site on every change, after writing the CMS's SEO text into the pages.
-4. The site is live at **https://2n2t.com** (the old address, `https://2n2t-code.github.io/site/`, forwards there automatically).
-5. **Custom domain (2n2t.com, registered with Spaceship):** set in **Settings → Pages → Custom domain**, with **Enforce HTTPS** ticked. At Spaceship (Domain manager → 2n2t.com → Advanced DNS) there are GitHub's four `A` records for the domain (`185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`) and a `CNAME` record for `www` pointing to `2n2t-code.github.io`. Don't remove those, or the site goes offline.
-
-All links between pages are relative, so the site works both at `2n2t-code.github.io/site/` and on a custom domain. `404.html` works out where the site's root is when it loads.
-
-When you add a custom domain, also change **Site address** in the CMS (Contact & social links) so page addresses, link previews and the sitemap use it.
+All links between pages are relative, so the site also works from any folder on any web server.

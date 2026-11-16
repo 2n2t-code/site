@@ -1,8 +1,7 @@
-# Publishes the site to GitHub Pages on every change to main
-# (including saves from Pages CMS). Before publishing it writes the SEO text
-# from the CMS into the page files (scripts/apply_seo.py).
-#
-# One-time setting: Settings → Pages → Build and deployment → Source: "GitHub Actions".
+# Publishes the site on every change to main (including saves from Pages CMS):
+# writes the SEO text from the CMS into the pages (scripts/apply_seo.py), then
+# uploads the site to the web server (gordons.hostns.io, public_html) over SSH.
+# 2n2t.com is hosted there; its DNS is managed by Thunderhat (ns1/ns2.thunderhat.com).
 name: Publish site
 
 on:
@@ -12,33 +11,13 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
   group: pages
   cancel-in-progress: true
 
 jobs:
-  publish:
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - uses: actions/checkout@v4
-      - name: Write SEO text from the CMS into the pages
-        run: python3 scripts/apply_seo.py
-      - name: Leave full-size originals out of the published site (it only uses the Web copies)
-        run: rm -rf assets/img/photos/Original assets/video/Original
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: .
-      - id: deployment
-        uses: actions/deploy-pages@v4
-
-  # Also uploads the same site to your web server over SSH (SFTP).
+  # Uploads the site to your web server over SSH (SFTP).
   # - The server's identity is in .github/known_hosts (fingerprints confirmed
   #   with the server's owner); the upload refuses any other server.
   # - The login key is the SSH_PRIVATE_KEY secret, and its passphrase the
