@@ -46,7 +46,7 @@ jobs:
     name: Upload to web server (FTP)
     runs-on: ubuntu-latest
     env:
-      FTP_SERVER: "gordons.hostns.io"  # the server's address (its full hostname)
+      FTP_SERVER: ""  # paused: gordons.hostns.io's FTP certificate is self-signed; switching to SSH
       FTP_USERNAME: "alexbennett"      # the FTP username
       FTP_DIR: "public_html"  # the folder the website goes in ("." if the FTP login opens inside it)
     steps:
