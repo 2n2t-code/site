@@ -1,0 +1,20 @@
+# Settings for Apache web servers (e.g. cPanel hosting). GitHub Pages ignores this file.
+
+# Your own "page not found" page.
+ErrorDocument 404 /404.html
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # Always use https:// and the address without www.
+  RewriteCond %{HTTPS} off [OR]
+  RewriteCond %{HTTP_HOST} ^www\. [NC]
+  RewriteCond %{REQUEST_URI} !^/\.well-known/
+  RewriteRule ^ https://2n2t.com%{REQUEST_URI} [L,R=301]
+  # Video Production moved from /film/ to /video-production/.
+  RewriteRule ^film/?$ /video-production/ [L,R=301]
+</IfModule>
+
+# Don't serve the full-size originals (they're only used to make the web versions).
+<IfModule mod_rewrite.c>
+  RewriteRule ^assets/(img/photos|video)/Original/ - [F,L]
+</IfModule>

@@ -37,3 +37,43 @@ jobs:
           path: .
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  # Also uploads the same site to your own web server by FTP (encrypted, FTPS).
+  # Fill in the three settings below; the password goes in GitHub's secrets as
+  # FTP_PASSWORD (Settings → Secrets and variables → Actions). While FTP_SERVER
+  # is empty, this job does nothing.
+  ftp:
+    name: Upload to web server (FTP)
+    runs-on: ubuntu-latest
+    env:
+      FTP_SERVER: ""     # the server's address, e.g. its IP or server1.example.com
+      FTP_USERNAME: ""   # the FTP username
+      FTP_DIR: "public_html"  # the folder the website goes in ("." if the FTP login opens inside it)
+    steps:
+      - uses: actions/checkout@v4
+        if: env.FTP_SERVER != ''
+      - name: Write SEO text from the CMS into the pages
+        if: env.FTP_SERVER != ''
+        run: python3 scripts/apply_seo.py
+      # Photos, videos etc. upload only when new or changed in size; the small
+      # text files (pages, styles, scripts, content) are re-sent every time.
+      # Nothing on the server is ever deleted.
+      - name: Upload the site
+        if: env.FTP_SERVER != ''
+        env:
+          LFTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          sudo apt-get -qq update && sudo apt-get -qq install -y lftp >/dev/null
+          # Never uploaded: the repository's history and settings, the publishing
+          # scripts, notes, and the full-size originals.
+          EXCLUDES="-x ^\\.git/ -x ^\\.github/ -x ^\\.gitignore$ -x ^scripts/ -x ^README\\.md$ -x ^\\.pages\\.yml$ -x ^\\.nojekyll$ -x /Original/ -x ^\\.well-known/ -x ^cgi-bin/"
+          lftp -c "
+            set ftp:ssl-force true; set ftp:ssl-protect-data true; set ssl:verify-certificate ${FTP_VERIFY_CERT:-yes};
+            set net:max-retries 3; set net:timeout 30;
+            open --env-password -u '$FTP_USERNAME' '$FTP_SERVER';
+            mirror -R --ignore-time --parallel=4 --verbose=1 $EXCLUDES ./ '$FTP_DIR';
+            mirror -R --parallel=4 --verbose=1 \
+              --include-glob *.html --include-glob *.css --include-glob *.js --include-glob *.json \
+              --include-glob *.xml --include-glob *.txt --include-glob *.svg --include-glob .htaccess \
+              $EXCLUDES ./ '$FTP_DIR'
+          "
