@@ -84,6 +84,24 @@ jobs:
               --include-glob *.xml --include-glob *.txt --include-glob *.svg --include-glob .htaccess \
               $EXCLUDES ./ '$SITE_DIR'
           "
+      # Files listed in .github/remove-from-server.txt (paths inside the site
+      # folder, one per line) are deleted from the server on every publish.
+      - name: Remove files that no longer belong on the server
+        if: env.SSH_HOST != ''
+        run: |
+          CMDS=""
+          while IFS= read -r f || [ -n "$f" ]; do
+            f="${f%%#*}"; f="$(printf '%s' "$f" | sed 's/^[[:space:]]*//; s/[[:space:]]*$//')"
+            case "$f" in ""|/*|*..*|*"'"*) continue;; esac
+            CMDS="$CMDS rm -f '$f';"
+          done < .github/remove-from-server.txt
+          if [ -n "$CMDS" ]; then
+            lftp -c "
+              set sftp:connect-program 'ssh -a -x -i $HOME/.ssh/deploy_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$HOME/.ssh/known_hosts';
+              open -u '$SSH_USER,' 'sftp://$SSH_HOST';
+              cd '$SITE_DIR'; $CMDS
+            " && echo "Removed (if present):$(echo "$CMDS" | sed "s/rm -f//g; s/;/,/g")"
+          fi
       - name: Check the upload
         if: env.SSH_HOST != ''
         run: |

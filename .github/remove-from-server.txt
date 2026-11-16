@@ -1,0 +1,9 @@
+# Files to delete from the web server (paths inside public_html, one per line).
+# Every publish removes them if they're there; the upload itself never deletes.
+
+# Moved to assets/img/photos/Original (they'd been uploaded to the top level by mistake).
+AlexJimSilkMillBTS-01.jpg
+AlexJimSilkMillBTS-02.jpg
+AlexJimSilkMillBTS-03.jpg
+AlexJimSilkMillBTS-04.jpg
+AlexJimSilkMillBTS-05.jpg

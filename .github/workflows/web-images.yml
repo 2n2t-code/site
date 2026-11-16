@@ -12,6 +12,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: web-images
@@ -53,3 +54,10 @@ jobs:
             sleep $((attempt * 5))
           done
           exit 1
+      # Saves made by this workflow don't start other workflows by themselves,
+      # so start the site publish explicitly once the web versions are saved.
+      - name: Publish the site
+        if: steps.save.outputs.pushed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run pages.yml --ref main

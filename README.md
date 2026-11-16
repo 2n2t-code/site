@@ -110,7 +110,7 @@ The fonts are system fonts, so nothing downloads. To use a web font, add its `<l
 - **Domain:** registered with Spaceship. Its nameservers are `ns1.thunderhat.com` and `ns2.thunderhat.com`, so the DNS records (including Google's `google-site-verification` TXT record) are managed on the Thunderhat side.
 - **Publishing:** every change on GitHub, including CMS saves, runs `.github/workflows/pages.yml` ("Publish site"). It writes the SEO text into the pages (`scripts/apply_seo.py`), then uploads the site over SSH (SFTP):
   - only changed photos and videos are sent; the pages, styles, scripts and content files are re-sent every time
-  - nothing on the server is ever deleted (remove old files by hand in cPanel's File Manager if needed)
+  - the upload never deletes anything on the server; to remove a file from the server, add its path (inside `public_html`) to `.github/remove-from-server.txt` and it's deleted on the next publish
   - never uploaded: the repository's history, `.github/`, `scripts/`, notes, and the full-size originals
   - afterwards it checks the files arrived, where 2n2t.com points, and that the main pages load
 - **Login:** the SSH key is stored in GitHub's secrets as `SSH_PRIVATE_KEY`, and its passphrase as `FTP_PASSWORD` (Settings → Secrets and variables → Actions). The server's identity is pinned in `.github/known_hosts` (fingerprints confirmed with the server's owner), so the upload refuses to connect to any other server. If the server's SSH keys are ever changed, those lines need updating.
