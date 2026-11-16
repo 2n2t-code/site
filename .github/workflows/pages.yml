@@ -38,42 +38,69 @@ jobs:
       - id: deployment
         uses: actions/deploy-pages@v4
 
-  # Also uploads the same site to your own web server by FTP (encrypted, FTPS).
-  # Fill in the three settings below; the password goes in GitHub's secrets as
-  # FTP_PASSWORD (Settings → Secrets and variables → Actions). While FTP_SERVER
-  # is empty, this job does nothing.
-  ftp:
-    name: Upload to web server (FTP)
+  # Also uploads the same site to your web server over SSH (SFTP).
+  # - The server's identity is in .github/known_hosts (fingerprints confirmed
+  #   with the server's owner); the upload refuses any other server.
+  # - The login key is the SSH_PRIVATE_KEY secret, and its passphrase the
+  #   FTP_PASSWORD secret (Settings → Secrets and variables → Actions).
+  # While SSH_HOST is empty, this job does nothing.
+  upload:
+    name: Upload to web server (SSH)
     runs-on: ubuntu-latest
     env:
-      FTP_SERVER: ""  # paused: gordons.hostns.io's FTP certificate is self-signed; switching to SSH
-      FTP_USERNAME: "alexbennett"      # the FTP username
-      FTP_DIR: "public_html"  # the folder the website goes in ("." if the FTP login opens inside it)
+      SSH_HOST: "gordons.hostns.io"  # the server's full hostname
+      SSH_USER: "alexbennett"        # the account username
+      SITE_DIR: "public_html"        # the folder the website goes in
     steps:
       - uses: actions/checkout@v4
-        if: env.FTP_SERVER != ''
+        if: env.SSH_HOST != ''
       - name: Write SEO text from the CMS into the pages
-        if: env.FTP_SERVER != ''
+        if: env.SSH_HOST != ''
         run: python3 scripts/apply_seo.py
+      - name: Set up the login key and the server's identity
+        if: env.SSH_HOST != ''
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          KEY_PASSPHRASE: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/deploy_key && chmod 600 ~/.ssh/deploy_key
+          # This copy of the key lives only on GitHub's temporary machine, which
+          # is wiped after the run; unlock it there so the upload can use it.
+          ssh-keygen -p -P "$KEY_PASSPHRASE" -N "" -f ~/.ssh/deploy_key >/dev/null 2>&1 \
+            || ssh-keygen -y -P "" -f ~/.ssh/deploy_key >/dev/null \
+            || { echo "The SSH key couldn't be unlocked: check the SSH_PRIVATE_KEY and FTP_PASSWORD secrets."; exit 1; }
+          cp .github/known_hosts ~/.ssh/known_hosts && chmod 600 ~/.ssh/known_hosts
+          sudo apt-get -qq update && sudo apt-get -qq install -y lftp >/dev/null
       # Photos, videos etc. upload only when new or changed in size; the small
       # text files (pages, styles, scripts, content) are re-sent every time.
       # Nothing on the server is ever deleted.
       - name: Upload the site
-        if: env.FTP_SERVER != ''
-        env:
-          LFTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        if: env.SSH_HOST != ''
         run: |
-          sudo apt-get -qq update && sudo apt-get -qq install -y lftp >/dev/null
           # Never uploaded: the repository's history and settings, the publishing
           # scripts, notes, and the full-size originals.
           EXCLUDES="-x ^\\.git/ -x ^\\.github/ -x ^\\.gitignore$ -x ^scripts/ -x ^README\\.md$ -x ^\\.pages\\.yml$ -x ^\\.nojekyll$ -x /Original/ -x ^\\.well-known/ -x ^cgi-bin/"
           lftp -c "
-            set ftp:ssl-force true; set ftp:ssl-protect-data true; set ssl:verify-certificate ${FTP_VERIFY_CERT:-yes};
+            set sftp:connect-program 'ssh -a -x -i $HOME/.ssh/deploy_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$HOME/.ssh/known_hosts';
             set net:max-retries 3; set net:timeout 30;
-            open --env-password -u '$FTP_USERNAME' '$FTP_SERVER';
-            mirror -R --ignore-time --parallel=4 --verbose=1 $EXCLUDES ./ '$FTP_DIR';
+            open -u '$SSH_USER,' 'sftp://$SSH_HOST';
+            mirror -R --ignore-time --parallel=4 --verbose=1 $EXCLUDES ./ '$SITE_DIR';
             mirror -R --parallel=4 --verbose=1 \
               --include-glob *.html --include-glob *.css --include-glob *.js --include-glob *.json \
               --include-glob *.xml --include-glob *.txt --include-glob *.svg --include-glob .htaccess \
-              $EXCLUDES ./ '$FTP_DIR'
+              $EXCLUDES ./ '$SITE_DIR'
           "
+      - name: Check the upload
+        if: env.SSH_HOST != ''
+        run: |
+          lftp -c "
+            set sftp:connect-program 'ssh -a -x -i $HOME/.ssh/deploy_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$HOME/.ssh/known_hosts';
+            open -u '$SSH_USER,' 'sftp://$SSH_HOST';
+            cd '$SITE_DIR'; cls -1; cat index.html
+          " > check.txt
+          echo "== files in $SITE_DIR:"; grep -v '<' check.txt | head -40
+          echo "== homepage title on the server:"; grep -o '<title>[^<]*</title>' check.txt | head -1
+          echo "== the server answering for 2n2t.com (before or after the DNS switch):"
+          curl -sS -o /dev/null -w "http://2n2t.com/video-production/ -> %{http_code} %{redirect_url}\n" --resolve 2n2t.com:80:91.238.160.176 http://2n2t.com/video-production/ || true
+          curl -sS -o /dev/null -w "http://2n2t.com/film/ -> %{http_code} %{redirect_url}\n" --resolve 2n2t.com:80:91.238.160.176 http://2n2t.com/film/ || true
