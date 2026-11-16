@@ -64,7 +64,12 @@ jobs:
           KEY_PASSPHRASE: ${{ secrets.FTP_PASSWORD }}
         run: |
           mkdir -p ~/.ssh && chmod 700 ~/.ssh
-          printf '%s\n' "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/deploy_key && chmod 600 ~/.ssh/deploy_key
+          printf '%s\n' "$SSH_PRIVATE_KEY" | tr -d '\r' | sed '/^[[:space:]]*$/d; s/^[[:space:]]*//; s/[[:space:]]*$//' > ~/.ssh/deploy_key
+          # If the BEGIN/END lines were left off when pasting the secret, put them back.
+          if ! head -1 ~/.ssh/deploy_key | grep -q -- '-----BEGIN'; then
+            { echo "-----BEGIN OPENSSH PRIVATE KEY-----"; cat ~/.ssh/deploy_key; echo "-----END OPENSSH PRIVATE KEY-----"; } > ~/.ssh/k && mv ~/.ssh/k ~/.ssh/deploy_key
+          fi
+          chmod 600 ~/.ssh/deploy_key
           # This copy of the key lives only on GitHub's temporary machine, which
           # is wiped after the run; unlock it there so the upload can use it.
           if ! ssh-keygen -y -P "" -f ~/.ssh/deploy_key >/dev/null 2>err.txt; then
