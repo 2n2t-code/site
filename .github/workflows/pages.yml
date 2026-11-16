@@ -115,6 +115,17 @@ jobs:
           " > check.txt
           echo "== files in $SITE_DIR:"; grep -v '<' check.txt | head -40
           echo "== homepage title on the server:"; grep -o '<title>[^<]*</title>' check.txt | head -1
+          echo "== where 2n2t.com points (nameservers, then addresses):"
+          dig +short NS 2n2t.com @1.1.1.1 || true
+          dig +short A 2n2t.com @1.1.1.1 || true
+          dig +short A www.2n2t.com @1.1.1.1 || true
+          echo "== https://2n2t.com as visitors see it:"
+          curl -sS -o /dev/null -w "https://2n2t.com/ -> %{http_code}, served from %{remote_ip}\n" https://2n2t.com/ || echo "https://2n2t.com/ failed (e.g. no certificate yet)"
+          curl -sS -o /dev/null -w "https://www.2n2t.com/ -> %{http_code} %{redirect_url}\n" https://www.2n2t.com/ || true
+          curl -sS -o /dev/null -w "https://2n2t.com/film/ -> %{http_code} %{redirect_url}\n" https://2n2t.com/film/ || true
+          for p in video-production/ live-in-session/ photography/ music/ about/ contact/ main.js style.css no-such-page; do
+            curl -sS -o /dev/null -w "  /$p -> %{http_code}\n" "https://2n2t.com/$p" || true
+          done
           echo "== the server answering for 2n2t.com (before or after the DNS switch):"
           curl -sS -o /dev/null -w "http://2n2t.com/video-production/ -> %{http_code} %{redirect_url}\n" --resolve 2n2t.com:80:91.238.160.176 http://2n2t.com/video-production/ || true
           curl -sS -o /dev/null -w "http://2n2t.com/film/ -> %{http_code} %{redirect_url}\n" --resolve 2n2t.com:80:91.238.160.176 http://2n2t.com/film/ || true
