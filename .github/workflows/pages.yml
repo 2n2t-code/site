@@ -72,15 +72,15 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           # This copy of the key lives only on GitHub's temporary machine, which
           # is wiped after the run; unlock it there so the upload can use it.
-          if ! ssh-keygen -y -P "" -f ~/.ssh/deploy_key >/dev/null 2>err.txt; then
-            if ! grep -q "incorrect passphrase" err.txt; then
+          if ! ssh-keygen -y -P "" -f ~/.ssh/deploy_key >/dev/null 2>"$RUNNER_TEMP/err.txt"; then
+            if ! grep -q "incorrect passphrase" "$RUNNER_TEMP/err.txt"; then
               # Safe details only (never the key itself), to help spot a paste problem.
               echo "Key check: $(wc -l < ~/.ssh/deploy_key) lines; first line: $(head -1 ~/.ssh/deploy_key | cut -c1-40); last line: $(tail -1 ~/.ssh/deploy_key | cut -c1-40)"
               echo "Line lengths: $(awk '{print length}' ~/.ssh/deploy_key | sort -n | uniq -c | tr '\n' ' ')"
-              echo "Key hash: $(sha256sum ~/.ssh/deploy_key | cut -c1-16)  ($(cat err.txt | sed 's#/home/runner/##'))"
+              echo "Key hash: $(sha256sum ~/.ssh/deploy_key | cut -c1-16)  ($(cat "$RUNNER_TEMP/err.txt" | sed 's#/home/runner/##'))"
               echo "::error::The SSH_PRIVATE_KEY secret isn't a complete key (it may have been changed when pasted). Paste the whole key file again, from -----BEGIN to -----END."; exit 1
             fi
-            if ! ssh-keygen -p -P "$KEY_PASSPHRASE" -N "" -f ~/.ssh/deploy_key >/dev/null 2>err.txt; then
+            if ! ssh-keygen -p -P "$KEY_PASSPHRASE" -N "" -f ~/.ssh/deploy_key >/dev/null 2>"$RUNNER_TEMP/err.txt"; then
               echo "::error::The key's passphrase is wrong: check the FTP_PASSWORD secret (it must be the key's passphrase)."; exit 1
             fi
           fi
@@ -111,7 +111,7 @@ jobs:
           lftp -c "
             set sftp:connect-program 'ssh -a -x -i $HOME/.ssh/deploy_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$HOME/.ssh/known_hosts';
             open -u '$SSH_USER,' 'sftp://$SSH_HOST';
-            cd '$SITE_DIR'; cls -1; cat index.html
+            cd '$SITE_DIR'; rm -f err.txt; cls -1; cat index.html
           " > check.txt
           echo "== files in $SITE_DIR:"; grep -v '<' check.txt | head -40
           echo "== homepage title on the server:"; grep -o '<title>[^<]*</title>' check.txt | head -1
