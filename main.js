@@ -1416,7 +1416,7 @@
     if (s.ctaText) byId("ses-cta-text").textContent = s.ctaText;
 
     // "Book a session" buttons: an email to you with the subject filled in.
-    var email = site.email || "2n2tproductions@gmail.com";
+    var email = site.email || "alex@2n2t.com";
     var subject = s.bookSubject || "Live In Session booking";
     document.querySelectorAll("[data-book]").forEach(function (a) {
       a.href = "mailto:" + email + "?subject=" + encodeURIComponent(subject);
