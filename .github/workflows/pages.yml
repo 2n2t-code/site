@@ -116,6 +116,13 @@ jobs:
           dig +short NS 2n2t.com @1.1.1.1 || true
           dig +short A 2n2t.com @1.1.1.1 || true
           dig +short A www.2n2t.com @1.1.1.1 || true
+          echo "== email for 2n2t.com (where mail is delivered, and the anti-spam records):"
+          echo "MX:"; dig +short MX 2n2t.com @1.1.1.1 || true
+          for h in $(dig +short MX 2n2t.com @1.1.1.1 | awk '{print $2}'); do echo "  $h -> $(dig +short A "$h" @1.1.1.1 | tr '\n' ' ')"; done
+          echo "mail.2n2t.com -> $(dig +short A mail.2n2t.com @1.1.1.1 | tr '\n' ' ')"
+          echo "SPF/TXT:"; dig +short TXT 2n2t.com @1.1.1.1 || true
+          echo "DKIM:"; dig +short TXT default._domainkey.2n2t.com @1.1.1.1 | cut -c1-60 || true
+          echo "Mail server ports on 91.238.160.176:"; for port in 25 465 587; do timeout 6 bash -c "echo > /dev/tcp/91.238.160.176/$port" 2>/dev/null && echo "  $port open" || echo "  $port closed/filtered"; done
           echo "== https://2n2t.com as visitors see it:"
           curl -sS -o /dev/null -w "https://2n2t.com/ -> %{http_code}, served from %{remote_ip}\n" https://2n2t.com/ || echo "https://2n2t.com/ failed (e.g. no certificate yet)"
           curl -sS -o /dev/null -w "https://www.2n2t.com/ -> %{http_code} %{redirect_url}\n" https://www.2n2t.com/ || true
