@@ -569,6 +569,13 @@
   }
 
   /* ---------- Footer, contact details (data/site.json) ---------- */
+  // Simple outline icons for the footer's social links.
+  var SOCIAL_ICONS = {
+    Instagram: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg>',
+    YouTube: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="4"/><path d="M10 9.2v5.6l4.8-2.8z" fill="currentColor" stroke="none"/></svg>',
+    LinkedIn: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10.5V17M8 7.4v.1M11.5 17v-6.5M11.5 13.3c0-1.7 1.1-2.8 2.5-2.8s2.5 1 2.5 2.8V17"/></svg>',
+    Bandcamp: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M8 6.5h13.5l-5.5 11H2.5z"/></svg>'
+  };
   function applySite(page) {
     var site = content.site || {};
     var email = site.email;
@@ -609,7 +616,10 @@
     if (social && (insta || site.youtube || site.linkedin)) {
       social.replaceChildren();
       links.forEach(function (l) {
-        if (l[1]) social.appendChild(el("li", null, [el("a", { href: l[1], rel: "me noopener", target: "_blank", text: l[0] })]));
+        if (!l[1]) return;
+        var link = el("a", { href: l[1], rel: "me noopener", target: "_blank", "aria-label": l[0], title: l[0] });
+        link.innerHTML = SOCIAL_ICONS[l[0]] || "";
+        social.appendChild(el("li", null, [link]));
       });
     }
 

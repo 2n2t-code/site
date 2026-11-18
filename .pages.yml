@@ -669,9 +669,6 @@ content:
     path: data/about.json
     format: json
     fields:
-      - name: intro
-        label: Line under the "About" heading
-        type: string
       - name: photo
         label: Portrait
         type: image

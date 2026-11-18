@@ -1056,3 +1056,129 @@ body[data-page="music"] main { text-transform: uppercase; }
   .ses-studio-top.has-photo { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-8); align-items: start; }
   .ses-studio-top.has-photo .ses-studio-photo { position: sticky; top: calc(var(--header-height) + var(--space-5)); }
 }
+
+/* ---------- About (feedback round) ---------- */
+/* No page heading: the photo and text start at the top, and the two columns sit
+   centred on the page whatever the screen width. */
+.about { padding-top: var(--space-7); justify-content: center; }
+.about-text { max-width: none; }
+@media (min-width: 900px) {
+  .about { grid-template-columns: minmax(280px, 420px) minmax(0, 65ch); }
+}
+/* "What I do": the site's headline style, bigger than the services below it. */
+.about-services-title {
+  font-family: var(--font-display); font-weight: 800; text-transform: uppercase;
+  font-size: var(--text-xl); letter-spacing: 0.01em; line-height: 1;
+  color: var(--color-text); margin: var(--space-7) 0 var(--space-4);
+}
+/* The services as a grid rather than one long list. */
+.services { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); column-gap: var(--space-5); }
+.services li, .services li:last-child { border-bottom: 0; padding: var(--space-4) 0; }
+.services li strong { font-size: var(--text-base); }
+
+/* ---------- Homepage intro (feedback round) ---------- */
+/* Bigger, brighter (near the headline's off-white) and close together, so
+   the short lines read as one block rather than separate paragraphs. */
+.home-intro-text p, .home-intro .home-intro-text p {
+  color: rgba(242, 239, 233, 0.86);
+  font-size: clamp(1.05rem, 0.95rem + 0.35vw, 1.25rem);
+  line-height: 1.55; margin: 0 0 0.35em;
+}
+.home-intro-text p:last-child { margin-bottom: var(--space-5); }
+
+/* ---------- Contact (feedback round) ---------- */
+/* One heading in the left column; the form starts level with it. */
+.contact { padding-top: var(--space-7); align-items: start; }
+.contact-title {
+  margin: 0 0 var(--space-6); font-family: var(--font-display); font-weight: 900;
+  text-transform: uppercase; line-height: 0.92; letter-spacing: 0.01em;
+  font-size: clamp(2.6rem, 1.6rem + 3vw, 4.4rem); color: var(--color-text);
+}
+.contact-kicker {
+  display: block; margin-bottom: var(--space-3);
+  font-family: var(--font-body); font-weight: 400; text-transform: none; letter-spacing: 0;
+  font-size: var(--text-lg); line-height: 1.4; color: var(--color-muted);
+}
+.contact-details .contact-title + .about-heading { margin-top: 0; }
+
+/* ---------- Footer (feedback round) ---------- */
+/* Social links as icons, on the same line as the email address. */
+.site-footer .social { gap: var(--space-3); align-items: center; }
+.site-footer .social a { display: grid; place-items: center; width: 36px; height: 36px; color: var(--color-muted); border-radius: 8px; transition: color var(--transition), background var(--transition); }
+.site-footer .social a:hover, .site-footer .social a:focus-visible { color: var(--color-text); background: rgba(255, 255, 255, 0.06); }
+.site-footer .social svg { width: 22px; height: 22px; }
+.site-footer { flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: flex-start; column-gap: var(--space-5); }
+.site-footer > p { flex-basis: 100%; }
+@media (min-width: 900px) {
+  .site-footer > p { flex-basis: auto; margin-left: auto; }
+}
+
+/* ---------- Video tiles (feedback round) ---------- */
+/* Stronger, taller shading behind the title and credits, so a logo or title
+   card in the thumbnail doesn't clash with the text laid over it. */
+.work-tile::after {
+  background:
+    linear-gradient(90deg, rgba(5, 6, 8, 0.9) 0%, rgba(5, 6, 8, 0.66) 38%, rgba(5, 6, 8, 0.12) 72%),
+    linear-gradient(0deg, rgba(5, 6, 8, 0.88) 0%, rgba(5, 6, 8, 0.5) 38%, rgba(5, 6, 8, 0) 70%);
+}
+.cine::after {
+  background:
+    linear-gradient(90deg, rgba(5, 6, 8, 0.88) 0%, rgba(5, 6, 8, 0.6) 36%, rgba(5, 6, 8, 0.08) 66%),
+    linear-gradient(0deg, rgba(5, 6, 8, 0.82) 0%, rgba(5, 6, 8, 0.35) 40%, rgba(5, 6, 8, 0) 62%),
+    radial-gradient(120% 100% at 50% 50%, transparent 60%, rgba(0, 0, 0, 0.45) 100%);
+}
+.work-tile .cine-title, .cine .cine-title, .work-tile .cine-song, .cine .cine-song { text-shadow: 0 2px 24px rgba(0, 0, 0, 0.55); }
+@media (max-width: 760px) {
+  .cine::after { background: linear-gradient(0deg, rgba(5, 6, 8, 0.94) 0%, rgba(5, 6, 8, 0.62) 48%, rgba(5, 6, 8, 0) 78%), radial-gradient(120% 100% at 50% 40%, transparent 55%, rgba(0, 0, 0, 0.45) 100%); }
+}
+
+/* ---------- Buttons (feedback round) ---------- */
+/* "Get in touch", "Book a session", "Send message": the same style as the
+   cream "Watch" buttons on the video tiles. */
+.button {
+  display: inline-flex; align-items: center; min-height: 52px; padding: 0 0 0 22px;
+  background: rgba(5, 6, 8, 0.15); color: var(--color-text);
+  border: 1.5px solid rgba(242, 239, 233, 0.9); border-radius: 10px;
+  font-family: var(--font-cine); font-weight: 800; font-size: 1rem; line-height: 1;
+  letter-spacing: 0.24em; text-transform: uppercase;
+  transition: background-color 0.3s, color 0.3s, transform var(--transition);
+}
+.button::after {
+  content: ""; align-self: stretch; width: 54px; margin-left: 16px;
+  border-left: 1.5px dashed currentColor;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f2efe9' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 12h15M13 6l6 6-6 6'/%3E%3C/svg%3E") center / 20px no-repeat;
+}
+.button:hover, .button:focus-visible { background: var(--color-text); color: #0b0b0d; filter: none; transform: none; }
+.button:hover::after, .button:focus-visible::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230b0b0d' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 12h15M13 6l6 6-6 6'/%3E%3C/svg%3E");
+}
+/* "Got a project in mind?" (and Live In Session's "Ready to book?"): the
+   line under the heading in the site's headline font too. */
+.home-cta p {
+  font-family: var(--font-display); font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.12em; font-size: 0.95rem; line-height: 1.6; color: rgba(242, 239, 233, 0.7);
+  max-width: 62ch; margin-left: auto; margin-right: auto;
+}
+
+/* ---------- Video Production dropdown (feedback round) ---------- */
+/* Hangs straight down from the menu bar, in the bar's own colour, like part
+   of it; brighter text; a quick fade. (The item sits centred in the bar, so
+   half the bar's height plus half the item's height reaches the bar's edge.) */
+@media (min-width: 900px) {
+  .site-header .site-nav .sub-nav {
+    top: calc(var(--header-height) / 2 + 50%); margin-top: 0; left: -20px; min-width: 220px; padding: 6px 0 10px;
+    background: rgba(14, 14, 16, 0.94); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    border: 1px solid var(--color-border); border-top: 0; border-radius: 0 0 8px 8px;
+    box-shadow: 0 18px 30px rgba(0, 0, 0, 0.35);
+    transform: none; transition: opacity 0.15s ease, visibility 0s linear 0.15s;
+  }
+  .site-header .site-nav .has-sub:hover .sub-nav, .site-header .site-nav .has-sub:focus-within .sub-nav {
+    transform: none; transition: opacity 0.15s ease, visibility 0s;
+  }
+  /* Bridge only the small gap between the link and the dropdown (not the link itself). */
+  .site-header .site-nav .sub-nav::before { top: -14px; height: 14px; }
+  .site-header .site-nav .sub-nav a { padding: 12px 20px; color: rgba(255, 255, 255, 0.82); }
+  .site-header .site-nav .sub-nav a:hover, .site-header .site-nav .sub-nav a:focus-visible { color: #fff; background: rgba(255, 255, 255, 0.05); }
+  .site-header .site-nav .sub-nav a[aria-current="page"] { color: #fff; }
+}
+.services li { align-content: start; }
