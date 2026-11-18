@@ -44,9 +44,14 @@ jobs:
         run: |
           mkdir -p ~/.ssh && chmod 700 ~/.ssh
           printf '%s\n' "$SSH_PRIVATE_KEY" | tr -d '\r' | sed '/^[[:space:]]*$/d; s/^[[:space:]]*//; s/[[:space:]]*$//' > ~/.ssh/deploy_key
-          # If the BEGIN/END lines were left off when pasting the secret, put them back.
-          if ! head -1 ~/.ssh/deploy_key | grep -q -- '-----BEGIN'; then
-            { echo "-----BEGIN OPENSSH PRIVATE KEY-----"; cat ~/.ssh/deploy_key; echo "-----END OPENSSH PRIVATE KEY-----"; } > ~/.ssh/k && mv ~/.ssh/k ~/.ssh/deploy_key
+          # Rebuild the key's layout in case pasting changed it: the BEGIN/END
+          # lines may be missing, or the line breaks lost. The key itself (the
+          # letters and numbers in between) is untouched, just re-wrapped.
+          TYPE="$(grep -o -- '-----BEGIN [A-Z ]*PRIVATE KEY-----' ~/.ssh/deploy_key | head -1 | sed 's/-----BEGIN //; s/-----$//')"
+          [ -n "$TYPE" ] || TYPE="OPENSSH PRIVATE KEY"
+          if ! grep -q '^[A-Za-z-]*: ' ~/.ssh/deploy_key; then
+            BODY="$(sed 's/-----[A-Z ]*-----//g' ~/.ssh/deploy_key | tr -d ' \n\t')"
+            { echo "-----BEGIN $TYPE-----"; printf '%s' "$BODY" | fold -w 70; echo; echo "-----END $TYPE-----"; } > ~/.ssh/k && mv ~/.ssh/k ~/.ssh/deploy_key
           fi
           chmod 600 ~/.ssh/deploy_key
           # This copy of the key lives only on GitHub's temporary machine, which
