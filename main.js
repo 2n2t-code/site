@@ -623,13 +623,13 @@
       });
     }
 
-    // Contact page: every account, with its handle.
+    // Contact page's Follow list: the 2N2T Productions Instagram, YouTube,
+    // Bandcamp and LinkedIn.
     var all = document.getElementById("contact-social");
     if (all) {
       var handle = function (u) { var m = String(u || "").replace(/\/+$/, "").match(/([^\/]+)$/); return m ? m[1].replace(/^@?/, "@") : ""; };
       var items = [
-        ["Instagram", site.instagramMain], ["Instagram", site.instagramVideo], ["Instagram", site.instagramPhotography],
-        ["Instagram", site.instagramMusic], ["YouTube", site.youtube], ["Bandcamp", site.bandcamp], ["LinkedIn", site.linkedin]
+        ["Instagram", site.instagramVideo], ["YouTube", site.youtube], ["Bandcamp", site.bandcamp], ["LinkedIn", site.linkedin]
       ].filter(function (i) { return i[1]; });
       if (items.length) {
         all.replaceChildren();
@@ -761,7 +761,12 @@
       img.addEventListener("load", function () {
         if (img.naturalWidth && img.naturalHeight) { p.ratio = img.naturalWidth / img.naturalHeight; size(p); }
       });
-      p.node = el("button", { class: "field-item", type: "button", "aria-label": "Enlarge: " + (p.alt || "photo " + (i + 1)) }, [img]);
+      p.node = el("button", { class: "field-item", type: "button", "aria-label": "Enlarge: " + (p.alt || "photo " + (i + 1)) }, [
+        img,
+        p.caption ? el("span", { class: "field-cap", "aria-hidden": "true", text: p.caption }) : null
+      ]);
+      p.node.addEventListener("pointerenter", function (e) { if (e.pointerType === "mouse") pointing = true; });
+      p.node.addEventListener("pointerleave", function () { pointing = false; });
       p.node.addEventListener("click", function (e) {
         if (dragged) { e.preventDefault(); return; }
         var at = lbList.indexOf(p);
@@ -777,7 +782,7 @@
     // and through the sphere, then the page moves on to the gallery cards.
     var NEAR = 760;       // photos fade out as they pass the camera...
     var NEAR_FADE = 420;  // ...over this distance
-    var Z_PER_PX = 0.6;   // camera movement per pixel scrolled (lower = slower zoom)
+    var Z_PER_PX = 0.9;   // camera movement per pixel scrolled (lower = slower zoom)
     var SPIN = 1.6;       // degrees per second the sphere turns on its own
     var R = 600;          // sphere radius (set from the screen size in layout)
 
@@ -788,6 +793,7 @@
     var YAW_MAX = Infinity, PITCH_MAX = 55, DEG_PER_PX = 0.06;
     var tiltX = 0, tiltY = 0, tiltTX = 0, tiltTY = 0;
     var running = false, onScreen = true, introDone = false;
+    var pointing = false; // the mouse is over a photo: the slow spin pauses
 
     function fieldTop() { return root.getBoundingClientRect().top + window.scrollY; }
 
@@ -839,8 +845,9 @@
         p.w = base * (0.75 + rand(p.seed + 3) * 0.55);
         size(p);
       });
-      // Scroll far enough to fly right through the sphere.
-      var travel = (2 * R + NEAR) / Z_PER_PX;
+      // Scrolling zooms in until the camera is in the middle of the cloud,
+      // with photos all around (the page ends there; there's no footer).
+      var travel = Math.max(H * 1.2, (R * 1.15) / Z_PER_PX);
       root.style.height = Math.round(H + travel) + "px";
     }
 
@@ -871,34 +878,41 @@
         var fy = Math.cos(t / 3100 + p.seed * 2.3) * floatAmt;
         p.node.style.transform = "translate3d(" + (p.x + fx).toFixed(1) + "px," + (p.y + fy).toFixed(1) + "px," + p.z.toFixed(1) + "px)" + face;
         if (o <= 0.001) {
-          if (p.shown) { p.node.style.visibility = "hidden"; p.shown = false; }
+          if (p.shown) { p.node.style.visibility = "hidden"; p.shown = false; p.os = null; }
           continue;
         }
         if (!p.shown) { p.node.style.visibility = "visible"; p.shown = true; }
-        p.node.style.opacity = o.toFixed(3);
-        p.node.style.pointerEvents = o > 0.35 ? "" : "none";
+        var os = o > 0.995 ? "1" : o.toFixed(2);
+        if (os !== p.os) { p.node.style.opacity = os; p.os = os; }
+        var pe = o > 0.35 ? "" : "none";
+        if (pe !== p.pe) { p.node.style.pointerEvents = pe; p.pe = pe; }
       }
     }
 
+    // Smoothing that takes the same time at any frame rate: "tau" is roughly
+    // how many milliseconds it takes to catch up (smaller = snappier).
+    function follow(cur, target, tau, dt) { return calmMotion || !dt ? target : target + (cur - target) * Math.exp(-dt / tau); }
     function frame(t) {
       if (!running) return;
-      var ease = calmMotion ? 1 : 0.09;
-      cam += (camTarget - cam) * ease;
-      var dt = lastT ? Math.min(100, t - lastT) : 0;
+      var dt = lastT ? Math.min(64, t - lastT) : 16;
       lastT = t;
-      if (introDone && !calmMotion && !dragging) spin += SPIN * dt / 1000;
+      cam = follow(cam, camTarget, 90, dt);
+      if (introDone && !calmMotion && !dragging && !pointing) spin += SPIN * dt / 1000;
       if (!dragging) {
         // Glide on a little after a drag or swipe.
-        yawT = clamp(yawT + velX * DEG_PER_PX, -YAW_MAX, YAW_MAX);
-        pitchT = clamp(pitchT - velY * DEG_PER_PX, -PITCH_MAX, PITCH_MAX);
-        velX *= 0.92; velY *= 0.92;
+        var f = dt / 16.7;
+        yawT = clamp(yawT + velX * DEG_PER_PX * f, -YAW_MAX, YAW_MAX);
+        pitchT = clamp(pitchT - velY * DEG_PER_PX * f, -PITCH_MAX, PITCH_MAX);
+        var decay = Math.pow(0.9, f);
+        velX *= decay; velY *= decay;
         if (Math.abs(velX) < 0.05) velX = 0;
         if (Math.abs(velY) < 0.05) velY = 0;
       }
-      yaw += (yawT - yaw) * (calmMotion ? 1 : 0.12);
-      pitch += (pitchT - pitch) * (calmMotion ? 1 : 0.12);
-      tiltX += (tiltTX - tiltX) * 0.06;
-      tiltY += (tiltTY - tiltY) * 0.06;
+      // While dragging the field follows your hand directly.
+      yaw = dragging ? yawT : follow(yaw, yawT, 70, dt);
+      pitch = dragging ? pitchT : follow(pitch, pitchT, 70, dt);
+      tiltX = follow(tiltX, tiltTX, 220, dt);
+      tiltY = follow(tiltY, tiltTY, 220, dt);
       draw(t);
       var still = Math.abs(camTarget - cam) < 0.3 && !velX && !velY && Math.abs(yawT - yaw) < 0.01 && Math.abs(pitchT - pitch) < 0.01 &&
         Math.abs(tiltTX - tiltX) < 0.01 && Math.abs(tiltTY - tiltY) < 0.01;
