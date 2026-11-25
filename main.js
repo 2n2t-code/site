@@ -658,7 +658,8 @@
       var p = photos[current];
       img.src = url(pick(p.src, p.mobile));
       img.alt = p.alt || "";
-      cap.textContent = (p.caption ? p.caption + " — " : "") + (current + 1) + " / " + photos.length;
+      // Phones show just the counter, no title.
+      cap.textContent = (p.caption && !PHONE.matches ? p.caption + " — " : "") + (current + 1) + " / " + photos.length;
       // Preload neighbours so arrow navigation feels instant.
       [current + 1, current - 1].forEach(function (n) {
         var q = photos[(n + photos.length) % photos.length];

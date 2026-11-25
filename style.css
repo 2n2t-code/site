@@ -1194,4 +1194,5 @@ body[data-page="music"] main { text-transform: uppercase; }
   opacity: 0; transform: translateY(4px); transition: opacity 0.25s, transform 0.25s; pointer-events: none;
 }
 .field-item:hover .field-cap, .field-item:focus-visible .field-cap { opacity: 1; transform: none; }
-@media (hover: none) { .field-cap { display: none; } }
+/* No titles on the photos on phones and touch screens. */
+@media (hover: none), (pointer: coarse), (max-width: 639px) { .field-cap { display: none !important; } }
