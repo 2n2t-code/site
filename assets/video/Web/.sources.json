@@ -14,6 +14,7 @@
   "2N2T Homepage Loop v4 9x16.mp4": {
     "portrait": true,
     "sha1": "7dea5f4b66f64e6fef19adce1fa23bb1e259f4f4",
+    "trimEnd": 2,
     "web": "2n2t-homepage-loop-v4-9x16"
   }
 }
