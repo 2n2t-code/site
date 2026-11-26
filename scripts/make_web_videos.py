@@ -36,6 +36,11 @@ VERSIONS = [  # (suffix, max width, max height, quality (lower = better), max bi
     ("1080", 1920, 1080, 21, "8M"),
     ("720", 1280, 720, 24, "3.5M"),
 ]
+# Tall (portrait, e.g. 9:16) videos, for phones: the same sizes turned on their side.
+PORTRAIT_VERSIONS = [
+    ("1080", 1080, 1920, 22, "6M"),
+    ("720", 720, 1280, 24, "2.5M"),
+]
 
 
 def web_name(path):
@@ -57,21 +62,36 @@ def duration(src):
         return 0.0
 
 
+def is_portrait(src):
+    out = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries",
+                          "stream=width,height:stream_side_data=rotation", "-of", "json", str(src)],
+                         capture_output=True, text=True)
+    try:
+        st = json.loads(out.stdout)["streams"][0]
+        w, h = st["width"], st["height"]
+        rot = abs(int(next((d.get("rotation", 0) for d in st.get("side_data_list", [])), 0)))
+        if rot in (90, 270):
+            w, h = h, w
+        return h > w
+    except (ValueError, KeyError, IndexError):
+        return False
+
+
 def fit(w, h):
     # Shrink to fit (never enlarge), keep even dimensions for H.264.
     return (f"scale='min({w},iw)':'min({h},ih)':force_original_aspect_ratio=decrease,"
             "scale=trunc(iw/2)*2:trunc(ih/2)*2,format=yuv420p")
 
 
-def process(src, name):
-    for suffix, w, h, crf, maxrate in VERSIONS:
+def process(src, name, portrait=False):
+    for suffix, w, h, crf, maxrate in (PORTRAIT_VERSIONS if portrait else VERSIONS):
         run(["ffmpeg", "-y", "-v", "error", "-i", str(src), "-t", str(MAX_SECONDS), "-an",
              "-vf", fit(w, h), "-c:v", "libx264", "-preset", "slow", "-crf", str(crf),
              "-maxrate", maxrate, "-bufsize", "16M", "-profile:v", "high", "-level", "4.1",
              "-movflags", "+faststart", str(WEB / f"{name}-{suffix}.mp4")])
     at = min(1.0, max(duration(src) / 3, 0))
     run(["ffmpeg", "-y", "-v", "error", "-ss", f"{at:.2f}", "-i", str(src), "-frames:v", "1",
-         "-vf", fit(1920, 1080), "-q:v", "3", str(WEB / f"{name}-poster.jpg")])
+         "-vf", fit(1080, 1920) if portrait else fit(1920, 1080), "-q:v", "3", str(WEB / f"{name}-poster.jpg")])
 
 
 def main():
@@ -87,15 +107,19 @@ def main():
                 h.update(chunk)
         digest = h.hexdigest()
         entry = manifest.get(src.name)
-        if entry and entry.get("sha1") == digest:
+        portrait = is_portrait(src)
+        # (Tall videos made before portrait sizes existed are made again.)
+        if entry and entry.get("sha1") == digest and (not portrait or entry.get("portrait")):
             continue
         name = web_name(src)
         try:
-            process(src, name)
+            process(src, name, portrait)
         except subprocess.CalledProcessError as err:
             print(f"Couldn't process {src.name}: {err.stderr.decode(errors='replace')[-500:]}")
             continue
         manifest[src.name] = {"sha1": digest, "web": name}
+        if portrait:
+            manifest[src.name]["portrait"] = True
         sizes = ", ".join(f"{p.name} {p.stat().st_size / 1e6:.1f} MB" for p in sorted(WEB.glob(f"{name}-*")))
         print(f"{src.name} -> {sizes}")
         done += 1
