@@ -1196,3 +1196,39 @@ body[data-page="music"] main { text-transform: uppercase; }
 .field-item:hover .field-cap, .field-item:focus-visible .field-cap { opacity: 1; transform: none; }
 /* No titles on the photos on phones and touch screens. */
 @media (hover: none), (pointer: coarse), (max-width: 639px) { .field-cap { display: none !important; } }
+
+/* ---------- Phone homepage: full-screen 9:16 video ---------- */
+@media (max-width: 639px) {
+  .has-phone-video .site-header--overlay { background: linear-gradient(to bottom, rgba(0, 0, 0, 0.55), transparent); border-bottom-color: transparent; }
+  .has-phone-video .hero { padding: 0; height: 100vh; height: 100svh; min-height: 560px; }
+  .has-phone-video .hero-media { position: absolute; inset: 0; aspect-ratio: auto; border-radius: 0; }
+  .has-phone-video .hero-poster { scale: 1; }
+  .has-phone-video .hero-tile {
+    border-radius: 0;
+    background: linear-gradient(to top, rgba(5, 6, 8, 0.92) 0%, rgba(5, 6, 8, 0.45) 38%, transparent 62%);
+  }
+  .has-phone-video .hero-tile .work-info { left: var(--gutter); right: var(--gutter); bottom: max(34px, env(safe-area-inset-bottom)); }
+  .has-phone-video .hero-tile .cine-kicker { font-size: 0.72rem; }
+  .has-phone-video .hero-tile .cine-title { font-size: clamp(2.2rem, 10.5vw, 2.8rem); line-height: 0.9; text-transform: uppercase; }
+  .has-phone-video .home-intro-head { display: none; }
+  .has-phone-video .home-intro { padding-top: var(--space-6); }
+  .phone-watch {
+    margin-top: 16px; display: inline-flex; align-items: stretch;
+    border: 1.5px solid rgba(242, 239, 233, 0.9); border-radius: 10px;
+    font: 800 0.85rem/1 var(--font-cine); letter-spacing: 0.24em; text-transform: uppercase;
+  }
+  .phone-watch span { padding: 12px 16px; }
+  .phone-watch span + span { border-left: 1.5px dashed currentColor; padding: 12px 13px; }
+}
+@media (max-width: 639px) {
+  /* The video sits behind the tile, and taps go through to it. */
+  .has-phone-video .phone-video { z-index: 0; pointer-events: none; }
+  .has-phone-video .hero-tile { z-index: 1; }
+}
+@media (max-width: 639px) {
+  /* No blur behind the see-through menu bar (its edge shows over the video). */
+  .has-phone-video .site-header--overlay:not(.is-solid) { -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+/* The see-through menu bar's shading mustn't repeat into its bottom border
+   (that drew a thin dark line across the homepage video). */
+.site-header--overlay:not(.is-solid) { background-repeat: no-repeat; background-origin: border-box; }

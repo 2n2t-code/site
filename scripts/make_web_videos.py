@@ -36,6 +36,12 @@ VERSIONS = [  # (suffix, max width, max height, quality (lower = better), max bi
     ("1080", 1920, 1080, 21, "8M"),
     ("720", 1280, 720, 24, "3.5M"),
 ]
+# Frames to drop from the end of a video's web versions (the original is left
+# as it is), e.g. a stray cut left at the end of an export. Remove the entry
+# once a fixed version is uploaded.
+TRIM_END_FRAMES = {
+    "2N2T Homepage Loop v4 9x16.mp4": 2,
+}
 # Tall (portrait, e.g. 9:16) videos, for phones: the same sizes turned on their side.
 PORTRAIT_VERSIONS = [
     ("1080", 1080, 1920, 22, "6M"),
@@ -83,9 +89,20 @@ def fit(w, h):
             "scale=trunc(iw/2)*2:trunc(ih/2)*2,format=yuv420p")
 
 
-def process(src, name, portrait=False):
+def frame_count(src):
+    out = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-count_packets",
+                          "-show_entries", "stream=nb_read_packets", "-of", "csv=p=0", str(src)],
+                         capture_output=True, text=True)
+    try:
+        return int(out.stdout.strip())
+    except ValueError:
+        return 0
+
+
+def process(src, name, portrait=False, trim=0):
+    keep = ["-frames:v", str(frame_count(src) - trim)] if trim else []
     for suffix, w, h, crf, maxrate in (PORTRAIT_VERSIONS if portrait else VERSIONS):
-        run(["ffmpeg", "-y", "-v", "error", "-i", str(src), "-t", str(MAX_SECONDS), "-an",
+        run(["ffmpeg", "-y", "-v", "error", "-i", str(src), "-t", str(MAX_SECONDS), *keep, "-an",
              "-vf", fit(w, h), "-c:v", "libx264", "-preset", "slow", "-crf", str(crf),
              "-maxrate", maxrate, "-bufsize", "16M", "-profile:v", "high", "-level", "4.1",
              "-movflags", "+faststart", str(WEB / f"{name}-{suffix}.mp4")])
@@ -109,17 +126,21 @@ def main():
         entry = manifest.get(src.name)
         portrait = is_portrait(src)
         # (Tall videos made before portrait sizes existed are made again.)
-        if entry and entry.get("sha1") == digest and (not portrait or entry.get("portrait")):
+        trim = TRIM_END_FRAMES.get(src.name, 0)
+        if (entry and entry.get("sha1") == digest and (not portrait or entry.get("portrait"))
+                and entry.get("trimEnd", 0) == trim):
             continue
         name = web_name(src)
         try:
-            process(src, name, portrait)
+            process(src, name, portrait, trim)
         except subprocess.CalledProcessError as err:
             print(f"Couldn't process {src.name}: {err.stderr.decode(errors='replace')[-500:]}")
             continue
         manifest[src.name] = {"sha1": digest, "web": name}
         if portrait:
             manifest[src.name]["portrait"] = True
+        if trim:
+            manifest[src.name]["trimEnd"] = trim
         sizes = ", ".join(f"{p.name} {p.stat().st_size / 1e6:.1f} MB" for p in sorted(WEB.glob(f"{name}-*")))
         print(f"{src.name} -> {sizes}")
         done += 1

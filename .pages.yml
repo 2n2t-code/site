@@ -373,6 +373,13 @@ content:
           media: videos
           categories: [video]
         description: "For a crisp HD background. The CMS can't upload videos (its limit is about 3 MB), so upload a 20–40 second cut (1080p, H.264 MP4, no audio, no black bars, under 25 MB) on GitHub at github.com/2n2t-code/site/upload/main/assets/video/Original, then pick it here from Videos → Original. About 5 minutes later the HD version is live; until then the YouTube showreel is used. Leave empty to use YouTube."
+      - name: showreelMobileFile
+        label: Showreel background video on phones (optional, 9:16)
+        type: file
+        options:
+          media: videos
+          categories: [video]
+        description: "A tall 9:16 cut for phones (1080x1920, H.264 MP4, 10–20 seconds, no audio, under 25 MB; keep text and logos out of the top 15% and bottom 25%). Upload it on GitHub to assets/video/Original like the desktop video, then pick it here. On phones it fills the screen behind the headline. Leave empty for the showreel tile."
       - name: showreelTitle
         label: Showreel title
         type: string

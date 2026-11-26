@@ -392,6 +392,41 @@
     document.addEventListener("videomodal", function (e) { modalOpen = e.detail; update(); });
   }
 
+  // Phone homepage with a 9:16 video: the video fills the screen, with the
+  // eyebrow, headline and a "Watch showreel" button over its lower part.
+  // Reduced motion / data saver: the video's still frame instead.
+  function setupPhoneVideo(home, showPoster) {
+    var hero = document.querySelector(".hero");
+    var media = document.querySelector(".hero-media");
+    var tile = document.querySelector(".hero-tile");
+    if (!hero || !media || !tile) return;
+    document.body.classList.add("has-phone-video");
+    var eyebrow = document.querySelector(".hero-eyebrow"), headline = document.querySelector(".home-intro .hero-title");
+    tile.querySelector(".cine-kicker").textContent = eyebrow ? eyebrow.textContent : "";
+    var title = tile.querySelector(".cine-title");
+    title.textContent = headline ? headline.textContent : "";
+    title.classList.remove("hero-tile-title");
+    var watch = el("span", { class: "phone-watch" }, [el("span", { text: "Watch showreel" }), el("span", { "aria-hidden": "true", text: "\u2192" })]);
+    tile.querySelector(".work-info").appendChild(watch);
+    var base = "assets/video/Web/" + webVideoName(home.showreelMobileFile);
+    var poster = url(base + "-poster.jpg");
+    if (calm) { showPoster(poster, true); return; }
+    var video = el("video", { class: "hero-video phone-video", muted: true, loop: true, playsinline: true, autoplay: true,
+      preload: "auto", "aria-hidden": "true", tabindex: "-1" });
+    video.muted = true; video.defaultMuted = true;
+    video.src = url(base + "-720.mp4");
+    video.addEventListener("playing", function () { video.classList.add("is-playing"); });
+    // If the web version isn't there (yet), show the still frame instead.
+    video.addEventListener("error", function () { video.remove(); showPoster(poster, true); });
+    media.appendChild(video);
+    var play = function () { var p = video.play(); if (p && p.catch) p.catch(function () {}); };
+    play();
+    var visible = true, modalOpen = false;
+    var update = function () { if (visible && !modalOpen) play(); else video.pause(); };
+    if ("IntersectionObserver" in window) new IntersectionObserver(function (en) { visible = en[0].isIntersecting; update(); }).observe(media);
+    document.addEventListener("videomodal", function (e) { modalOpen = e.detail; update(); });
+  }
+
   function renderHome() {
     // Editable homepage text and showreel (data/home.json).
     var home = content.home || {};
@@ -472,12 +507,13 @@
       reelBox.replaceChildren(reelTile);
     }
 
-    // Phones: no background video at all (saves data and battery). They keep
-    // the still image: the "Showreel background on phones" image if set in the
-    // CMS, otherwise the YouTube showreel's thumbnail.
+    // Phones: with a tall (9:16) phone video set in the CMS, it fills the
+    // screen behind the headline (setupPhoneVideo). Otherwise no background
+    // video (saves data and battery): the showreel tile with a still image.
     if (PHONE.matches) {
       document.querySelectorAll(".hero-yt[data-youtube-bg]").forEach(function (b) { b.removeAttribute("data-youtube-bg"); });
-      if (home.showreelMobileImage) showPoster(url(home.showreelMobileImage), true, showYouTubeThumb);
+      if (home.showreelMobileFile) setupPhoneVideo(home, showPoster);
+      else if (home.showreelMobileImage) showPoster(url(home.showreelMobileImage), true, showYouTubeThumb);
       else showYouTubeThumb();
     } else if (home.showreelFile) {
       // HD background: your own showreel file, if one is set in the CMS.
