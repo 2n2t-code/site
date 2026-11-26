@@ -1232,3 +1232,8 @@ body[data-page="music"] main { text-transform: uppercase; }
 /* The see-through menu bar's shading mustn't repeat into its bottom border
    (that drew a thin dark line across the homepage video). */
 .site-header--overlay:not(.is-solid) { background-repeat: no-repeat; background-origin: border-box; }
+@media (max-width: 639px) {
+  /* With the phone video at the top, the YouTube showreel tile comes back,
+     between the intro and Selected work. */
+  .has-phone-video .home-intro-reel { display: block; margin-top: var(--space-5); }
+}
