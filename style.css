@@ -1305,7 +1305,7 @@ body[data-page="music"] .page-intro h1 {
 #work.has-film .work-grid { display: none; }
 #work.has-film { overflow: hidden; }
 .film { overflow: hidden;
-  --k: clamp(9px, 0.95vw, 13px);               /* px per mm of film */
+  --k: clamp(11px, min(1.3vw, 1.75vh), 23px);  /* px per mm of film: sized to the screen */
   --base: #160d08;                              /* scanned colour negative: near-black, warm */
   --print: #f2a05a;                             /* edge printing glows peach-orange */
   position: relative; height: calc(var(--k) * 35);
@@ -1393,3 +1393,13 @@ body[data-page="music"] .page-intro h1 {
 .film-cue.left::before { transform: scaleX(-1); }
 .film-cue.on { opacity: 1; }
 .film:hover { cursor: default; }
+
+/* Desktop: Selected work is its own full-screen module, with just the heading
+   and the film strip (centred), running edge to edge. */
+#work.has-film {
+  max-width: none; min-height: calc(100vh - var(--header-height)); min-height: calc(100svh - var(--header-height));
+  display: flex; flex-direction: column; justify-content: center; gap: var(--space-6);
+  padding-top: var(--space-7); padding-bottom: var(--space-7); margin-top: var(--space-7);
+}
+#work.has-film > .home-head { width: 100%; max-width: calc(1600px - 2 * var(--gutter)); margin: 0 auto; }
+#work.has-film .film { margin-top: 0; flex: none; }
