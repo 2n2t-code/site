@@ -60,7 +60,7 @@
         }
       ],
       "features": [
-        "One-shot, 1 or 2 static cameras",
+        "One-shot gimbal / Static camera(s)",
         "Pro audio recording",
         "Mix/mastering",
         "Audio sync",
