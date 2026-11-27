@@ -472,7 +472,7 @@
     section.appendChild(film);
     section.classList.add("has-film");
 
-    var x = 0, speed = 0, target = 70, open = null, last = 0, loopW = 0, running = false, onScreen = false, started = false;
+    var x = 0, speed = 0, target = 0, open = null, last = 0, loopW = 0, running = false, onScreen = false, started = false;
     function setOpen(s) { if (open === s) return; if (open) open.classList.remove("is-open"); open = s; if (s) s.classList.add("is-open"); }
     // Edge zones: pointing near the right edge speeds the film on (new frames
     // come in from the right); near the left edge runs it backwards. The closer
@@ -501,7 +501,11 @@
       if (!running) return;
       var dt = last ? Math.min(50, t - last) / 1000 : 0; last = t;
       var goal = edgeGoal || (open || calmMotion ? 0 : target);
-      speed += (goal - speed) * (1 - Math.exp(-dt / (edgeGoal ? 0.25 : 0.6)));
+      // Speeds up in ~0.25 s at the edges; comes to a stop quickly when you move
+      // away (the intro's whip settles a little more gently).
+      var tau = edgeGoal ? 0.25 : (t - revealedAt < 1600 ? 0.45 : 0.16);
+      speed += (goal - speed) * (1 - Math.exp(-dt / tau));
+      if (!goal && Math.abs(speed) < 1) speed = 0;
       x -= speed * dt;
       if (!loopW) loopW = track.scrollWidth / 2;
       if (loopW && -x > loopW) x += loopW;   // loops both ways
@@ -511,13 +515,14 @@
       var blur = Math.min(4, Math.max(0, Math.abs(speed) - 1300) / 500);
       track.style.filter = blur > 0.3 ? "blur(" + blur.toFixed(1) + "px)" : "";
       if (!onScreen) { running = false; return; } // paused while scrolled away
+      if (!speed && !edgeGoal) { running = false; return; } // still: nothing to animate until you point at an edge
       requestAnimationFrame(frame);
     }
     function run() { if (running || !started) return; running = true; last = 0; requestAnimationFrame(frame); }
 
-    var revealed = false;
+    var revealed = false, revealedAt = -1e9;
     function reveal() {
-      if (revealed) return; revealed = true;
+      if (revealed) return; revealed = true; revealedAt = performance.now();
       film.classList.add("is-revealed");
       if (!calmMotion) {
         track.animate([{ filter: "brightness(1.5)" }, { filter: "none" }], { duration: 700, easing: "ease-out" });
