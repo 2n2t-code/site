@@ -1287,3 +1287,13 @@ body[data-page="music"] .page-intro h1 {
   /* Phones and tablets: no slide-in here, shown as normal. */
   .js .reveal.reveal-from-left, .js .reveal.reveal-from-right { opacity: 1; transform: none; transition: none; }
 }
+
+/* Homepage intro lines: one line each on desktops (the text is sized to the
+   column), and where a line must wrap, it wraps evenly (no lone last word). */
+.home-intro-text p { text-wrap: balance; }
+@media (min-width: 1200px) {
+  .home-intro { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); }
+  .home-intro-left { container-type: inline-size; }
+  .home-intro-text { max-width: none; }
+  .home-intro .home-intro-text p { font-size: clamp(1rem, 3cqi, 1.2rem); }
+}
