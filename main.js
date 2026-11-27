@@ -691,6 +691,15 @@
 
     // Selected work: every video in data/videos.json, in the order listed there.
     var videos = (content.film || {}).videos || [];
+    // Homepage order: the "Selected work" list (Homepage in the CMS), matched to
+    // Video work by title. Empty: the Video work order.
+    var pickTitles = (home.selectedWork || []).map(function (t) { return String(typeof t === "string" ? t : (t && t.title) || "").trim().toLowerCase(); }).filter(Boolean);
+    if (pickTitles.length) {
+      var byTitle = {};
+      videos.forEach(function (v) { var k = String(v.title || "").trim().toLowerCase(); if (!byTitle[k]) byTitle[k] = v; });
+      var picked = pickTitles.map(function (k) { return byTitle[k]; }).filter(Boolean);
+      if (picked.length) videos = picked;
+    }
     var totalWork = String(videos.length).padStart(2, "0");
     renderList(document.getElementById("home-work"), videos, function (v, i) {
       var title = v.title || "Untitled";
