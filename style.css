@@ -1268,3 +1268,9 @@ body[data-page="music"] .page-intro h1 {
 }
 .pkg-features.has-plus { border-top: 0; margin-top: 0; padding-top: var(--space-1); }
 .pkg-rates + .pkg-plus { border-top: 0; padding-top: var(--space-3); }
+@media (min-width: 640px) {
+  /* Homepage intro: centred within its left-hand column (beside the showreel tile). */
+  .home-intro-left { text-align: center; }
+  .home-intro .hero-title, .home-intro-text { margin-left: auto; margin-right: auto; }
+  .home-intro .hero-actions { justify-content: center; }
+}
