@@ -9,22 +9,20 @@
         "assets/img/photos/Web/alexjimsilkmillbts-15.jpg",
         "assets/img/photos/Web/alexjimsilkmillbts-22.jpg"
       ],
-      "photoAlt": "Alex filming a band in the studio",
-      "linkLabel": "",
-      "link": ""
+      "photoAlt": "Alex filming a band in the studio"
     },
     {
       "kicker": "Live In Session",
       "title": "Your band, filmed live in the room",
       "text": "Over 1,000 sessions filmed at The Silk Mill Recording Studios: multi-camera video with studio-quality sound, recorded, mixed and mastered by audio engineer Jim Hodgkinson.\n\nPackages, prices, the studio and how booking works are all on the Live In Session page.",
       "photos": [
-        "assets/img/photos/Web/alexjimsilkmillbts-23.jpg",
-        "assets/img/photos/Web/alexjimsilkmillbts-14.jpg",
-        "assets/img/photos/Web/alexjimsilkmillbts-07.jpg"
+        "assets/img/photos/Web/alexjimsilkmillbts-05.jpg",
+        "assets/img/photos/Web/alexjimsilkmillbts-07.jpg",
+        "assets/img/photos/Web/alexjimsilkmillbts-21.jpg"
       ],
       "photoAlt": "A Live In Session being filmed and recorded at The Silk Mill",
-      "linkLabel": "Explore Live In Session",
-      "link": "live-in-session/"
+      "link": "live-in-session/",
+      "linkLabel": "Explore Live In Session"
     }
   ]
 }
