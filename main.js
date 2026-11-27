@@ -474,8 +474,25 @@
 
     var x = 0, speed = 0, target = 70, open = null, last = 0, loopW = 0, running = false, onScreen = false, started = false;
     function setOpen(s) { if (open === s) return; if (open) open.classList.remove("is-open"); open = s; if (s) s.classList.add("is-open"); }
-    track.addEventListener("mouseover", function (e) { var s = e.target.closest(".film-seg"); if (s) setOpen(s); });
-    film.addEventListener("mouseleave", function () { setOpen(null); });
+    // Edge zones: pointing near the right edge speeds the film on (new frames
+    // come in from the right); near the left edge runs it backwards. The closer
+    // to the edge, the faster. Frames don't open while you're in a zone.
+    var EDGE = 0.16, EDGE_MAX = 1100, edgeGoal = 0;
+    var cueL = el("div", { class: "film-cue left", "aria-hidden": "true" });
+    var cueR = el("div", { class: "film-cue right", "aria-hidden": "true" });
+    film.appendChild(cueL); film.appendChild(cueR);
+    film.addEventListener("mousemove", function (e) {
+      var r = film.getBoundingClientRect(), rel = (e.clientX - r.left) / r.width, k = 0;
+      if (rel < EDGE) k = -(1 - rel / EDGE);
+      else if (rel > 1 - EDGE) k = (rel - (1 - EDGE)) / EDGE;
+      edgeGoal = k ? Math.sign(k) * (0.25 + 0.75 * k * k) * EDGE_MAX : 0;
+      cueL.classList.toggle("on", k < 0); cueR.classList.toggle("on", k > 0);
+      if (edgeGoal) setOpen(null);
+      else { var under = document.elementFromPoint(e.clientX, e.clientY); var s = under && under.closest(".film-seg"); if (s && track.contains(s)) setOpen(s); }
+      run();
+    });
+    track.addEventListener("mouseover", function (e) { if (edgeGoal) return; var s = e.target.closest(".film-seg"); if (s) setOpen(s); });
+    film.addEventListener("mouseleave", function () { setOpen(null); edgeGoal = 0; cueL.classList.remove("on"); cueR.classList.remove("on"); });
     track.addEventListener("focusin", function (e) { setOpen(e.target.closest(".film-seg")); });
     track.addEventListener("focusout", function (e) { if (!track.contains(e.relatedTarget)) setOpen(null); });
     window.addEventListener("resize", function () { loopW = 0; });
@@ -483,13 +500,15 @@
     function frame(t) {
       if (!running) return;
       var dt = last ? Math.min(50, t - last) / 1000 : 0; last = t;
-      var goal = open || calmMotion ? 0 : target;
-      speed += (goal - speed) * (1 - Math.exp(-dt / 0.6));
+      var goal = edgeGoal || (open || calmMotion ? 0 : target);
+      speed += (goal - speed) * (1 - Math.exp(-dt / (edgeGoal ? 0.25 : 0.6)));
       x -= speed * dt;
       if (!loopW) loopW = track.scrollWidth / 2;
-      if (loopW && -x > loopW) x += loopW;
+      if (loopW && -x > loopW) x += loopW;   // loops both ways
+      if (loopW && x > 0) x -= loopW;
       track.style.transform = "translate3d(" + x.toFixed(1) + "px,0,0)";
-      var blur = Math.min(4, Math.abs(speed) / 500);
+      // Motion blur only at the very fast intro speed, not while browsing.
+      var blur = Math.min(4, Math.max(0, Math.abs(speed) - 1300) / 500);
       track.style.filter = blur > 0.3 ? "blur(" + blur.toFixed(1) + "px)" : "";
       if (!onScreen) { running = false; return; } // paused while scrolled away
       requestAnimationFrame(frame);

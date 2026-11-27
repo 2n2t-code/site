@@ -1377,3 +1377,19 @@ body[data-page="music"] .page-intro h1 {
 .film-intro { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 8; pointer-events: none;
   mix-blend-mode: screen; opacity: 0; transition: opacity .25s; }
 .film-intro.on { opacity: 1; }
+
+/* Film strip edge zones: a soft glow and an arrow while the pointer is there. */
+.film-cue {
+  position: absolute; top: 0; bottom: 0; width: 16%; z-index: 7; pointer-events: none;
+  opacity: 0; transition: opacity 0.3s; display: grid; align-items: center;
+}
+.film-cue.left { left: 0; background: linear-gradient(90deg, rgba(8, 5, 3, 0.85), transparent); justify-items: start; padding-left: 22px; }
+.film-cue.right { right: 0; background: linear-gradient(270deg, rgba(8, 5, 3, 0.85), transparent); justify-items: end; padding-right: 22px; }
+.film-cue::before {
+  content: ""; width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid rgba(242, 239, 233, 0.85);
+  background: rgba(14, 14, 16, 0.4) center / 20px no-repeat;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f2efe9' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 12h15M13 6l6 6-6 6'/%3E%3C/svg%3E");
+}
+.film-cue.left::before { transform: scaleX(-1); }
+.film-cue.on { opacity: 1; }
+.film:hover { cursor: default; }
