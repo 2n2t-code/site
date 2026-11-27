@@ -62,10 +62,10 @@
       "features": [
         "One-shot, 1 or 2 static cameras",
         "Pro audio recording",
+        "Mix/mastering",
         "Audio sync",
-        "Colour grade",
-        "Audio engineer, mix and master",
         "Lighting",
+        "Colour grade",
         "1 consolidated round of minor changes",
         "2–4 week turnaround"
       ],
@@ -87,13 +87,13 @@
           "price": "£1,200"
         }
       ],
+      "plusLine": "Everything in Basic, plus:",
       "features": [
         "Multicam",
         "1 consolidated round of notes",
         "1–3 week turnaround"
       ],
-      "featured": true,
-      "plusLine": "Everything in Basic, plus:"
+      "featured": true
     },
     {
       "name": "Full",
@@ -111,14 +111,14 @@
           "price": "£1,500"
         }
       ],
+      "plusLine": "Everything in Mid, plus:",
       "features": [
         "4K export included",
         "2 consolidated rounds of revision notes",
         "1 week turnaround",
         "Social edits included"
       ],
-      "featured": false,
-      "plusLine": "Everything in Mid, plus:"
+      "featured": false
     }
   ],
   "extrasTitle": "Additional extras",
