@@ -149,6 +149,10 @@ content:
           - name: note
             label: Short note (optional)
             type: string
+          - name: plusLine
+            label: "Builds on (optional)"
+            type: string
+            description: 'Shown above the list, e.g. "Everything in Basic, plus:". Then list only what this package adds or upgrades.'
           - name: features
             label: What's included
             type: string

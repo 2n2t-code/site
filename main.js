@@ -1530,7 +1530,8 @@
           return [el("dt", { text: r.label || "" }), el("dd", { text: r.price || "" })];
         }))) : null,
         pk.note ? el("p", { class: "pkg-note", text: pk.note }) : null,
-        feats.length ? el("ul", { class: "pkg-features" }, feats.map(function (f) { return el("li", { text: f }); })) : null
+        pk.plusLine ? el("p", { class: "pkg-plus", text: pk.plusLine }) : null,
+        feats.length ? el("ul", { class: "pkg-features" + (pk.plusLine ? " has-plus" : "") }, feats.map(function (f) { return el("li", { text: f }); })) : null
       ]);
     }, "Prices coming soon.");
 

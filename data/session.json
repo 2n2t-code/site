@@ -89,15 +89,11 @@
       ],
       "features": [
         "Multicam",
-        "Pro audio recording",
-        "Audio sync",
-        "Colour grade",
-        "Audio engineer, mix and master",
-        "Lighting",
         "1 consolidated round of notes",
         "1–3 week turnaround"
       ],
-      "featured": true
+      "featured": true,
+      "plusLine": "Everything in Basic, plus:"
     },
     {
       "name": "Full",
@@ -117,17 +113,12 @@
       ],
       "features": [
         "4K export included",
-        "Multicam",
-        "Pro audio recording",
-        "Audio sync",
-        "Colour grade",
-        "Audio engineer, mix and master",
-        "Lighting",
         "2 consolidated rounds of revision notes",
         "1 week turnaround",
         "Social edits included"
       ],
-      "featured": false
+      "featured": false,
+      "plusLine": "Everything in Mid, plus:"
     }
   ],
   "extrasTitle": "Additional extras",

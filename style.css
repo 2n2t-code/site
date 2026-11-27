@@ -1260,3 +1260,11 @@ body[data-page="music"] main { text-transform: uppercase; }
 body[data-page="music"] .page-intro h1 {
   font-size: clamp(2.9rem, 1.7rem + 5.2vw, 6.8rem); line-height: 0.95; letter-spacing: 0.005em; margin-bottom: var(--space-2);
 }
+
+/* Packages: "Everything in Basic, plus:" line above a package's extras. */
+.pkg-plus {
+  margin: var(--space-2) 0 0; padding-top: var(--space-4); border-top: 1px solid var(--color-border);
+  font-family: var(--font-display); font-weight: 700; font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-accent);
+}
+.pkg-features.has-plus { border-top: 0; margin-top: 0; padding-top: var(--space-1); }
+.pkg-rates + .pkg-plus { border-top: 0; padding-top: var(--space-3); }
