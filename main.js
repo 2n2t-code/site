@@ -265,6 +265,10 @@
   }
 
   function renderFilm() {
+    var vpd = content.vp || {};
+    var vl = document.getElementById("vp-label"), vi = document.getElementById("vp-intro");
+    if (vl && vpd.label) vl.textContent = vpd.label;
+    if (vi && vpd.intro) vi.textContent = vpd.intro;
     renderVpStories();
     var list = document.getElementById("cine-list");
     if (!list) return;
@@ -810,6 +814,9 @@
       pre.src = full;
     }
 
+    var ci = document.getElementById("contact-intro"), ch = document.getElementById("contact-heading");
+    if (ci && site.contactIntro) ci.textContent = site.contactIntro;
+    if (ch && site.contactHeading) ch.textContent = site.contactHeading;
     var loc = document.getElementById("contact-location");
     if (loc && site.location) loc.textContent = site.location;
 

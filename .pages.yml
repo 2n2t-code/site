@@ -90,11 +90,19 @@ content:
 
   - name: vp
     label: Video Production page
-    description: "The staggered sections near the top of the Video Production page: 2-3 photos beside a short text, alternating sides. Give one a link (e.g. live-in-session/) to make it a doorway to that page. For big photos, upload to photos/Original on GitHub, then pick name.jpg from photos/Web."
+    description: "The header description at the top of the Video Production page, and the staggered sections under it: 2-3 photos beside a short text, alternating sides. Give one a link (e.g. live-in-session/) to make it a doorway to that page. For big photos, upload to photos/Original on GitHub, then pick name.jpg from photos/Web."
     type: file
     path: data/vp.json
     format: json
     fields:
+      - name: label
+        label: "Header: small label"
+        type: string
+        description: The small orange text above the big VIDEO PRODUCTION heading.
+      - name: intro
+        label: "Header: description"
+        type: text
+        description: The line under the big heading.
       - name: stories
         label: Sections
         type: object
@@ -779,6 +787,13 @@ content:
         description: Where the contact form sends messages, and shown in the footer.
       - name: location
         label: Location
+        type: string
+      - name: contactIntro
+        label: "Contact page header: description"
+        type: string
+        description: The line above the big heading on the Contact page.
+      - name: contactHeading
+        label: "Contact page header: heading"
         type: string
       - name: instagramMain
         label: Instagram (homepage, About, Contact)
