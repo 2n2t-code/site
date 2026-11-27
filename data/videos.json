@@ -1,6 +1,14 @@
 {
   "videos": [
     {
+      "category": "Live In Session at Silk Mill Studios",
+      "title": "The Futuristic Gramophones",
+      "link": "https://www.youtube.com/watch?v=M54RmO3AlNU",
+      "videoType": "Showreel",
+      "thumb": "assets/img/photos/Web/thefuturisticgramophonesshoweelthumb1.jpg",
+      "mobileThumb": "assets/img/photos/Web/thefuturisticgramophonesshoweelthumb1-sm.jpg"
+    },
+    {
       "category": "Live Concert",
       "title": "Pierre Bensusan",
       "link": "https://www.youtube.com/watch?v=FGRNWgGfReA",
@@ -9,6 +17,17 @@
       "year": "2026",
       "role": "Producer, Camera Op, Editor, Grade",
       "thumb": "assets/img/photos/Web/pierre-liverpool-hekimoglu-thumb-4.jpg"
+    },
+    {
+      "category": "Live In Session",
+      "title": "Algorhythm",
+      "link": "https://www.youtube.com/watch?v=6tPhsQtXXog",
+      "venue": "Silk Mill Studios",
+      "song": "'Love Story' by Taylor Swift",
+      "year": "2025",
+      "role": "Camera, Lighting, Editor, Grade",
+      "thumb": "assets/img/photos/Web/algorhythmlove-storythumb1.jpg",
+      "mobileThumb": "assets/img/photos/Web/algorhythmlove-storythumb1-sm.jpg"
     },
     {
       "category": "Live In Session",
@@ -28,18 +47,18 @@
     },
     {
       "category": "Live Event",
-      "title": "Dirty Weekend at The Edge Festival",
-      "link": "https://www.youtube.com/watch?v=TS9bDqmXpWc",
-      "venue": "Solva, Wales",
-      "year": "2025"
-    },
-    {
-      "category": "Live Event",
       "title": "Discoteca",
       "link": "https://www.youtube.com/watch?v=UYP-mWkQISc",
       "venue": "O2 Victoria Warehouse, Manchester",
       "year": "2025",
       "role": "Videographer, Editor"
+    },
+    {
+      "category": "Live Event",
+      "title": "Dirty Weekend at The Edge Festival",
+      "link": "https://www.youtube.com/watch?v=TS9bDqmXpWc",
+      "venue": "Solva, Wales",
+      "year": "2025"
     },
     {
       "category": "Highlights",
@@ -49,17 +68,6 @@
       "venue": "Peckforton Castle",
       "year": "2024",
       "role": "Camera, Editor, Grade"
-    },
-    {
-      "category": "Live In Session",
-      "title": "Algorhythm",
-      "link": "https://www.youtube.com/watch?v=6tPhsQtXXog",
-      "venue": "Silk Mill Studios",
-      "song": "'Love Story' by Taylor Swift",
-      "year": "2025",
-      "role": "Camera, Lighting, Editor, Grade",
-      "thumb": "assets/img/photos/Web/algorhythmlove-storythumb1.jpg",
-      "mobileThumb": "assets/img/photos/Web/algorhythmlove-storythumb1-sm.jpg"
     },
     {
       "category": "Wedding Band Highlights",
@@ -79,14 +87,6 @@
       "song": "'Cowboys In Tangier'",
       "year": "2026",
       "thumb": "assets/img/photos/Web/the-beautiful-failures-cowboys-in-tangier-thumbnail.jpg"
-    },
-    {
-      "category": "Live In Session at Silk Mill Studios",
-      "title": "The Futuristic Gramophones",
-      "link": "https://www.youtube.com/watch?v=M54RmO3AlNU",
-      "videoType": "Showreel",
-      "thumb": "assets/img/photos/Web/thefuturisticgramophonesshoweelthumb1.jpg",
-      "mobileThumb": "assets/img/photos/Web/thefuturisticgramophonesshoweelthumb1-sm.jpg"
     }
   ]
 }
