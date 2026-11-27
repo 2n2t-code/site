@@ -1455,3 +1455,7 @@ body[data-page="music"] .page-intro h1 {
 @media (max-width: 639px) {
   .vp-story-link .button { letter-spacing: 0.14em; font-size: 0.9rem; }
 }
+
+/* Video Production: header centred. */
+body[data-page="film"] .vp-intro { text-align: center; }
+body[data-page="film"] .vp-intro p:last-child, body[data-page="film"] .vp-intro #vp-intro { margin-left: auto; margin-right: auto; }
