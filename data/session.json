@@ -40,7 +40,7 @@
   "packageTags": [
     "Based on a full 3-track session",
     "Based on a 5-track showreel",
-    "Shot in 1080p as standard"
+    "1080p as standard"
   ],
   "packages": [
     {
@@ -61,7 +61,7 @@
       ],
       "features": [
         "One-shot, 1 or 2 static cameras",
-        "Full track recording",
+        "Pro audio recording",
         "Audio sync",
         "Colour grade",
         "Audio engineer, mix and master",
@@ -89,7 +89,7 @@
       ],
       "features": [
         "Multicam",
-        "Full track recording",
+        "Pro audio recording",
         "Audio sync",
         "Colour grade",
         "Audio engineer, mix and master",
@@ -117,7 +117,7 @@
       ],
       "features": [
         "Multicam",
-        "Full track recording",
+        "Pro audio recording",
         "Audio sync",
         "Colour grade",
         "Audio engineer, mix and master",
@@ -148,7 +148,7 @@
       "price": "£350 per day"
     },
     {
-      "item": "4K recording",
+      "item": "4K export",
       "price": "£100 per session"
     },
     {
@@ -156,7 +156,7 @@
       "price": "£100"
     },
     {
-      "item": "Titles and kinetic typography",
+      "item": "Basic titles & kinetic typography",
       "price": "£50 per hour"
     },
     {
