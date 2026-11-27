@@ -1412,3 +1412,12 @@ body[data-page="music"] .page-intro h1 {
 .film-seg .work-tile .cine-credits dt, .film-seg .work-tile .cine-credits dd { padding: 4px 0; }
 .film-seg .work-tile .cine-watch, .film-seg.is-open .work-tile .cine-watch { display: none; }
 .film-seg .work-tile .cine-song { font-size: 0.9rem; }
+/* Film strip hover: a small play icon (no circle) to the right of the credits,
+   in the frame's bottom-right corner. */
+.film-seg .frame::before {
+  content: ""; position: absolute; right: 22px; bottom: 20px; z-index: 3; width: 24px; height: 28px; pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 30'%3E%3Cpath d='M2 2.5v25L24 15z' fill='%23f2efe9' stroke='%23f2efe9' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.6));
+  opacity: 0; transform: translateX(-6px); transition: opacity 0.3s, transform 0.3s;
+}
+.film-seg.is-open .frame::before { opacity: 0.95; transform: none; transition-delay: 0.15s; }
