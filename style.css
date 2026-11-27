@@ -1406,3 +1406,9 @@ body[data-page="music"] .page-intro h1 {
 }
 #work.has-film > .home-head { width: 100%; max-width: calc(1600px - 2 * var(--gutter)); margin: 0 auto; }
 #work.has-film .film { margin-top: 0; flex: none; }
+
+/* Film strip frames on hover: credits shown (compact), no Watch button. */
+.film-seg .work-tile .cine-credits { display: grid; font-size: 0.62rem; margin-top: 8px; max-width: 360px; }
+.film-seg .work-tile .cine-credits dt, .film-seg .work-tile .cine-credits dd { padding: 4px 0; }
+.film-seg .work-tile .cine-watch, .film-seg.is-open .work-tile .cine-watch { display: none; }
+.film-seg .work-tile .cine-song { font-size: 0.9rem; }
