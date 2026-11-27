@@ -91,7 +91,7 @@ To add a page to the menu, add a `<li><a href="...">Name</a></li>` line inside `
 ### Look and feel
 
 Change the variables at the top of `style.css` (`--color-accent`, `--font-display`, `--space-*` and so on).
-The fonts are system fonts, so nothing downloads. To use a web font, add its `<link>` to each page's `<head>` and update `--font-display` or `--font-body`.
+The whole site uses **Rubik** (Google Fonts), loaded by a `<link>` in each page's `<head>`. To change font, update that link on every page and `--font-display` / `--font-body` at the top of `style.css`. Rubik is much wider than a condensed font, so the big headlines are scaled down with `zoom` in the "Rubik (site-wide font)" section of `style.css`.
 
 ### Image tips
 

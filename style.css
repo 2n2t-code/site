@@ -18,9 +18,9 @@
   --color-overlay-strong: rgba(10, 10, 12, 0.92);
   --color-lightbox: rgba(10, 10, 12, 0.97);
 
-  /* Fonts (system stacks = zero font downloads) */
-  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif; /* headings (Google Fonts, loaded on every page) */
+  /* Fonts: Rubik (Google Fonts, loaded on every page) for everything */
+  --font-body: "Rubik", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Rubik", system-ui, -apple-system, "Segoe UI", Arial, sans-serif; /* headings */
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --font-cine: var(--font-display);  /* Video Production panels */
   --font-label: var(--font-display); /* small spaced labels */
@@ -1241,4 +1241,22 @@ body[data-page="music"] main { text-transform: uppercase; }
   /* Intro text centred on phones. */
   .home-intro-text { text-align: center; margin-left: auto; margin-right: auto; }
   .home-intro .hero-actions { justify-content: center; }
+}
+
+/* ---------- Rubik (site-wide font) ---------- */
+/* Rubik is much wider than the old condensed headline font, so the big
+   headlines are scaled down to fit, with a little more line spacing. */
+.hero-title, .cine-title, .vp-intro h1, .contact-title, .home-cta h2, .ses-team-name, .pkg-price, .cine-index b, .field-title, .more-title { zoom: 0.84; }
+.cine-title, .vp-intro h1, .field-title, .ses-team-name, .pkg-price { line-height: 0.95; }
+.contact-title { line-height: 1; }
+.cine-song { zoom: 0.9; }
+/* Section headings ("Selected work", "Albums & EPs", "Packages", "The Team"…): bigger. */
+.section-title, .about-services-title {
+  font-family: var(--font-display); font-weight: 800; text-transform: uppercase;
+  font-size: clamp(1.9rem, 1.3rem + 2.2vw, 3rem); line-height: 1; letter-spacing: -0.005em;
+}
+.page-intro h1 { font-weight: 900; }
+/* Music: a big main header, like Video Production's. */
+body[data-page="music"] .page-intro h1 {
+  font-size: clamp(2.9rem, 1.7rem + 5.2vw, 6.8rem); line-height: 0.95; letter-spacing: 0.005em; margin-bottom: var(--space-2);
 }
