@@ -427,6 +427,107 @@
     document.addEventListener("videomodal", function (e) { modalOpen = e.detail; update(); });
   }
 
+  /* ---------- Selected work as a 35 mm film strip (desktop homepage) ---------- */
+  // On computers (wide screens with a mouse) the Selected work tiles become
+  // frames on a strip of scanned colour-negative film. When the section scrolls
+  // into view an intro clip (Homepage → film strip intro video: film start +
+  // burn, blended so black disappears) plays over the dark film gate; the strip
+  // appears under the burn already running and eases into a slow drift.
+  // Hovering a frame stops the strip and opens that frame into the full tile.
+  // Phones and tablets keep the normal tiles.
+  var FILM_DESKTOP = window.matchMedia("(min-width: 900px) and (hover: hover)");
+  function setupFilmStrip(home) {
+    var section = document.getElementById("work");
+    var list = document.getElementById("home-work");
+    if (!section || !list || !FILM_DESKTOP.matches) return;
+    var tiles = [].slice.call(list.querySelectorAll(".work-tile"));
+    if (tiles.length < 2) return;
+    var calmMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    var film = el("div", { class: "film" });
+    var track = el("div", { class: "film-track" });
+    film.appendChild(track);
+    // Two copies of the frames, so the strip can loop forever.
+    for (var copy = 0; copy < 2; copy++) {
+      tiles.forEach(function (t, i) {
+        var fr = i + 11; // frame counter, as printed along the roll
+        var node = copy ? t.cloneNode(true) : t;
+        if (copy) {
+          node.setAttribute("tabindex", "-1"); node.setAttribute("aria-hidden", "true");
+          node.addEventListener("click", function () { t.click(); });
+        }
+        var seg = el("div", { class: "film-seg" }, [
+          el("div", { class: "edge top", "aria-hidden": "true" }, [el("span", { text: "2N2T 400" }), el("span", { class: "dx" }), el("span", { text: "SAFETY" })]),
+          el("div", { class: "edge bottom", "aria-hidden": "true" }, [el("span", { text: String(fr) }), el("span", { class: "arrow", text: "▶" }), el("span", { text: fr + "A" }), el("span", { class: "dx" })]),
+          el("div", { class: "frame" }, [node])
+        ]);
+        track.appendChild(seg);
+      });
+    }
+    var introSrc = home.workIntroVideo ? url("assets/video/Web/" + webVideoName(home.workIntroVideo) + "-1080.mp4") : "";
+    var intro = introSrc && !calmMotion
+      ? el("video", { class: "film-intro", muted: true, playsinline: true, preload: "none", "aria-hidden": "true", tabindex: "-1" })
+      : null;
+    if (intro) { intro.muted = true; intro.src = introSrc; film.appendChild(intro); }
+    section.appendChild(film);
+    section.classList.add("has-film");
+
+    var x = 0, speed = 0, target = 70, open = null, last = 0, loopW = 0, running = false, onScreen = false, started = false;
+    function setOpen(s) { if (open === s) return; if (open) open.classList.remove("is-open"); open = s; if (s) s.classList.add("is-open"); }
+    track.addEventListener("mouseover", function (e) { var s = e.target.closest(".film-seg"); if (s) setOpen(s); });
+    film.addEventListener("mouseleave", function () { setOpen(null); });
+    track.addEventListener("focusin", function (e) { setOpen(e.target.closest(".film-seg")); });
+    track.addEventListener("focusout", function (e) { if (!track.contains(e.relatedTarget)) setOpen(null); });
+    window.addEventListener("resize", function () { loopW = 0; });
+
+    function frame(t) {
+      if (!running) return;
+      var dt = last ? Math.min(50, t - last) / 1000 : 0; last = t;
+      var goal = open || calmMotion ? 0 : target;
+      speed += (goal - speed) * (1 - Math.exp(-dt / 0.6));
+      x -= speed * dt;
+      if (!loopW) loopW = track.scrollWidth / 2;
+      if (loopW && -x > loopW) x += loopW;
+      track.style.transform = "translate3d(" + x.toFixed(1) + "px,0,0)";
+      var blur = Math.min(4, Math.abs(speed) / 500);
+      track.style.filter = blur > 0.3 ? "blur(" + blur.toFixed(1) + "px)" : "";
+      if (!onScreen) { running = false; return; } // paused while scrolled away
+      requestAnimationFrame(frame);
+    }
+    function run() { if (running || !started) return; running = true; last = 0; requestAnimationFrame(frame); }
+
+    var revealed = false;
+    function reveal() {
+      if (revealed) return; revealed = true;
+      film.classList.add("is-revealed");
+      if (!calmMotion) {
+        track.animate([{ filter: "brightness(1.5)" }, { filter: "none" }], { duration: 700, easing: "ease-out" });
+        speed = 3400; // the reel is already running fast, then eases into the drift
+      }
+      run();
+    }
+    function start() {
+      if (started) return; started = true;
+      film.classList.add("is-on");
+      if (!intro) { reveal(); return; }
+      // The intro plays over the dark film gate; the strip appears just as the burn begins.
+      var REVEAL_AT = 1.15; // seconds into the intro clip
+      intro.classList.add("on");
+      var p = intro.play(); if (p && p.catch) p.catch(reveal); // can't play: show the strip straight away
+      intro.addEventListener("ended", function () { intro.classList.remove("on"); reveal(); }, { once: true });
+      intro.addEventListener("error", function () { intro.classList.remove("on"); reveal(); }, { once: true });
+      (function watch() { if (revealed) return; if (intro.currentTime >= REVEAL_AT) reveal(); else requestAnimationFrame(watch); })();
+      setTimeout(reveal, 3500); // safety net if the clip stalls
+    }
+    if (!("IntersectionObserver" in window)) { onScreen = true; start(); return; }
+    // Load the intro a little before the section arrives, so it starts without a stutter.
+    if (intro) new IntersectionObserver(function (en, o) { if (en[0].isIntersecting) { intro.preload = "auto"; intro.load(); o.disconnect(); } }, { rootMargin: "0px 0px 800px 0px" }).observe(film);
+    new IntersectionObserver(function (en) {
+      onScreen = en[0].isIntersecting;
+      if (onScreen) { if (!started && en[0].intersectionRatio >= 0.35) start(); run(); }
+    }, { threshold: [0, 0.35] }).observe(film);
+  }
+
   function renderHome() {
     // Editable homepage text and showreel (data/home.json).
     var home = content.home || {};
@@ -549,6 +650,7 @@
       btn.addEventListener("click", function () { openVideo(Object.assign({}, v, { title: fullTitle }), btn); });
       return el("li", { class: "reveal" }, [btn]);
     }, "Video work coming soon.");
+    setupFilmStrip(home);
 
     // Header goes from see-through to solid once you scroll past the top.
     var header = document.querySelector(".site-header--overlay");

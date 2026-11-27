@@ -384,6 +384,13 @@ content:
           media: videos
           categories: [video]
         description: "A tall 9:16 cut for phones (1080x1920, H.264 MP4, 10–20 seconds, no audio, under 25 MB; keep text and logos out of the top 15% and bottom 25%). Upload it on GitHub to assets/video/Original like the desktop video, then pick it here. On phones it fills the screen behind the headline. Leave empty for the showreel tile."
+      - name: workIntroVideo
+        label: "Selected work: film strip intro video (desktop)"
+        type: file
+        options:
+          media: videos
+          categories: [video]
+        description: "Plays once over the film strip when someone scrolls to Selected work on a computer (film start + burn, on black; it's blended so black disappears). Short (about 2 seconds), 16:9, H.264 MP4, no audio. Upload on GitHub to assets/video/Original, then pick it here. Leave empty for no intro."
       - name: showreelTitle
         label: Showreel title
         type: string

@@ -1297,3 +1297,83 @@ body[data-page="music"] .page-intro h1 {
   .home-intro-text { max-width: none; }
   .home-intro .home-intro-text p { font-size: clamp(1rem, 3cqi, 1.2rem); }
 }
+
+/* ---------- Selected work as a 35 mm film strip (desktop homepage) ----------
+   Built to real proportions (all sizes in "mm" of film, k = px per mm):
+   film 35 wide · frame 36 x 24 · frame pitch 38 = 8 perforations of 4.75 ·
+   KS perforations ~2.8 x 2.0 with rounded corners, 2 from the film edge. */
+#work.has-film .work-grid { display: none; }
+#work.has-film { overflow: hidden; }
+.film { overflow: hidden;
+  --k: clamp(9px, 0.95vw, 13px);               /* px per mm of film */
+  --base: #160d08;                              /* scanned colour negative: near-black, warm */
+  --print: #f2a05a;                             /* edge printing glows peach-orange */
+  position: relative; height: calc(var(--k) * 35);
+  margin: var(--space-5) calc(-1 * var(--gutter)) 0;
+  opacity: 0;
+}
+.film.is-on { opacity: 1; }
+.film { background: #0c0705; }
+.film .film-track { opacity: 0; transition: opacity .15s ease-out; }
+.film.is-revealed .film-track { opacity: 1; }
+.film-track { position: absolute; inset: 0 auto 0 0; display: flex; will-change: transform; }
+.film-seg {
+  --w: 38;                                       /* frame pitch in mm */
+  position: relative; flex: 0 0 auto; height: 100%; width: calc(var(--k) * var(--w));
+  background:
+    /* subtle density variation along the base */
+    radial-gradient(120% 60% at 50% 50%, rgba(120, 50, 20, 0.18), transparent 70%),
+    linear-gradient(180deg, rgba(90, 40, 15, 0.35), transparent 20%, transparent 80%, rgba(90, 40, 15, 0.3)),
+    var(--base);
+  transition: width 0.55s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+/* Perforation rows: rounded "Kodak Standard" holes on a 4.75 mm pitch, 2 mm from each edge. */
+.film-seg::before, .film-seg::after {
+  content: ""; position: absolute; left: 0; right: 0; height: calc(var(--k) * 2);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4.75 2'%3E%3Crect x='0.98' y='0' width='2.79' height='2' rx='0.5' fill='%23000' stroke='%23c8783a' stroke-opacity='.35' stroke-width='.12'/%3E%3C/svg%3E");
+  background-size: calc(var(--k) * 4.75) 100%; background-repeat: repeat-x;
+}
+.film-seg::before { top: calc(var(--k) * 1.6); }
+.film-seg::after { bottom: calc(var(--k) * 1.6); }
+/* The exposed frame: 36 x 24, with the unexposed frame line between frames. */
+.film-seg .frame {
+  position: absolute; top: calc(var(--k) * 5.5); left: calc(var(--k) * 1); right: calc(var(--k) * 1);
+  height: calc(var(--k) * 24); border-radius: calc(var(--k) * 0.7); overflow: hidden;
+  box-shadow: 0 0 calc(var(--k) * 1.2) rgba(255, 120, 40, 0.18), inset 0 0 calc(var(--k) * 2.4) rgba(20, 6, 0, 0.75);
+}
+.film-seg .work-tile { width: 100%; height: 100%; aspect-ratio: auto; border-radius: 0; padding: 12px 14px; background: #120b07; }
+.film-seg:nth-child(3n) .frame::after { content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 2; background: linear-gradient(90deg, rgba(220, 40, 20, 0.35), transparent 22%); mix-blend-mode: screen; }
+.film-seg:nth-child(5n+2) .frame::after { content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 2; background: linear-gradient(270deg, rgba(255, 110, 30, 0.3), transparent 18%); mix-blend-mode: screen; }
+.film-seg .work-tile > img { filter: sepia(0.15) saturate(0.95) contrast(1.08) brightness(0.9); transition: filter 0.4s, transform 1.6s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.film-seg .work-tile::before { /* grain */
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: 0.16; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.film-seg .work-info, .film-seg .cine-watch, .film-seg .cine-index { opacity: 0; transition: opacity 0.3s; }
+/* Closed frames: just the picture (no text, no dark shading over it). */
+.film-seg .work-tile::after { opacity: 0; transition: opacity 0.4s; }
+.film-seg.is-open .work-tile::after { opacity: 1; }
+.film-seg.is-open .work-info { opacity: 1; transition-delay: 0.15s; }
+.film-seg .cine-title { font-size: 1.4rem !important; }
+.film-seg .cine-kicker { font-size: 0.58rem !important; }
+/* Edge printing (as developed: dark on the orange base). */
+.edge { position: absolute; left: 0; right: 0; height: calc(var(--k) * 1.6); display: flex; align-items: center; gap: calc(var(--k) * 3);
+  padding-left: calc(var(--k) * 2); white-space: nowrap; overflow: hidden;
+  font: 700 calc(var(--k) * 1.3)/1 var(--font-display); letter-spacing: 0.1em; color: var(--print); text-shadow: 0 0 calc(var(--k) * 0.5) rgba(255, 140, 60, 0.55); }
+.edge.top { top: 0; }
+.edge.bottom { bottom: 0; }
+.edge .arrow { font-size: 0.85em; }
+.edge.inner { top: calc(var(--k) * 3.65); height: calc(var(--k) * 1.8); justify-content: space-between; padding: 0 calc(var(--k) * 2.2); color: rgba(45, 14, 0, 0.7); }
+.dx { display: inline-block; height: calc(var(--k) * 1); width: calc(var(--k) * 8);
+  height: calc(var(--k) * 1.25); width: calc(var(--k) * 11); filter: drop-shadow(0 0 calc(var(--k) * .4) rgba(255,140,60,.5));
+  background: repeating-linear-gradient(90deg, var(--print) 0 3px, transparent 3px 5px, var(--print) 5px 6px, transparent 6px 9px, var(--print) 9px 13px, transparent 13px 15px); }
+/* Hover / focus: the frame opens up into the full tile. */
+.film-seg.is-open { --w: 68; z-index: 2; }
+.film-seg.is-open .work-tile > img { filter: none; }
+.film-seg.is-open .cine-watch, .film-seg.is-open .cine-index { opacity: 1; transition-delay: 0.2s; }
+.film-seg.is-open .cine-title { font-size: clamp(1.5rem, 0.9rem + 1.2vw, 2.2rem) !important; }
+.film-seg.is-open .work-tile { padding: 16px 20px; }
+/* Real light-leak footage over the strip: black drops out ("screen"), only the light shows. */
+.film-intro { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 8; pointer-events: none;
+  mix-blend-mode: screen; opacity: 0; transition: opacity .25s; }
+.film-intro.on { opacity: 1; }
