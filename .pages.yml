@@ -88,6 +88,47 @@ content:
             type: image
             description: A thumbnail used instead on phones (screens under 640px wide), e.g. a tighter crop. 16:9 works best.
 
+  - name: vp
+    label: Video Production page
+    description: "The staggered sections near the top of the Video Production page: 2-3 photos beside a short text, alternating sides. Give one a link (e.g. live-in-session/) to make it a doorway to that page. For big photos, upload to photos/Original on GitHub, then pick name.jpg from photos/Web."
+    type: file
+    path: data/vp.json
+    format: json
+    fields:
+      - name: stories
+        label: Sections
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{kicker}: {title}"
+        fields:
+          - name: kicker
+            label: Small label
+            type: string
+          - name: title
+            label: Heading
+            type: string
+          - name: text
+            label: Text
+            type: text
+            description: Leave a blank line between paragraphs.
+          - name: photos
+            label: Photos (2-3)
+            type: image
+            options:
+              multiple: true
+            description: "The first is the large one. Pick name.jpg (not -sm) from photos/Web."
+          - name: photoAlt
+            label: Photo description (for screen readers and Google)
+            type: string
+          - name: link
+            label: Link (optional)
+            type: string
+            description: "Makes this section a doorway, e.g. live-in-session/ or contact/."
+          - name: linkLabel
+            label: Button text
+            type: string
   - name: session
     label: Live In Session page
     description: "The Live In Session page (in the menu under Video Production): intro, the session videos, packages and prices, extras, how booking works, The Team and the studio. Empty parts are hidden. Meta Title and Description are under SEO. For big photos, upload to photos/Original on GitHub (github.com/2n2t-code/site/upload/main/assets/img/photos/Original), then pick name.jpg from photos/Web."

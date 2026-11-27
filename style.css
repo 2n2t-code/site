@@ -1421,3 +1421,37 @@ body[data-page="music"] .page-intro h1 {
   opacity: 0; transform: translateX(-6px); transition: opacity 0.3s, transform 0.3s;
 }
 .film-seg.is-open .frame::before { opacity: 0.95; transform: none; transition-delay: 0.15s; }
+
+/* ---------- Video Production: staggered photo + text sections ---------- */
+.vp-stories { max-width: 1400px; margin: 0 auto; padding: var(--space-6) var(--gutter) var(--space-8); display: grid; gap: clamp(4rem, 9vw, 8rem); }
+.vp-story { display: grid; gap: var(--space-6); align-items: center; }
+.vp-story-title { font-family: var(--font-display); font-weight: 900; text-transform: uppercase; line-height: 0.95; font-size: clamp(2rem, 1.2rem + 2.6vw, 3.6rem); margin: 0 0 var(--space-4); }
+.vp-story-text .vp-label { margin-bottom: var(--space-3); }
+.vp-story-text .ses-text p { color: rgba(242, 239, 233, 0.82); font-size: var(--text-lg); }
+.vp-story-link { margin: var(--space-5) 0 0; }
+/* The photos: one large, two smaller ones staggered over its corners. */
+.vp-shots { position: relative; aspect-ratio: 5 / 4; }
+.vp-shot { position: absolute; margin: 0; overflow: hidden; border-radius: 14px; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55); background: var(--color-surface); }
+.vp-shot img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 1.2s cubic-bezier(.2, .7, .2, 1); }
+.vp-shots .s1 { left: 0; top: 0; width: 72%; height: 70%; }
+.vp-shots .s2 { right: 0; top: 22%; width: 44%; height: 40%; z-index: 2; }
+.vp-shots .s3 { left: 18%; bottom: 0; width: 46%; height: 38%; z-index: 3; }
+.vp-shots.n1 .s1 { width: 100%; height: 100%; }
+.vp-shots.n2 .s2 { top: auto; bottom: 0; height: 46%; }
+.vp-story.flip .s1 { left: auto; right: 0; }
+.vp-story.flip .s2 { right: auto; left: 0; }
+.vp-story.flip .s3 { left: auto; right: 18%; }
+/* Doorway sections: the whole thing links through; photos ease in on hover. */
+.vp-story.is-door { cursor: pointer; }
+.vp-story.is-door:hover .vp-shot img { transform: scale(1.05); }
+@media (min-width: 900px) {
+  .vp-story { grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); gap: clamp(2.5rem, 5vw, 5rem); }
+  .vp-story.flip .vp-shots { order: 2; }
+  .vp-story.flip .vp-story-text { order: 1; }
+}
+@media (max-width: 639px) {
+  .vp-story-text .ses-text p { font-size: var(--text-base); }
+}
+@media (max-width: 639px) {
+  .vp-story-link .button { letter-spacing: 0.14em; font-size: 0.9rem; }
+}

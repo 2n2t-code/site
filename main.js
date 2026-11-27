@@ -37,7 +37,7 @@
   // Which data files each page needs (site.json is loaded on every page).
   var PAGE_DATA = {
     home: ["videos", "home"],
-    film: ["videos", "home"],
+    film: ["videos", "home", "vp"],
     session: ["videos", "session"],
     photography: ["photos"],
     "photo-category": ["photos"],
@@ -116,6 +116,7 @@
         tracks: (d.music || {}).releases || [],
         bands: (d.music || {}).bands || [],
         musicIntro: (d.music || {}).intro || "",
+        vp: d.vp || {},
         session: d.session || {}
       };
     });
@@ -230,7 +231,41 @@
 
   // Video Production page: one cinematic panel per video — the showreel first,
   // then Live In Session, then everything else, in the CMS order.
+  // Video Production: staggered sections, 2-3 photos beside a short text, the
+  // photo side alternating. One can link through to another page (e.g. Live In Session).
+  function renderVpStories() {
+    var box = document.getElementById("vp-stories");
+    if (!box) return;
+    var stories = ((content.vp || {}).stories || []).filter(function (s) { return s && (s.title || s.text || (s.photos || []).length); });
+    box.replaceChildren();
+    stories.forEach(function (s, i) {
+      var photos = (s.photos || []).filter(Boolean).slice(0, 3);
+      var shots = el("div", { class: "vp-shots n" + photos.length }, photos.map(function (src, k) {
+        var small = /\/photos\/Web\/[^/]+\.jpe?g$/i.test(src) && k > 0 ? src.replace(/(\.jpe?g)$/i, "-sm$1") : src;
+        var img = el("img", { src: url(pick(small, small)), alt: k === 0 ? (s.photoAlt || "") : "", loading: "lazy", decoding: "async" });
+        img.addEventListener("error", function once() { img.removeEventListener("error", once); img.src = url(src); });
+        return el("figure", { class: "vp-shot s" + (k + 1) }, [img]);
+      }));
+      var body = el("div", { class: "ses-text" });
+      paragraphs(body, s.text);
+      var link = s.link ? el("p", { class: "vp-story-link" }, [el("a", { class: "button", href: /^(https?:|\/|#|mailto:)/.test(s.link) ? s.link : ROOT + s.link, text: s.linkLabel || "Find out more" })]) : null;
+      var text = el("div", { class: "vp-story-text" }, [
+        s.kicker ? el("p", { class: "vp-label", text: s.kicker }) : null,
+        s.title ? el("h2", { class: "vp-story-title", text: s.title }) : null,
+        body, link
+      ]);
+      var row = el("section", { class: "vp-story" + (i % 2 ? " flip" : "") + (s.link ? " is-door" : "") }, [shots, text]);
+      if (s.link) {
+        // The whole doorway is clickable, not just the button.
+        row.addEventListener("click", function (e) { if (!e.target.closest("a")) location.href = link.querySelector("a").href; });
+      }
+      box.appendChild(row);
+    });
+    box.hidden = !stories.length;
+  }
+
   function renderFilm() {
+    renderVpStories();
     var list = document.getElementById("cine-list");
     if (!list) return;
     var home = content.home || {};
